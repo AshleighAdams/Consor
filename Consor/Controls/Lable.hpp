@@ -6,7 +6,7 @@
 
 namespace Consor
 {
-	class CLable : CControl
+	class CLable : public CControl
 	{
 		std::string m_Text;
 	public:
