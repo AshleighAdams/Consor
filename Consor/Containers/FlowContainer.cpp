@@ -3,23 +3,43 @@
 using namespace Consor;
 using namespace std;
 
-CFlowContainer::CFlowContainer()
+CFlowContainer::CFlowContainer(CFlowContainer::FlowAxis Axis, double Seperation)
 {
 	m_ControlItterator = m_Controls.begin();
+	m_Axis = Axis;
+	m_Seperation = Seperation;
 }
 
 CSize CFlowContainer::Size()
 {
 	CSize ret;
 
+	double span = 0.0;
+
 	for(CControl* ctrl : m_Controls)
 	{
 		CSize size = ctrl->Size();
-		if(size.Width > ret.Width)
-			ret.Width = size.Width;
 
-		ret.Height += size.Height;
+		if(m_Axis == CFlowContainer::FlowAxis::Vertical)
+		{
+			if(size.Width > ret.Width)
+				ret.Width = size.Width;
+
+			span += size.Height + m_Seperation;
+		}
+		else
+		{
+			if(size.Height > ret.Height)
+				ret.Height = size.Height;
+
+			span += size.Width + m_Seperation;
+		}
 	}
+
+	if(m_Axis == CFlowContainer::FlowAxis::Vertical)
+		ret.Height = span;
+	else
+		ret.Width = span;
 
 	return ret;
 }
@@ -45,7 +65,10 @@ void CFlowContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasF
 		ctrl->Draw(Renderer, false, Skin);
 		Renderer.PopRenderBounds();
 		
-		pos.Y += ctrl_size.Height;
+		if(m_Axis == CFlowContainer::FlowAxis::Vertical)
+			pos.Y += ctrl_size.Height + m_Seperation;
+		else
+			pos.X += ctrl_size.Width + m_Seperation;
 	}
 }
 

@@ -7,13 +7,23 @@
 
 namespace Consor
 {
+	
+
 	class CFlowContainer : public CControl
 	{
+	public:
+		enum FlowAxis
+		{
+			Horizontal,
+			Vertical
+		};
 	protected:
 		std::list<CControl*> m_Controls;
 		std::list<CControl*>::iterator m_ControlItterator;
+		double m_Seperation;
+		FlowAxis m_Axis;
 	public:
-		CFlowContainer();
+		CFlowContainer(FlowAxis axis, double Sepperation);
 		virtual CSize Size();
 		virtual void OnResize(const CSize& Size);
 		virtual void ForceResize(const CSize& Size);
