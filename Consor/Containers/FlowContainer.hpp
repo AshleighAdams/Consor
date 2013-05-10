@@ -1,24 +1,27 @@
-#ifndef CONSOR_WINDOWCONTAINER_H
-#define CONSOR_WINDOWCONTAINER_H
+#ifndef CONSOR_FLOWCONTAINER_H
+#define CONSOR_FLOWCONTAINER_H
 
 #include "Control.hpp"
 #include <string>
+#include <list>
 
 namespace Consor
 {
-	class CWindowsContainer : public CControl
+	class CFlowContainer : public CControl
 	{
 	protected:
-		CControl* m_pClient;
-		std::string m_Title;
+		std::list<CControl*> m_Controls;
+		std::list<CControl*>::iterator m_ControlItterator;
 	public:
-		CWindowsContainer(CControl& Client, const std::string& Title);
+		CFlowContainer();
 		virtual CSize Size();
 		virtual void OnResize(const CSize& Size);
 		virtual void ForceResize(const CSize& Size);
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);
 		virtual bool HandleInput(int Key);
 		virtual bool CanFocus();
+
+		virtual void AddControl(CControl& Control);
 	};
 };
 
