@@ -51,6 +51,12 @@
     <ClCompile Include="Controls\Lable.cpp">
       <Filter>Source Files\Controls</Filter>
     </ClCompile>
+    <ClCompile Include="Containers\BorderContainer.cpp">
+      <Filter>Source Files\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="Containers\WindowContainer.cpp">
+      <Filter>Source Files\Containers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Util\FrequencyController.hpp">
@@ -82,6 +88,12 @@
     </ClInclude>
     <ClInclude Include="Skin.hpp">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\BorderContainer.hpp">
+      <Filter>Source Files\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\WindowContainer.hpp">
+      <Filter>Source Files\Containers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

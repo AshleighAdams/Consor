@@ -162,9 +162,9 @@ CHAR_INFO& CWindowsConsoleRenderer::_CharInfoAt(int x, int y)
 {
 	static CHAR_INFO dummy; // so expected behavour is done, but it's out of the screen bounds, so let them play with a dummy value
 
-	if(x < 0 || x > m_CurrentRenderBound.Size.Width - 1)
+	if(x < 0 || x > (int)(m_CurrentRenderBound.Size.Width - 1))
 		return dummy;
-	if(y < 0 || y > m_CurrentRenderBound.Size.Height - 1)
+	if(y < 0 || y > (int)(m_CurrentRenderBound.Size.Height - 1))
 		return dummy;
 
 	//x += m_CurrentRenderBound.Pos.X;
@@ -172,14 +172,14 @@ CHAR_INFO& CWindowsConsoleRenderer::_CharInfoAt(int x, int y)
 	x += m_CurrentOffset.X;
 	y += m_CurrentOffset.Y;
 
-	if(x < m_CurrentRenderBound.Pos.X)
+	if(x < (int)(m_CurrentRenderBound.Pos.X))
 		return dummy;
-	if(y < m_CurrentRenderBound.Pos.Y)
+	if(y < (int)(m_CurrentRenderBound.Pos.Y))
 		return dummy;
 
-	if(x < 0 || x >= m_Width)
+	if(x < 0 || (int)(x >= m_Width))
 		return dummy;
-	if(y < 0 || y >= m_Height)
+	if(y < 0 || (int)(y >= m_Height))
 		return dummy;
 
 	return m_pBuffer[x + m_Width * y];

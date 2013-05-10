@@ -5,35 +5,36 @@
 #include "Util/Time.hpp"
 
 #include "Controls/Lable.hpp"
+#include "Containers/WindowContainer.hpp"
+#include "Containers/BorderContainer.hpp"
 
 using namespace std;
 
 int main(int count, char** values)
 {
 	Consor::Console::CWindowsConsoleRenderer renderer; 
+	Consor::CDefaultSkin skin;
 
 	Consor::CLable lbl;
 	lbl.SetText("Hello, world; how are you on this fine day?");
-	lbl.ForceResize(Consor::CSize(13, 5));
+	lbl.ForceResize(Consor::CSize(20, 5));
 
-	Consor::CDefaultSkin skin;
+	Consor::CBorderContainer border(lbl, 2);
 
-	double scroll = 0;
+	Consor::CWindowsContainer window(border, "Hello");
 
 	while(true)
 	{
 		renderer.Clear(Consor::CColour());
 		
-		{
-			renderer.PushRenderBounds(Consor::CVector(5, 5), lbl.Size());
-			renderer.PushRenderBounds(Consor::CVector(0, scroll), renderer.RenderSize());
-			{
-				lbl.Draw(renderer, false, skin);
-			}
-			renderer.PopRenderBounds();
-			renderer.PopRenderBounds();
-		}
+		Consor::CSize size = window.Size();
+		Consor::CSize rsize = renderer.RenderSize();
 
+		Consor::CVector pos = Consor::CVector(rsize.Width / 2.0, rsize.Height / 2.0) - Consor::CVector(size.Width / 2, size.Height / 2);
+
+		renderer.PushRenderBounds(pos, window.Size());
+		window.Draw(renderer, true, skin);
+		
 		renderer.FlushToScreen();
 	}
 
