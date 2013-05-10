@@ -31,10 +31,10 @@ int main(int count, char** values)
 	Consor::CFlowContainer flow;
 	flow.AddControl(lbl1);
 
-	Consor::CWindowsContainer flowwindow(lbl2, "Flow window");
+	Consor::CWindowContainer flowwindow(lbl2, "Flow window");
 	flow.AddControl(flowwindow);
 
-	Consor::CWindowsContainer window(flow, "Flow Test");
+	Consor::CWindowContainer window(flow, "Flow Test");
 
 
 	while(true)

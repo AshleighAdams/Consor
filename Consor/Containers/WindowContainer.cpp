@@ -3,27 +3,27 @@
 using namespace Consor;
 using namespace std;
 
-CWindowsContainer::CWindowsContainer(CControl& Client, const string& Title)
+CWindowContainer::CWindowContainer(CControl& Client, const string& Title)
 {
 	m_pClient = &Client;
 	m_Title = Title;
 }
 
-CSize CWindowsContainer::Size()
+CSize CWindowContainer::Size()
 {
 	return m_pClient->Size() + CSize(2, 2); // an aditional 2 for the border
 }
 
-void CWindowsContainer::OnResize(const CSize& Size)
+void CWindowContainer::OnResize(const CSize& Size)
 {
 }
 
-void CWindowsContainer::ForceResize(const CSize& Size)
+void CWindowContainer::ForceResize(const CSize& Size)
 {
 	m_pClient->ForceResize(Size - CSize(2, 2)); // subtract the border
 }
 
-void CWindowsContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
+void CWindowContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
 	CVector pos;
 	CSize size = Size();
@@ -41,12 +41,12 @@ void CWindowsContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool H
 	Renderer.PopRenderBounds();
 }
 
-bool CWindowsContainer::HandleInput(int Key)
+bool CWindowContainer::HandleInput(int Key)
 {
 	return m_pClient->HandleInput(Key);
 }
 
-bool CWindowsContainer::CanFocus()
+bool CWindowContainer::CanFocus()
 {
 	return true;
 }
