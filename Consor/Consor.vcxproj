@@ -69,6 +69,7 @@
   <ItemGroup>
     <ClCompile Include="ConsoleRenderer.cpp" />
     <ClCompile Include="Control.cpp" />
+    <ClCompile Include="Controls\Lable.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Units.cpp" />
     <ClCompile Include="Util\FrequencyController.cpp" />
@@ -79,6 +80,8 @@
   <ItemGroup>
     <ClInclude Include="ConsoleRenderer.hpp" />
     <ClInclude Include="Control.hpp" />
+    <ClInclude Include="Controls\Lable.hpp" />
+    <ClInclude Include="Skin.hpp" />
     <ClInclude Include="Units.hpp" />
     <ClInclude Include="Util\FrequencyController.hpp" />
     <ClInclude Include="Util\Hooks.hpp" />

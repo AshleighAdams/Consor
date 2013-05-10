@@ -261,6 +261,13 @@ CColour CColour::Blend(const CColour& A, const CColour& B)
 	return out.Normalize();
 }
 
+const CColour& CColour::None()
+{
+	static CColour none = CColour(0, 0, 0, 0);
+
+	return none;
+}
+
 CColour CColour::operator+(const CColour& A) const
 {
 	return CColour(this->R + A.R, this->G + A.G, this->B + A.B, this->A + A.A).Normalize();

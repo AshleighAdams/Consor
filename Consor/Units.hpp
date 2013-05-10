@@ -59,6 +59,7 @@ namespace Consor
 
 		CColour& Normalize();
 		static CColour Blend(const CColour& A, const CColour& B);
+		static const CColour& None();
 
 		CColour operator+(const CColour& A) const;
 		CColour operator-(const CColour& A) const;
