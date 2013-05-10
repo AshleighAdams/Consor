@@ -48,6 +48,9 @@
     <ClCompile Include="ConsoleRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Controls\Lable.cpp">
+      <Filter>Source Files\Controls</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Util\FrequencyController.hpp">
@@ -72,6 +75,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Control.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls\Lable.hpp">
+      <Filter>Source Files\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="Skin.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
