@@ -25,14 +25,9 @@ int main(int count, char** values)
 	Consor::CLable lbl2;
 	lbl2.SetText("Second lable is here.");
 
-	Consor::CBorderContainer bc1(lbl1, 1);
-	Consor::CBorderContainer bc2(lbl2, 1);
-
-	Consor::CFlowContainer flow;
+	Consor::CFlowContainer flow(Consor::CFlowContainer::FlowAxis::Horizontal, 1.0);
 	flow.AddControl(lbl1);
-
-	Consor::CWindowContainer flowwindow(lbl2, "Flow window");
-	flow.AddControl(flowwindow);
+	flow.AddControl(lbl2);
 
 	Consor::CWindowContainer window(flow, "Flow Test");
 
