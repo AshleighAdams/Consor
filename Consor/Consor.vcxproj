@@ -68,6 +68,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ConsoleRenderer.cpp" />
+    <ClCompile Include="Containers\BorderContainer.cpp" />
+    <ClCompile Include="Containers\WindowContainer.cpp" />
     <ClCompile Include="Control.cpp" />
     <ClCompile Include="Controls\Lable.cpp" />
     <ClCompile Include="main.cpp" />
@@ -79,6 +81,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConsoleRenderer.hpp" />
+    <ClInclude Include="Containers\BorderContainer.hpp" />
+    <ClInclude Include="Containers\WindowContainer.hpp" />
     <ClInclude Include="Control.hpp" />
     <ClInclude Include="Controls\Lable.hpp" />
     <ClInclude Include="Skin.hpp" />

@@ -27,7 +27,7 @@ void CLable::ForceResize(const CSize& Size)
 	size_t width,height;
 
 	m_Text = Util::WrapText(m_SetText, Size.Width, &width, &height);
-	m_Size = CSize(width, (height > Size.Height ? height : Size.Height));
+	m_Size = CSize(width, height); //(height > Size.Height ? height : Size.Height));
 
 	OnResize(m_Size);
 }

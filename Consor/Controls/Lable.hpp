@@ -8,6 +8,7 @@ namespace Consor
 {
 	class CLable : public CControl
 	{
+	protected:
 		std::string m_Text;
 		std::string m_SetText;
 	public:
