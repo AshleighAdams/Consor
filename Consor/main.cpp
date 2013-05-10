@@ -7,6 +7,7 @@
 #include "Controls/Lable.hpp"
 #include "Containers/WindowContainer.hpp"
 #include "Containers/BorderContainer.hpp"
+#include "Containers/FlowContainer.hpp"
 
 using namespace std;
 
@@ -15,13 +16,26 @@ int main(int count, char** values)
 	Consor::Console::CWindowsConsoleRenderer renderer; 
 	Consor::CDefaultSkin skin;
 
-	Consor::CLable lbl;
-	lbl.SetText("Hello, world; how are you on this fine day?");
-	lbl.ForceResize(Consor::CSize(20, 5));
 
-	Consor::CBorderContainer border(lbl, 2);
 
-	Consor::CWindowsContainer window(border, "Hello");
+	Consor::CLable lbl1;
+	lbl1.SetText("Hello, world; how are you on this fine day?");
+	lbl1.ForceResize(Consor::CSize(20, 5));
+
+	Consor::CLable lbl2;
+	lbl2.SetText("Second lable is here.");
+
+	Consor::CBorderContainer bc1(lbl1, 1);
+	Consor::CBorderContainer bc2(lbl2, 1);
+
+	Consor::CFlowContainer flow;
+	flow.AddControl(lbl1);
+
+	Consor::CWindowsContainer flowwindow(lbl2, "Flow window");
+	flow.AddControl(flowwindow);
+
+	Consor::CWindowsContainer window(flow, "Flow Test");
+
 
 	while(true)
 	{
