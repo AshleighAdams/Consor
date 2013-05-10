@@ -25,7 +25,7 @@ void CBorderContainer::m_SetBorder(size_t Left, size_t Right, size_t Top, size_t
 
 CSize CBorderContainer::Size()
 {
-	CSize bordersize = CSize(m_BorderTop + m_BorderBottom, m_BorderLeft + m_BorderRight);
+	CSize bordersize = CSize(m_BorderLeft + m_BorderRight, m_BorderTop + m_BorderBottom);
 	return m_pClient->Size() + bordersize;
 }
 
@@ -35,7 +35,7 @@ void CBorderContainer::OnResize(const CSize& Size)
 
 void CBorderContainer::ForceResize(const CSize& Size)
 {
-	CSize bordersize = CSize(m_BorderTop + m_BorderBottom, m_BorderLeft + m_BorderRight);
+	CSize bordersize = CSize(m_BorderLeft + m_BorderRight, m_BorderTop + m_BorderBottom);
 	m_pClient->ForceResize(Size - bordersize); // subtract the border
 }
 

@@ -60,6 +60,9 @@
     <ClCompile Include="Containers\FlowContainer.cpp">
       <Filter>Source Files\Containers</Filter>
     </ClCompile>
+    <ClCompile Include="Containers\AlignContainer.cpp">
+      <Filter>Source Files\Containers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Util\FrequencyController.hpp">
@@ -99,6 +102,9 @@
       <Filter>Source Files\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Containers\FlowContainer.hpp">
+      <Filter>Source Files\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\AlignContainer.hpp">
       <Filter>Source Files\Containers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -36,6 +36,8 @@ CSize CFlowContainer::Size()
 		}
 	}
 
+	span -= m_Seperation;
+
 	if(m_Axis == CFlowContainer::FlowAxis::Vertical)
 		ret.Height = span;
 	else
