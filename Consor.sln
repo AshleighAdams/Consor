@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Consor", "Consor\Consor.vcxproj", "{8B19E51B-34B7-416D-AB8C-2DBCBF7A5EB6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8B19E51B-34B7-416D-AB8C-2DBCBF7A5EB6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8B19E51B-34B7-416D-AB8C-2DBCBF7A5EB6}.Debug|Win32.Build.0 = Debug|Win32
+		{8B19E51B-34B7-416D-AB8C-2DBCBF7A5EB6}.Release|Win32.ActiveCfg = Release|Win32
+		{8B19E51B-34B7-416D-AB8C-2DBCBF7A5EB6}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
