@@ -8,6 +8,7 @@
 #include "Containers/WindowContainer.hpp"
 #include "Containers/BorderContainer.hpp"
 #include "Containers/FlowContainer.hpp"
+#include "Containers/AlignContainer.hpp"
 
 using namespace std;
 
@@ -19,15 +20,29 @@ int main(int count, char** values)
 
 
 	Consor::CLable lbl1;
-	lbl1.SetText("Hello, world; how are you on this fine day?");
-	lbl1.ForceResize(Consor::CSize(20, 5));
+	lbl1.SetText("Some message can go here, it can be anything, IDGAS really");
 
-	Consor::CLable lbl2;
-	lbl2.SetText("Second lable is here.");
+	Consor::CLable pretend_button_ok;
+	pretend_button_ok.SetText("<OK>");
 
-	Consor::CFlowContainer flow(Consor::CFlowContainer::FlowAxis::Horizontal, 1.0);
+	Consor::CLable pretend_button_cancel;
+	pretend_button_cancel.SetText("<Cancel>");
+
+	Consor::CFlowContainer flow(Consor::CFlowContainer::FlowAxis::Vertical, 1.0);
+	Consor::CFlowContainer flow_buttons(Consor::CFlowContainer::FlowAxis::Horizontal, 2.0);
+
+	flow_buttons.AddControl(pretend_button_ok);
+	flow_buttons.AddControl(pretend_button_cancel);
+
+	
+
+	Consor::CAlignContainer allign_buttons(flow_buttons, Consor::CSize(), 
+		Consor::CAlignContainer::Axis::Horizotal, Consor::CAlignContainer::Align::Center);
+
 	flow.AddControl(lbl1);
-	flow.AddControl(lbl2);
+	flow.AddControl(allign_buttons);
+
+	allign_buttons.ForceResize(flow.Size());
 
 	Consor::CWindowContainer window(flow, "Flow Test");
 
@@ -43,6 +58,7 @@ int main(int count, char** values)
 
 		renderer.PushRenderBounds(pos, window.Size());
 		window.Draw(renderer, true, skin);
+		renderer.PopRenderBounds();
 		
 		renderer.FlushToScreen();
 	}
