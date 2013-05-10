@@ -167,8 +167,15 @@ CHAR_INFO& CWindowsConsoleRenderer::_CharInfoAt(int x, int y)
 	if(y < 0 || y > m_CurrentRenderBound.Size.Height - 1)
 		return dummy;
 
-	x += m_CurrentRenderBound.Pos.X;
-	y += m_CurrentRenderBound.Pos.Y;
+	//x += m_CurrentRenderBound.Pos.X;
+	//y += m_CurrentRenderBound.Pos.Y;
+	x += m_CurrentOffset.X;
+	y += m_CurrentOffset.Y;
+
+	if(x < m_CurrentRenderBound.Pos.X)
+		return dummy;
+	if(y < m_CurrentRenderBound.Pos.Y)
+		return dummy;
 
 	if(x < 0 || x >= m_Width)
 		return dummy;

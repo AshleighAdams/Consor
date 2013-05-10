@@ -34,6 +34,8 @@ namespace Consor
 		{
 		protected:
 			std::list<renderbound_t> m_Bounds;
+			std::list<CVector> m_Offsets;
+			CVector m_CurrentOffset;
 			renderbound_t m_CurrentRenderBound;
 		public:
 			// platform specific stuff

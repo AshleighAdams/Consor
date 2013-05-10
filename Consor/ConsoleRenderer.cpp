@@ -54,17 +54,41 @@ void IConsoleRenderer::PushRenderBounds(const CVector& from, const CSize& size)
 	rb.Pos = from + m_CurrentRenderBound.Pos; // this is added as the new renderbounds will apear to be the full console size
 	rb.Size = size;
 
+	CVector offset = rb.Pos;
+
+	if(m_Bounds.size() != 0)
+	{
+		if(rb.Pos.X < m_CurrentRenderBound.Pos.X)
+			rb.Pos.X = m_CurrentRenderBound.Pos.X;
+		if(rb.Pos.X > m_CurrentRenderBound.Pos.X + m_CurrentRenderBound.Size.Width)
+			rb.Size.Width = 0; // too far over to the right...
+		if(rb.Pos.X + rb.Size.Width > m_CurrentRenderBound.Pos.X + m_CurrentRenderBound.Size.Width)
+			rb.Size.Width = (m_CurrentRenderBound.Pos.X + m_CurrentRenderBound.Size.Width) - rb.Pos.X;
+
+		if(rb.Pos.Y < m_CurrentRenderBound.Pos.Y)
+			rb.Pos.Y = m_CurrentRenderBound.Pos.Y;
+		if(rb.Pos.Y > m_CurrentRenderBound.Pos.Y + m_CurrentRenderBound.Size.Height)
+			rb.Size.Height = 0; // too far over to the right...
+		if(rb.Pos.Y + rb.Size.Height > m_CurrentRenderBound.Pos.Y + m_CurrentRenderBound.Size.Height)
+			rb.Size.Height = (m_CurrentRenderBound.Pos.Y + m_CurrentRenderBound.Size.Height) - rb.Pos.Y;
+	}
+
 	m_Bounds.push_back(rb);
+	m_Offsets.push_back(offset);
+
 	m_CurrentRenderBound = rb;
+	m_CurrentOffset = offset;
 }
 
 void IConsoleRenderer::PopRenderBounds()
 {
 	m_Bounds.pop_back();
+	m_Offsets.pop_back();
 
 	assert(m_Bounds.size() > 0);
 
 	m_CurrentRenderBound = m_Bounds.back(); // last element
+	m_CurrentOffset = m_Offsets.back();
 }
 
 CSize IConsoleRenderer::RenderSize()

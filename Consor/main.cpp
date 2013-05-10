@@ -13,9 +13,12 @@ int main(int count, char** values)
 	Consor::Console::CWindowsConsoleRenderer renderer; 
 
 	Consor::CLable lbl;
-	lbl.SetText("Hello, world");
+	lbl.SetText("Hello, world; how are you on this fine day?");
+	lbl.ForceResize(Consor::CSize(13, 5));
 
 	Consor::CDefaultSkin skin;
+
+	double scroll = 0;
 
 	while(true)
 	{
@@ -23,7 +26,11 @@ int main(int count, char** values)
 		
 		{
 			renderer.PushRenderBounds(Consor::CVector(5, 5), lbl.Size());
-			lbl.Draw(renderer, false, skin);
+			renderer.PushRenderBounds(Consor::CVector(0, scroll), renderer.RenderSize());
+			{
+				lbl.Draw(renderer, false, skin);
+			}
+			renderer.PopRenderBounds();
 			renderer.PopRenderBounds();
 		}
 
