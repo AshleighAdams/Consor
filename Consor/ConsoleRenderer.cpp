@@ -51,11 +51,12 @@ void IConsoleRenderer::PushRenderBounds(const CVector& from, const CSize& size)
 {
 	renderbound_t rb;
 
-	rb.Pos = from + m_CurrentRenderBound.Pos; // this is added as the new renderbounds will apear to be the full console size
+	//rb.Pos = from + m_CurrentRenderBound.Pos; // this is added as the new renderbounds will apear to be the full console size
+	rb.Pos = from + m_CurrentOffset; // this should be correc,t but not fully tested...
 	rb.Size = size;
 
 	CVector offset = rb.Pos;
-
+	
 	if(m_Bounds.size() != 0)
 	{
 		if(rb.Pos.X < m_CurrentRenderBound.Pos.X)

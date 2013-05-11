@@ -8,6 +8,12 @@ CVerticalScrollbar::CVerticalScrollbar(const CSize& Size)
 	m_Size = Size;
 }
 
+CVerticalScrollbar::CVerticalScrollbar()
+{
+	m_Value = 0;
+	m_Size = CSize();
+}
+
 void CVerticalScrollbar::SetPercent(double Percent)
 {
 	m_Value = Percent;
@@ -27,7 +33,7 @@ void CVerticalScrollbar::Draw(Consor::Console::IConsoleRenderer& Renderer, bool 
 
 	Renderer.DrawBox(CVector(), selfsize, bgcol);
 	
-	CVector pos = CVector(0, selfsize.Height * GetPercent());
+	CVector pos = CVector(0, (int)((selfsize.Height - 1) * GetPercent()));
 	CSize size = CSize(selfsize.Width, 1);
 
 	Renderer.DrawBox(pos, size, fgcol);
