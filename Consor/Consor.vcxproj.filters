@@ -48,9 +48,6 @@
     <ClCompile Include="ConsoleRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Controls\Lable.cpp">
-      <Filter>Source Files\Controls</Filter>
-    </ClCompile>
     <ClCompile Include="Containers\BorderContainer.cpp">
       <Filter>Source Files\Containers</Filter>
     </ClCompile>
@@ -81,6 +78,9 @@
     <ClCompile Include="Controls\TextBox.cpp">
       <Filter>Source Files\Controls</Filter>
     </ClCompile>
+    <ClCompile Include="Controls\Label.cpp">
+      <Filter>Source Files\Controls</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Util\FrequencyController.hpp">
@@ -106,9 +106,6 @@
     </ClInclude>
     <ClInclude Include="Control.hpp">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Controls\Lable.hpp">
-      <Filter>Source Files\Controls</Filter>
     </ClInclude>
     <ClInclude Include="Skin.hpp">
       <Filter>Source Files</Filter>
@@ -144,6 +141,9 @@
       <Filter>Source Files\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Controls\TextBox.hpp">
+      <Filter>Source Files\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls\Label.hpp">
       <Filter>Source Files\Controls</Filter>
     </ClInclude>
   </ItemGroup>

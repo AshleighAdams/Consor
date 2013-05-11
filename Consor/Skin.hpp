@@ -8,8 +8,8 @@ namespace Consor
 	class ISkin
 	{
 	public:
-		virtual CColour LableForeground() const = 0;
-		virtual CColour LableForegroundFocused() const = 0;
+		virtual CColour LabelForeground() const = 0;
+		virtual CColour LabelForegroundFocused() const = 0;
 
 		virtual CColour WindowBorder() const = 0;
 		virtual CColour WindowBackground() const = 0;
@@ -31,12 +31,12 @@ namespace Consor
 		{
 		}
 
-		virtual CColour LableForeground() const
+		virtual CColour LabelForeground() const
 		{
 			return CColour(1, 1, 1);
 		}
 
-		virtual CColour LableForegroundFocused() const
+		virtual CColour LabelForegroundFocused() const
 		{
 			return CColour(1, 0, 0);
 		}

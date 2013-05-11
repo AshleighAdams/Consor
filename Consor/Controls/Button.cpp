@@ -5,26 +5,26 @@ using namespace Consor;
 
 CButton::CButton()
 {
-	m_Lable.SetText("Default Button");
-	m_HAlign = CAlignContainer(m_Lable, m_Lable.Size(), 
+	m_Label.SetText("Default Button");
+	m_HAlign = CAlignContainer(m_Label, m_Label.Size(), 
 		CAlignContainer::Axis::Horizotal, CAlignContainer::Align::Center);
-	m_VAlign = CAlignContainer(m_HAlign, m_Lable.Size(), 
+	m_VAlign = CAlignContainer(m_HAlign, m_Label.Size(), 
 		CAlignContainer::Axis::Vertical, CAlignContainer::Align::Center);
 }
 
 void CButton::SetText(std::string Text)
 {
-	m_Lable.SetText(Text);
-	ForceResize(m_Lable.Size() + CSize(2, 0));
+	m_Label.SetText(Text);
+	ForceResize(m_Label.Size() + CSize(2, 0));
 	//OnResize(m_Size);
 }
 
 void CButton::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
-	CColour col = Skin.LableForeground();
+	CColour col = Skin.LabelForeground();
 
 	if(HasFocus)
-		col = Skin.LableForegroundFocused();
+		col = Skin.LabelForegroundFocused();
 
 	if(Size().Height == 1)
 	{
@@ -43,7 +43,7 @@ void CButton::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, c
 
 void CButton::OnResize(const CSize& Size)
 {
-	m_Lable.ForceResize(Size - CSize(2, 0));
+	m_Label.ForceResize(Size - CSize(2, 0));
 	m_HAlign.ForceResize(Size - CSize(2, 0));
 	m_VAlign.ForceResize(Size - CSize(2, 0));
 }
