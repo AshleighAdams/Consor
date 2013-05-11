@@ -15,6 +15,7 @@ namespace Consor
 		virtual CColour WindowForeground() const = 0;
 
 		virtual CColour ScrollForeground() const = 0;
+		virtual CColour ScrollForegroundFocused() const = 0;
 		virtual CColour ScrollBackground() const = 0;
 	};
 
@@ -54,6 +55,11 @@ namespace Consor
 		{
 			return CColour(1, 1, 1);
 		}
+
+		virtual CColour ScrollForegroundFocused() const
+		{
+			return CColour(1, 0, 0);
+		}	
 
 		virtual CColour ScrollBackground() const
 		{

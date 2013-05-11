@@ -114,7 +114,7 @@ bool CFlowContainer::HandleInput(Input::Key Key)
 	if(Key == Input::Key::Up || Key == Input::Key::Left)
 	{
 		if(m_Focused <= 0)
-			return true;
+			return false;
 		m_Focused--;
 		return true;
 	}
@@ -123,7 +123,7 @@ bool CFlowContainer::HandleInput(Input::Key Key)
 		size_t focusable = m_Focusable();
 
 		if(m_Focused >= focusable - 1)
-			return true;
+			return false;
 		m_Focused++;
 		return true;
 	}

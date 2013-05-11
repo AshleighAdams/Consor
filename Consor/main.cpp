@@ -1,5 +1,6 @@
 #include <iostream>
 #include <thread>
+#include <mutex>
 
 #include "WindowsConsoleRenderer.hpp"
 #include "Util/StringUtils.hpp"
@@ -22,17 +23,43 @@ using namespace std;
 
 int main(int count, char** values)
 {
+	std::mutex main_mutex;
+
 	Consor::CLable lbl1;
-	lbl1.SetText("One two three, four five six, seven ate nine! ten elleven twelve, thirtenn four-teen fif-teen six-teen seven-teen eight-teen nine-teen twenty, twenty-one twenty-two twnety three fuck this this is just some text, i can't be arsed to continue the numbers...");
-	lbl1.ForceResize(Consor::CSize(20, 1));
+	lbl1.SetText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tempor metus sed ligula tempor tincidunt. Nullam quis condimentum augue. Nulla varius, nunc venenatis molestie egestas, neque lorem bibendum dui, vitae placerat magna nunc at nulla. In ultricies lectus quis purus bibendum eget ullamcorper metus tempus. Phasellus pulvinar, est sit amet auctor tempus, turpis nisl cursus mauris, vitae hendrerit felis tellus eu turpis. Vestibulum id leo sed magna vehicula aliquet. Fusce viverra auctor augue ut rutrum. Quisque quis nisl non turpis sollicitudin rutrum sit amet eget libero. Donec pretium egestas ante, eu aliquam mi porttitor quis.");
+	lbl1.ForceResize(Consor::CSize(30, 1));
+	Consor::CScrollContainer lbl_scroll(lbl1, Consor::CSize(-1, 10));
+	
+	Consor::CFlowContainer button_flow(Consor::CFlowContainer::FlowAxis::Horizontal, 1);
+	Consor::CButton ok, cancel;
+	ok.SetText("OK");
+	cancel.SetText("Cancel");
 
-	Consor::CFlowContainer flow(Consor::CFlowContainer::FlowAxis::Vertical, 0.0);
-	flow.AddControl(lbl1);
-	flow.AddControl(lbl1);
+	button_flow.AddControl(ok);
+	button_flow.AddControl(cancel);
+	
+	Consor::CAlignContainer button_flow_align(button_flow, Consor::CSize(),
+		Consor::CAlignContainer::Axis::Horizotal, Consor::CAlignContainer::Align::Center);
 
-	Consor::CScrollContainer scroll(flow, Consor::CSize(-1, 10));
+	Consor::CFlowContainer main_flow(Consor::CFlowContainer::FlowAxis::Vertical, 1);
+	main_flow.AddControl(lbl_scroll);
+	main_flow.AddControl(button_flow_align);
 
-	Consor::CWindowContainer window(scroll, "Flow Test");
+	button_flow_align.ForceResize(main_flow.Size());
+
+	Consor::CWindowContainer window(main_flow, "Consor Test");
+
+	ok.Click += [&]()
+	{
+		ok.SetText("No, it's not OK");
+		lbl1.ForceResize(main_flow.Size() - Consor::CSize(3, 0));
+	};
+
+	cancel.Click += [&]()
+	{
+		cancel.SetText("I'm afraid I can't do that, Dave.");
+		lbl1.ForceResize(main_flow.Size() - Consor::CSize(3, 0));
+	};
 
 	thread input_thread([&]()
 	{
@@ -44,8 +71,12 @@ int main(int count, char** values)
 		{
 			if(input_fc.Check() && input.KeyWaiting())
 			{
+				main_mutex.lock();
+				
 				Consor::Input::Key kp = input.GetKeyPress();
 				window.HandleInput(kp);
+				
+				main_mutex.unlock();
 			}
 			else
 			{
@@ -64,6 +95,8 @@ int main(int count, char** values)
 		{
 			if(draw_fc.Check())
 			{
+				main_mutex.lock();
+
 				renderer.Clear(Consor::CColour());
 		
 				Consor::CSize size = window.Size();
@@ -76,6 +109,8 @@ int main(int count, char** values)
 				renderer.PopRenderBounds();
 		
 				renderer.FlushToScreen();
+
+				main_mutex.unlock();
 			}
 			else
 			{

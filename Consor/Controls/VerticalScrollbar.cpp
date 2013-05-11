@@ -29,6 +29,9 @@ void CVerticalScrollbar::Draw(Consor::Console::IConsoleRenderer& Renderer, bool 
 	CColour fgcol = Skin.ScrollForeground();
 	CColour bgcol = Skin.ScrollBackground();
 
+	if(HasFocus)
+		fgcol = Skin.ScrollForegroundFocused();
+
 	CSize selfsize = Size();
 
 	Renderer.DrawBox(CVector(), selfsize, bgcol);

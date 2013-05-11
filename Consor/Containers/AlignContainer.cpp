@@ -27,6 +27,11 @@ CSize CAlignContainer::Size()
 		ret.Width = clientsize.Width;
 	}
 	
+	if(ret.Width < clientsize.Width)
+		ret.Width = clientsize.Width;
+	if(ret.Height < clientsize.Height)
+		ret.Height = clientsize.Height;
+
 	return ret;
 }
 
