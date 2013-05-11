@@ -10,6 +10,7 @@
 
 #include "Controls/Lable.hpp"
 #include "Controls/Button.hpp"
+#include "Controls/TextBox.hpp"
 #include "Controls/HorizontalScrollbar.hpp"
 #include "Controls/VerticalScrollbar.hpp"
 
@@ -35,9 +36,13 @@ int main(int count, char** values)
 	ok.SetText("OK");
 	cancel.SetText("Cancel");
 
+	Consor::CTextBox testbox;
+	testbox.ForceResize(Consor::CSize(20, 1));
+
+	button_flow.AddControl(testbox);
 	button_flow.AddControl(ok);
 	button_flow.AddControl(cancel);
-	
+
 	Consor::CAlignContainer button_flow_align(button_flow, Consor::CSize(),
 		Consor::CAlignContainer::Axis::Horizotal, Consor::CAlignContainer::Align::Center);
 
@@ -51,14 +56,12 @@ int main(int count, char** values)
 
 	ok.Click += [&]()
 	{
-		ok.SetText("No, it's not OK");
-		lbl1.ForceResize(main_flow.Size() - Consor::CSize(3, 0));
+		testbox.SetText("OK clicked");
 	};
 
 	cancel.Click += [&]()
 	{
-		cancel.SetText("I'm afraid I can't do that, Dave.");
-		lbl1.ForceResize(main_flow.Size() - Consor::CSize(3, 0));
+		testbox.SetText("Cancel clicked and some");
 	};
 
 	thread input_thread([&]()
