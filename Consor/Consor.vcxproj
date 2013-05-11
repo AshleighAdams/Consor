@@ -77,6 +77,7 @@
     <ClCompile Include="Controls\Button.cpp" />
     <ClCompile Include="Controls\HorizontalScrollbar.cpp" />
     <ClCompile Include="Controls\Label.cpp" />
+    <ClCompile Include="Controls\PasswordBox.cpp" />
     <ClCompile Include="Controls\TextBox.cpp" />
     <ClCompile Include="Controls\VerticalScrollbar.cpp" />
     <ClCompile Include="main.cpp" />
@@ -98,6 +99,7 @@
     <ClInclude Include="Controls\Button.hpp" />
     <ClInclude Include="Controls\HorizontalScrollbar.hpp" />
     <ClInclude Include="Controls\Label.hpp" />
+    <ClInclude Include="Controls\PasswordBox.hpp" />
     <ClInclude Include="Controls\TextBox.hpp" />
     <ClInclude Include="Controls\VerticalScrollbar.hpp" />
     <ClInclude Include="InputSystem.hpp" />

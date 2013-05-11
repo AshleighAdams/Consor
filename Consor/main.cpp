@@ -11,6 +11,7 @@
 #include "Controls/Label.hpp"
 #include "Controls/Button.hpp"
 #include "Controls/TextBox.hpp"
+#include "Controls/PasswordBox.hpp"
 #include "Controls/HorizontalScrollbar.hpp"
 #include "Controls/VerticalScrollbar.hpp"
 
@@ -98,6 +99,15 @@ int main(int count, char** values)
 
 	flow_tests_lables.AddControl(lbl_scroll);
 	flow_tests_controls.AddControl(scroll);
+
+	// PasswordBox test
+	Consor::CLabel lbl_pb;
+	Consor::CPasswordBox pb;
+	lbl_pb.SetText("PasswordBox:");
+	pb.ForceResize(Consor::CSize(20, 1));
+
+	flow_tests_lables.AddControl(lbl_pb);
+	flow_tests_controls.AddControl(pb);
 
 	// end test
 	main_flow.AddControl(flow_tests);

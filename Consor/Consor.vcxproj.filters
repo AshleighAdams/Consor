@@ -81,6 +81,9 @@
     <ClCompile Include="Controls\Label.cpp">
       <Filter>Source Files\Controls</Filter>
     </ClCompile>
+    <ClCompile Include="Controls\PasswordBox.cpp">
+      <Filter>Source Files\Controls</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Util\FrequencyController.hpp">
@@ -144,6 +147,9 @@
       <Filter>Source Files\Controls</Filter>
     </ClInclude>
     <ClInclude Include="Controls\Label.hpp">
+      <Filter>Source Files\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls\PasswordBox.hpp">
       <Filter>Source Files\Controls</Filter>
     </ClInclude>
   </ItemGroup>

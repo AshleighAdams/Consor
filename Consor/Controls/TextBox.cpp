@@ -15,7 +15,7 @@ void CTextBox::SetText(const std::string& Text)
 	m_CursorPosition = m_Text.length();
 }
 
-const std::string& CTextBox::GetText()
+std::string CTextBox::GetText()
 {
 	return m_Text;
 }
@@ -50,7 +50,7 @@ void CTextBox::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, 
 		bool dotdotdot_ = false;
 		bool _dotdotdot = false;
 
-		if(m_Text.length() >= textarea.Width)
+		if(m_Text.length() > textarea.Width)
 			_dotdotdot = true;
 
 		if(cursor_pos >= textarea.Width - 3 && HasFocus)
