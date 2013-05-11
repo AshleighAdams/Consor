@@ -26,8 +26,15 @@ void CButton::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, c
 	if(HasFocus)
 		col = Skin.LableForegroundFocused();
 
-	Renderer.DrawString("<", CVector(0, m_Size.Height / 2.0), col, CColour::None());
-	Renderer.DrawString(">", CVector(m_Size.Width - 1, m_Size.Height / 2.0), col, CColour::None());
+	if(Size().Height == 1)
+	{
+		Renderer.DrawString("<", CVector(0, m_Size.Height / 2.0), col, CColour::None());
+		Renderer.DrawString(">", CVector(m_Size.Width - 1, m_Size.Height / 2.0), col, CColour::None());
+	}
+	else
+	{
+		Renderer.DrawRect(CVector(), Size(), col, CColour::None());
+	}
 
 	Renderer.PushRenderBounds(CVector(1, 0), m_VAlign.Size());
 	m_VAlign.Draw(Renderer, HasFocus, Skin);
