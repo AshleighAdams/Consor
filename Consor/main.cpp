@@ -23,12 +23,10 @@ using namespace std;
 int main(int count, char** values)
 {
 	Consor::CLable lbl1;
-	lbl1.SetText("Some message can go here, it can be anything, IDGAS really; but I will need some lorem ipsum");
+	lbl1.SetText("One two three, four five six, seven ate nine! ten elleven twelve, thirtenn four-teen fif-teen six-teen seven-teen eight-teen nine-teen twenty, twenty-one twenty-two twnety three fuck this this is just some text, i can't be arsed to continue the numbers...");
 	lbl1.ForceResize(Consor::CSize(20, 1));
 
 	Consor::CFlowContainer flow(Consor::CFlowContainer::FlowAxis::Vertical, 0.0);
-	flow.AddControl(lbl1);
-	flow.AddControl(lbl1);
 	flow.AddControl(lbl1);
 	flow.AddControl(lbl1);
 
