@@ -2,7 +2,7 @@
 #define CONTROLS_BUTTON_H
 
 #include "Control.hpp"
-#include "Lable.hpp"
+#include "Label.hpp"
 #include "Containers/AlignContainer.hpp"
 #include "Util/Hooks.hpp"
 
@@ -15,7 +15,7 @@ namespace Consor
 	protected:
 		CAlignContainer m_VAlign;
 		CAlignContainer m_HAlign;
-		CLable m_Lable;
+		CLabel m_Label;
 	public:
 		CHook<> Click;
 

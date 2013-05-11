@@ -1,14 +1,14 @@
-#include "Lable.hpp"
+#include "Label.hpp"
 #include "Util/StringUtils.hpp"
 
 using namespace Consor;
 
-CLable::CLable()
+CLabel::CLabel()
 {
 	m_Text = "";
 }
 
-void CLable::SetText(const std::string& Text)
+void CLabel::SetText(const std::string& Text)
 {
 	m_Text = Text;
 	m_SetText = Text;
@@ -16,17 +16,17 @@ void CLable::SetText(const std::string& Text)
 	OnResize(m_Size);
 }
 
-void CLable::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
+void CLabel::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
-	CColour col = Skin.LableForeground();
+	CColour col = Skin.LabelForeground();
 
 	if(HasFocus)
-		col = Skin.LableForegroundFocused();
+		col = Skin.LabelForegroundFocused();
 
 	Renderer.DrawString(m_Text, CVector(), col, CColour::None());
 }
 
-void CLable::ForceResize(const CSize& Size)
+void CLabel::ForceResize(const CSize& Size)
 {
 	size_t width,height;
 
