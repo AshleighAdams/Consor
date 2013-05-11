@@ -92,8 +92,11 @@ bool CScrollContainer::HandleInput(Input::Key Key)
 
 			if(perc > 1.0)
 				perc = 1.0;
+
+			if(perc == m_VScrollbar.GetPercent()) // allow shallower scrollcontainers to also scroll
+				return false;
+
 			m_VScrollbar.SetPercent(perc);
-			
 			return true;
 		}
 		else if(Key == Input::Key::PageUp || Key == Input::Key::Numpad9)
@@ -105,8 +108,11 @@ bool CScrollContainer::HandleInput(Input::Key Key)
 
 			if(perc < 0)
 				perc = 0;
-			m_VScrollbar.SetPercent(perc);
 
+			if(perc == m_VScrollbar.GetPercent())
+				return false;
+
+			m_VScrollbar.SetPercent(perc);
 			return true;
 		}
 	}
