@@ -91,8 +91,13 @@ std::string Consor::Util::WrapText(const std::string& input, size_t width, size_
 	size_t rheight = 0;
 	size_t line_len = 0;
 
+	size_t inlen = input.length();
+
 	while(true)
 	{
+		if(pos >= inlen)
+			break;
+
 		const char& x = input[pos];
 
 		if(line_len + 1 > width)
@@ -101,13 +106,16 @@ std::string Consor::Util::WrapText(const std::string& input, size_t width, size_
 			bool failed = false;
 			size_t start_pos = pos;
 
-			while(!IsSeperatorChar(input[--pos]))
-				if(retries-- == -0)
+			while(!IsSeperatorChar(input[pos]))
+			{
+				pos--;
+				if(retries-- == 0 || pos == 0)
 				{
 					pos = start_pos - 2;
 					failed = true;
 					break;
 				}
+			}
 
 			if(!failed)
 				pos++; // else the space, or other crap gets in the way

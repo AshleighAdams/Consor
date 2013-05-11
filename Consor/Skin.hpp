@@ -9,6 +9,7 @@ namespace Consor
 	{
 	public:
 		virtual CColour LableForeground() const = 0;
+		virtual CColour LableForegroundFocused() const = 0;
 		virtual CColour WindowBorder() const = 0;
 		virtual CColour WindowBackground() const = 0;
 		virtual CColour WindowForeground() const = 0;
@@ -27,6 +28,11 @@ namespace Consor
 		virtual CColour LableForeground() const
 		{
 			return CColour(1, 1, 1);
+		}
+
+		virtual CColour LableForegroundFocused() const
+		{
+			return CColour(1, 0, 0);
 		}
 
 		virtual CColour WindowBorder() const

@@ -30,11 +30,12 @@ namespace Consor
 		Align m_Align;
 	public:
 		CAlignContainer(CControl& Client, const CSize& Size, Axis Axis, Align align);
+		CAlignContainer(){} // this will crash, but exists only so classes can have it
 		virtual CSize Size();
 		virtual void OnResize(const CSize& Size);
 		virtual void ForceResize(const CSize& Size);
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);
-		virtual bool HandleInput(int Key);
+		virtual bool HandleInput(Input::Key Key);
 		virtual bool CanFocus();
 	};
 };
