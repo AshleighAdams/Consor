@@ -12,6 +12,7 @@ namespace Consor
 		double m_Value;
 	public:
 		CVerticalScrollbar(const CSize& Size);
+		CVerticalScrollbar();
 		void SetPercent(double Percent);
 		double GetPercent();
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);

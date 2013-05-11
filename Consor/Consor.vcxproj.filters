@@ -75,6 +75,9 @@
     <ClCompile Include="Controls\Button.cpp">
       <Filter>Source Files\Controls</Filter>
     </ClCompile>
+    <ClCompile Include="Containers\ScrollContainer.cpp">
+      <Filter>Source Files\Containers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Util\FrequencyController.hpp">
@@ -133,6 +136,9 @@
     </ClInclude>
     <ClInclude Include="Controls\Button.hpp">
       <Filter>Source Files\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\ScrollContainer.hpp">
+      <Filter>Source Files\Containers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

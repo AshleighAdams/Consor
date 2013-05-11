@@ -71,6 +71,7 @@
     <ClCompile Include="Containers\AlignContainer.cpp" />
     <ClCompile Include="Containers\BorderContainer.cpp" />
     <ClCompile Include="Containers\FlowContainer.cpp" />
+    <ClCompile Include="Containers\ScrollContainer.cpp" />
     <ClCompile Include="Containers\WindowContainer.cpp" />
     <ClCompile Include="Control.cpp" />
     <ClCompile Include="Controls\Button.cpp" />
@@ -90,6 +91,7 @@
     <ClInclude Include="Containers\AlignContainer.hpp" />
     <ClInclude Include="Containers\BorderContainer.hpp" />
     <ClInclude Include="Containers\FlowContainer.hpp" />
+    <ClInclude Include="Containers\ScrollContainer.hpp" />
     <ClInclude Include="Containers\WindowContainer.hpp" />
     <ClInclude Include="Control.hpp" />
     <ClInclude Include="Controls\Button.hpp" />
