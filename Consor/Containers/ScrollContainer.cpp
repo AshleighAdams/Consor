@@ -53,7 +53,7 @@ void CScrollContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool Ha
 
 	if(m_Size.Width > 0) // if the width isn't automatic
 	{
-		offset.X = (int)-(m_HScrollbar.GetPercent() * childsize.Width);
+		offset.X = (int)-(m_HScrollbar.GetPercent() * (childsize.Width - selfsize.Width));
 
 		Renderer.PushRenderBounds(CVector(0, selfsize.Height - hscrollsize.Height), hscrollsize);
 			m_HScrollbar.Draw(Renderer, false, Skin);
@@ -61,7 +61,7 @@ void CScrollContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool Ha
 	}
 	if(m_Size.Height > 0) // if the hieht isn't automatic
 	{
-		offset.Y = (int)-(m_VScrollbar.GetPercent() * childsize.Height);
+		offset.Y = (int)-(m_VScrollbar.GetPercent() * (childsize.Height - selfsize.Height));
 
 		Renderer.PushRenderBounds(CVector(selfsize.Width - vscrollsize.Width, 0), vscrollsize);
 			m_VScrollbar.Draw(Renderer, false, Skin);
@@ -79,13 +79,14 @@ bool CScrollContainer::HandleInput(Input::Key Key)
 		return true;
 
 	CSize clientsize = m_pClient->Size();
+	CSize selfsize = Size();
 
 	if(m_Size.Height > 0)
 	{
 		if(Key == Input::Key::PageDown || Key == Input::Key::Numpad3)
 		{
 			double perc = m_VScrollbar.GetPercent();
-			double incremant = 1.0 / clientsize.Height;
+			double incremant = 1.0 / (clientsize.Height - selfsize.Height);
 
 			perc += incremant;
 
@@ -96,7 +97,7 @@ bool CScrollContainer::HandleInput(Input::Key Key)
 		else if(Key == Input::Key::PageUp || Key == Input::Key::Numpad9)
 		{
 			double perc = m_VScrollbar.GetPercent();
-			double incremant = 1.0 / clientsize.Height;
+			double incremant = 1.0 / (clientsize.Height - selfsize.Height);
 
 			perc -= incremant;
 
