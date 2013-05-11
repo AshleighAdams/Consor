@@ -12,6 +12,9 @@ namespace Consor
 		virtual CColour WindowBorder() const = 0;
 		virtual CColour WindowBackground() const = 0;
 		virtual CColour WindowForeground() const = 0;
+
+		virtual CColour ScrollForeground() const = 0;
+		virtual CColour ScrollBackground() const = 0;
 	};
 
 	class CDefaultSkin : public ISkin
@@ -39,6 +42,16 @@ namespace Consor
 		virtual CColour WindowForeground() const
 		{
 			return CColour(1, 1, 1);
+		}
+
+		virtual CColour ScrollForeground() const
+		{
+			return CColour(1, 1, 1);
+		}
+
+		virtual CColour ScrollBackground() const
+		{
+			return CColour(0, 0, 0.5);
 		}
 	};
 }
