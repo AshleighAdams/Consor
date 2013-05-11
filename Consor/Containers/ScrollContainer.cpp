@@ -56,7 +56,7 @@ void CScrollContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool Ha
 		offset.X = (int)-(m_HScrollbar.GetPercent() * (childsize.Width - selfsize.Width));
 
 		Renderer.PushRenderBounds(CVector(0, selfsize.Height - hscrollsize.Height), hscrollsize);
-			m_HScrollbar.Draw(Renderer, false, Skin);
+			m_HScrollbar.Draw(Renderer, HasFocus, Skin);
 		Renderer.PopRenderBounds();
 	}
 	if(m_Size.Height > 0) // if the hieht isn't automatic
@@ -64,12 +64,12 @@ void CScrollContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool Ha
 		offset.Y = (int)-(m_VScrollbar.GetPercent() * (childsize.Height - selfsize.Height));
 
 		Renderer.PushRenderBounds(CVector(selfsize.Width - vscrollsize.Width, 0), vscrollsize);
-			m_VScrollbar.Draw(Renderer, false, Skin);
+			m_VScrollbar.Draw(Renderer, HasFocus, Skin);
 		Renderer.PopRenderBounds();
 	}
 
 	Renderer.PushRenderBounds(offset, selfsize - CSize(vscrollsize.Width, hscrollsize.Height));
-		m_pClient->Draw(Renderer, HasFocus, Skin);
+		m_pClient->Draw(Renderer, HasFocus && m_pClient->CanFocus(), Skin);
 	Renderer.PopRenderBounds();
 }
 
@@ -93,6 +93,8 @@ bool CScrollContainer::HandleInput(Input::Key Key)
 			if(perc > 1.0)
 				perc = 1.0;
 			m_VScrollbar.SetPercent(perc);
+			
+			return true;
 		}
 		else if(Key == Input::Key::PageUp || Key == Input::Key::Numpad9)
 		{
@@ -104,8 +106,12 @@ bool CScrollContainer::HandleInput(Input::Key Key)
 			if(perc < 0)
 				perc = 0;
 			m_VScrollbar.SetPercent(perc);
+
+			return true;
 		}
 	}
+
+	return false;
 }
 
 bool CScrollContainer::CanFocus()
