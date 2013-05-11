@@ -111,14 +111,23 @@ bool CFlowContainer::HandleInput(Input::Key Key)
 	if(pFocused && pFocused->HandleInput(Key))
 		return true;
 
-	if(Key == Input::Key::Up || Key == Input::Key::Left)
+	Input::Key Next = Input::Key::Down;
+	Input::Key Prev = Input::Key::Up;
+
+	if(m_Axis == FlowAxis::Horizontal)
+	{
+		Next = Input::Key::Right;
+		Prev = Input::Key::Left;
+	}
+
+	if(Key == Prev)
 	{
 		if(m_Focused <= 0)
 			return false;
 		m_Focused--;
 		return true;
 	}
-	else if(Key == Input::Key::Down || Key == Input::Key::Right)
+	else if(Key == Next)
 	{
 		size_t focusable = m_Focusable();
 
@@ -127,6 +136,8 @@ bool CFlowContainer::HandleInput(Input::Key Key)
 		m_Focused++;
 		return true;
 	}
+
+	return false;
 }
 
 bool CFlowContainer::CanFocus()
