@@ -5,6 +5,9 @@
 #include "Util/Time.hpp"
 
 #include "Controls/Lable.hpp"
+#include "Controls/HorizontalScrollbar.hpp"
+#include "Controls/VerticalScrollbar.hpp"
+
 #include "Containers/WindowContainer.hpp"
 #include "Containers/BorderContainer.hpp"
 #include "Containers/FlowContainer.hpp"
@@ -28,18 +31,20 @@ int main(int count, char** values)
 	Consor::CLable pretend_button_cancel;
 	pretend_button_cancel.SetText("<Cancel>");
 
+	Consor::CVerticalScrollbar scrollbar(Consor::CSize(1, 10));
+	scrollbar.SetPercent(0.5);
+
 	Consor::CFlowContainer flow(Consor::CFlowContainer::FlowAxis::Vertical, 1.0);
 	Consor::CFlowContainer flow_buttons(Consor::CFlowContainer::FlowAxis::Horizontal, 2.0);
 
 	flow_buttons.AddControl(pretend_button_ok);
 	flow_buttons.AddControl(pretend_button_cancel);
 
-	
-
 	Consor::CAlignContainer allign_buttons(flow_buttons, Consor::CSize(), 
 		Consor::CAlignContainer::Axis::Horizotal, Consor::CAlignContainer::Align::Center);
 
 	flow.AddControl(lbl1);
+	flow.AddControl(scrollbar);
 	flow.AddControl(allign_buttons);
 
 	allign_buttons.ForceResize(flow.Size());

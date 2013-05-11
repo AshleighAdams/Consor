@@ -73,7 +73,9 @@
     <ClCompile Include="Containers\FlowContainer.cpp" />
     <ClCompile Include="Containers\WindowContainer.cpp" />
     <ClCompile Include="Control.cpp" />
+    <ClCompile Include="Controls\HorizontalScrollbar.cpp" />
     <ClCompile Include="Controls\Lable.cpp" />
+    <ClCompile Include="Controls\VerticalScrollbar.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Units.cpp" />
     <ClCompile Include="Util\FrequencyController.cpp" />
@@ -88,7 +90,9 @@
     <ClInclude Include="Containers\FlowContainer.hpp" />
     <ClInclude Include="Containers\WindowContainer.hpp" />
     <ClInclude Include="Control.hpp" />
+    <ClInclude Include="Controls\HorizontalScrollbar.hpp" />
     <ClInclude Include="Controls\Lable.hpp" />
+    <ClInclude Include="Controls\VerticalScrollbar.hpp" />
     <ClInclude Include="Skin.hpp" />
     <ClInclude Include="Units.hpp" />
     <ClInclude Include="Util\FrequencyController.hpp" />
