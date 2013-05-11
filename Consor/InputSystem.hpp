@@ -10,6 +10,8 @@ namespace Consor
 			Escape  = 0,
 			Enter = 1,
 			Space = 32,
+			Backspace = '\b',
+			Tab = '\t',
 
 			Insert = 2,
 			Home = 3,

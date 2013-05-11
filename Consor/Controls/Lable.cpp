@@ -8,7 +8,7 @@ CLable::CLable()
 	m_Text = "";
 }
 
-void CLable::SetText(std::string Text)
+void CLable::SetText(const std::string& Text)
 {
 	m_Text = Text;
 	m_SetText = Text;

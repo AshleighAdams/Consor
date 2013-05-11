@@ -10,6 +10,7 @@ namespace Consor
 	public:
 		virtual CColour LableForeground() const = 0;
 		virtual CColour LableForegroundFocused() const = 0;
+
 		virtual CColour WindowBorder() const = 0;
 		virtual CColour WindowBackground() const = 0;
 		virtual CColour WindowForeground() const = 0;
@@ -17,6 +18,10 @@ namespace Consor
 		virtual CColour ScrollForeground() const = 0;
 		virtual CColour ScrollForegroundFocused() const = 0;
 		virtual CColour ScrollBackground() const = 0;
+
+		virtual CColour TextBoxForeground() const = 0;
+		virtual CColour TextBoxForegroundFocused() const = 0;
+		virtual CColour TextBoxBackground() const = 0;
 	};
 
 	class CDefaultSkin : public ISkin
@@ -64,6 +69,21 @@ namespace Consor
 		virtual CColour ScrollBackground() const
 		{
 			return CColour(0, 0, 0.5);
+		}
+
+		virtual CColour TextBoxForeground() const
+		{
+			return CColour(1, 1, 1);
+		}
+
+		virtual CColour TextBoxForegroundFocused() const
+		{
+			return CColour(1, 0, 0);
+		}
+
+		virtual CColour TextBoxBackground() const
+		{
+			return CColour::None();
 		}
 	};
 }
