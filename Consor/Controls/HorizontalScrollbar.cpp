@@ -37,7 +37,7 @@ void CHorizontalScrollbar::Draw(Consor::Console::IConsoleRenderer& Renderer, boo
 	Renderer.DrawBox(CVector(), selfsize, bgcol);
 	
 
-	CVector pos = CVector((int)((selfsize.Width - 1) * GetPercent()), 0);
+	CVector pos = CVector((selfsize.Width - 1) * GetPercent(), 0);
 	CSize size = CSize(1, selfsize.Height);
 
 	if(fmod(pos.X, 1.0) > 0.5)
