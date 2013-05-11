@@ -85,7 +85,7 @@ void CAlignContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool Has
 	Renderer.PopRenderBounds();
 }
 
-bool CAlignContainer::HandleInput(int Key)
+bool CAlignContainer::HandleInput(Input::Key Key)
 {
 	return m_pClient->HandleInput(Key);
 }

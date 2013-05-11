@@ -19,16 +19,18 @@ namespace Consor
 		};
 	protected:
 		std::list<CControl*> m_Controls;
-		std::list<CControl*>::iterator m_ControlItterator;
+		size_t m_Focused;
 		double m_Seperation;
 		FlowAxis m_Axis;
+		size_t m_Focusable();
+		CControl* m_GetFocused();
 	public:
 		CFlowContainer(FlowAxis axis, double Sepperation);
 		virtual CSize Size();
 		virtual void OnResize(const CSize& Size);
 		virtual void ForceResize(const CSize& Size);
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);
-		virtual bool HandleInput(int Key);
+		virtual bool HandleInput(Input::Key Key);
 		virtual bool CanFocus();
 
 		virtual void AddControl(CControl& Control);

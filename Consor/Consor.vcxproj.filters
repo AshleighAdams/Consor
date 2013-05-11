@@ -69,6 +69,12 @@
     <ClCompile Include="Controls\VerticalScrollbar.cpp">
       <Filter>Source Files\Controls</Filter>
     </ClCompile>
+    <ClCompile Include="WindowsInputSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Controls\Button.cpp">
+      <Filter>Source Files\Controls</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Util\FrequencyController.hpp">
@@ -117,6 +123,15 @@
       <Filter>Source Files\Controls</Filter>
     </ClInclude>
     <ClInclude Include="Controls\VerticalScrollbar.hpp">
+      <Filter>Source Files\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsInputSystem.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls\Button.hpp">
       <Filter>Source Files\Controls</Filter>
     </ClInclude>
   </ItemGroup>

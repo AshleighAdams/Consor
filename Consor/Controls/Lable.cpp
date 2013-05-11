@@ -19,7 +19,11 @@ void CLable::SetText(std::string Text)
 void CLable::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
 	CColour col = Skin.LableForeground();
-	Renderer.DrawString(m_Text, CVector(), Skin.LableForeground(), CColour::None());
+
+	if(HasFocus)
+		col = Skin.LableForegroundFocused();
+
+	Renderer.DrawString(m_Text, CVector(), col, CColour::None());
 }
 
 void CLable::ForceResize(const CSize& Size)

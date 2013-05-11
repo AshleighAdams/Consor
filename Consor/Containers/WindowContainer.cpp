@@ -41,7 +41,7 @@ void CWindowContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool Ha
 	Renderer.PopRenderBounds();
 }
 
-bool CWindowContainer::HandleInput(int Key)
+bool CWindowContainer::HandleInput(Input::Key Key)
 {
 	return m_pClient->HandleInput(Key);
 }

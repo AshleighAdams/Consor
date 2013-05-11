@@ -21,7 +21,7 @@ void CControl::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, 
 {
 }
 
-bool CControl::HandleInput(int Key)
+bool CControl::HandleInput(Input::Key Key)
 {
 	return false;
 }

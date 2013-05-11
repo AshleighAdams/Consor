@@ -73,6 +73,7 @@
     <ClCompile Include="Containers\FlowContainer.cpp" />
     <ClCompile Include="Containers\WindowContainer.cpp" />
     <ClCompile Include="Control.cpp" />
+    <ClCompile Include="Controls\Button.cpp" />
     <ClCompile Include="Controls\HorizontalScrollbar.cpp" />
     <ClCompile Include="Controls\Lable.cpp" />
     <ClCompile Include="Controls\VerticalScrollbar.cpp" />
@@ -82,6 +83,7 @@
     <ClCompile Include="Util\StringUtils.cpp" />
     <ClCompile Include="Util\Time.cpp" />
     <ClCompile Include="WindowsConsoleRenderer.cpp" />
+    <ClCompile Include="WindowsInputSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConsoleRenderer.hpp" />
@@ -90,9 +92,11 @@
     <ClInclude Include="Containers\FlowContainer.hpp" />
     <ClInclude Include="Containers\WindowContainer.hpp" />
     <ClInclude Include="Control.hpp" />
+    <ClInclude Include="Controls\Button.hpp" />
     <ClInclude Include="Controls\HorizontalScrollbar.hpp" />
     <ClInclude Include="Controls\Lable.hpp" />
     <ClInclude Include="Controls\VerticalScrollbar.hpp" />
+    <ClInclude Include="InputSystem.hpp" />
     <ClInclude Include="Skin.hpp" />
     <ClInclude Include="Units.hpp" />
     <ClInclude Include="Util\FrequencyController.hpp" />
@@ -100,6 +104,7 @@
     <ClInclude Include="Util\StringUtils.hpp" />
     <ClInclude Include="Util\Time.hpp" />
     <ClInclude Include="WindowsConsoleRenderer.hpp" />
+    <ClInclude Include="WindowsInputSystem.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
