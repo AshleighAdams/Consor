@@ -44,6 +44,9 @@ namespace Consor
 			renderbound_t m_CurrentRenderBound;
 		public:
 			// platform specific stuff
+			virtual std::string RendererName();
+			virtual std::string VersionString() = 0;
+
 			virtual void FlushToScreen() = 0;
 			virtual std::unique_ptr<ICharInformation> GetCharInformation(const CVector& pos) = 0;
 			virtual CSize Size() = 0;
