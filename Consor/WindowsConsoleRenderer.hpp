@@ -99,6 +99,7 @@ namespace Consor
 			CHAR_INFO& _CharInfoAt(int x, int y);
 
 			CColour         m_ColourTable[16];
+			CColour         m_OriginalColourTable[16];
 		public:
 			CWindowsConsoleRenderer();
 			~CWindowsConsoleRenderer();
@@ -110,8 +111,8 @@ namespace Consor
 			size_t MaxColours();
 			void GetColours(size_t Count, CColour* pColours);
 			void SetColours(size_t Count, CColour* pColours);
-
-
+			void ResetColours();
+			
 #ifdef WINDOWS_CONSOLE_RENDERER_FAST
 			void DrawBox(const CVector& pos, const CSize& size, const CColour& col);
 			void DrawRect(const CVector& pos, const CSize& size, const CColour& fgcol, const CColour& bgcol);
