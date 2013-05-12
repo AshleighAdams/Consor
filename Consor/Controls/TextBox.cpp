@@ -8,6 +8,7 @@ CTextBox::CTextBox()
 	m_Size = CSize();
 	SetText("");
 	m_InsertMode = false;
+	m_LastTyped = Util::GetTime();
 }
 
 void CTextBox::SetText(const std::string& Text)
@@ -72,7 +73,7 @@ void CTextBox::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, 
 
 		Renderer.PushRenderBounds(pos, textarea);
 			Renderer.DrawString(text, CVector(), Skin.TextBoxForeground(), CColour::None()); // this doesn't use focus col
-			if(HasFocus && fmod(Util::GetTime(), 1.0) > 0.5)
+			if(HasFocus && fmod(Util::GetTime() - m_LastTyped, 1.0) < 0.5)
 			{
 				std::unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(pos + CVector(cursor_pos, 0));
 				info->SetChar(m_InsertMode ? (char)219 : '_');
@@ -109,6 +110,7 @@ bool CTextBox::HandleInput(Input::Key Key)
 			return false;
 
 		m_CursorPosition--;
+		m_LastTyped = Util::GetTime();
 		return true;
 	}
 	else if(Key == Input::Key::Right)
@@ -117,6 +119,7 @@ bool CTextBox::HandleInput(Input::Key Key)
 			return false;
 
 		m_CursorPosition++;
+		m_LastTyped = Util::GetTime();
 		return true;
 	}
 	else if(Key == Input::Key::Delete)
@@ -124,6 +127,7 @@ bool CTextBox::HandleInput(Input::Key Key)
 		if(m_CursorPosition == m_Text.length())
 			return true;
 		m_Text.erase(m_CursorPosition, 1);
+		m_LastTyped = Util::GetTime();
 		return true;
 	}
 	else if(Key == Input::Key::Backspace)
@@ -132,11 +136,13 @@ bool CTextBox::HandleInput(Input::Key Key)
 			return true;
 		m_Text.erase(m_CursorPosition - 1, 1);
 		m_CursorPosition--;
+		m_LastTyped = Util::GetTime();
 		return true;
 	}
 	else if(Key == Input::Key::Insert)
 	{
 		m_InsertMode = !m_InsertMode;
+		m_LastTyped = Util::GetTime();
 		return true;
 	}
 
@@ -147,6 +153,7 @@ bool CTextBox::HandleInput(Input::Key Key)
 			m_Text.erase(m_CursorPosition, 1);
 		m_Text.insert(m_CursorPosition, 1, letter);
 		m_CursorPosition++;
+		m_LastTyped = Util::GetTime();
 		return true;
 	}
 
