@@ -1,4 +1,5 @@
-﻿#include "WindowsConsoleRenderer.hpp"
+﻿#define WINDOWS_CONSOLERENDERER_FRIEND
+#include "WindowsConsoleRenderer.hpp"
 
 #include <sstream>
 #include <assert.h>
@@ -8,92 +9,92 @@ using namespace std;
 using namespace Consor;
 using namespace Consor::Console;
 
-CColour AttributeForegroundColour(CharAttributes att)
+CColour AttributeForegroundColour(CWindowsConsoleRenderer& Renderer, CharAttributes att)
 {
-	double R, G, B;
-	R = G = B = 0;
-
+	int col = ((int)att >> 00) & 0x0F;
+	/*
 	if(att & CharAttributes::ForegroundRed)
-		R = 0.5;
+		col += 4;
 	if(att & CharAttributes::ForegroundGreen)
-		G = 0.5;
+		col += 2;
 	if(att & CharAttributes::ForegroundBlue)
-		B = 0.5;
+		col += 1;
 
 	if(att & CharAttributes::ForegroundIntense)
-	{
-		R *= 2.0;
-		G *= 2.0;
-		B *= 2.0;
-	}
-
-	return CColour(R, G, B);
+		col += 8;
+	*/
+	return Renderer.m_ColourTable[col];
 }
 
-CColour AttributeBackgroundColour(CharAttributes att)
+CColour AttributeBackgroundColour(CWindowsConsoleRenderer& Renderer, CharAttributes att)
 {
-	double R, G, B;
-	R = G = B = 0;
-
+	int col = ((int)att >> 4) & 0x0F;
+	/*
 	if(att & CharAttributes::BackgroundRed)
-		R = 0.5;
+		col += 4;
 	if(att & CharAttributes::BackgroundGreen)
-		G = 0.5;
+		col += 2;
 	if(att & CharAttributes::BackgroundBlue)
-		B = 0.5;
+		col += 1;
 
 	if(att & CharAttributes::BackgroundIntense)
+		col += 8;
+	*/
+	return Renderer.m_ColourTable[col];
+}
+
+
+inline bool double_equals(double a, double b)
+{
+	double diff = abs(a-b);
+	double epsilon = 0.01; // DBL_EPSILON
+	return diff < epsilon;
+}
+
+CharAttributes FromForegroundColour(CWindowsConsoleRenderer& Renderer, const CColour& targ)
+{	
+	int atts = 0;
+	bool found = false;
+
+	for(const CColour& col : Renderer.m_ColourTable)
 	{
-		R *= 2.0;
-		G *= 2.0;
-		B *= 2.0;
+		if(
+		  double_equals(col.R, targ.R) &&
+		  double_equals(col.G, targ.G) &&
+		  double_equals(col.B, targ.B) )
+		{
+			found = true;
+			break;
+		}
+		atts++;
 	}
 
-	return CColour(R, G, B);
+	if(found)
+		return (CharAttributes)atts;
+	else
+		return CharAttributes::None;
 }
 
-CharAttributes FromForegroundColour(const CColour& col)
+CharAttributes FromBackgroundColour(CWindowsConsoleRenderer& Renderer, const CColour& col)
 {
-	CharAttributes atts = CharAttributes::None;
-
-	if(col.R != 0)
-		atts = atts | CharAttributes::ForegroundRed;
-	if(col.G != 0)
-		atts = atts | CharAttributes::ForegroundGreen;
-	if(col.B != 0)
-		atts = atts | CharAttributes::ForegroundBlue;
-
-	if(col.R > 0.5 || col.G > 0.5 || col.B > 0.5)
-		atts = atts | CharAttributes::ForegroundIntense;
-
-	return atts;
-}
-
-CharAttributes FromBackgroundColour(const CColour& col)
-{
-	CharAttributes atts = CharAttributes::None;
-
-	if(col.R != 0)
-		atts = atts | CharAttributes::BackgroundRed;
-	if(col.G != 0)
-		atts = atts | CharAttributes::BackgroundGreen;
-	if(col.B != 0)
-		atts = atts | CharAttributes::BackgroundBlue;
-
-	if(col.R > 0.5 || col.G > 0.5 || col.B > 0.5)
-		atts = atts | CharAttributes::BackgroundIntense;
-
-	return atts;
+	int atts = (int)FromForegroundColour(Renderer, col);
+	return (CharAttributes)(atts << 4);
 }
 
 CWindowsConsoleRenderer::CWindowsConsoleRenderer()
 {
-	m_Width = 80;
-	m_Height = 25;
+	m_STDOutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	CONSOLE_SCREEN_BUFFER_INFOEX info;
+	info.cbSize = sizeof(info);
+
+	GetConsoleScreenBufferInfoEx(m_STDOutHandle, &info);
+	
+	m_Width = info.dwSize.X;
+	m_Height = info.dwSize.Y;
 
 	PushRenderBounds(CVector(), CSize(m_Width, m_Height));
 
-	m_STDOutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	m_BufferHandle = CreateConsoleScreenBuffer(
 		GENERIC_READ | GENERIC_WRITE,
 		FILE_SHARE_READ | FILE_SHARE_WRITE,
@@ -121,6 +122,28 @@ CWindowsConsoleRenderer::CWindowsConsoleRenderer()
 	srctWriteRect.Bottom = m_Height;
 
 	bool success = ReadConsoleOutput(m_BufferHandle, m_pBuffer, coordBufSize, coordBufCoord, &srctWriteRect);
+
+	// update the colour tables:
+
+	
+	
+	for(int i = 0; i < MaxColours(); i++)
+	{
+		COLORREF ref = info.ColorTable[i]; // 0x00bbggrr
+		int r = (ref & 0x000000FF) >> 0;
+		int g = (ref & 0x0000FF00) >> 8;
+		int b = (ref & 0x00FF0000) >> 16;
+
+		m_ColourTable[i].A = 1.0;
+		m_ColourTable[i].R = (double)r / 255.0;
+		m_ColourTable[i].G = (double)g / 255.0;
+		m_ColourTable[i].B = (double)b / 255.0;
+	}
+
+	//info.ColorTable[14] = RGB(255, 128, 0);  // Replace yellow
+	//SetConsoleScreenBufferInfoEx(hConsole, &info);
+	//SetConsoleTextAttribute(hConsole, FOREGROUNDINTENSITY | FOREGROUND_RED | FOREGROUND_GREEN);
+
 }
 
 CWindowsConsoleRenderer::~CWindowsConsoleRenderer()
@@ -156,6 +179,46 @@ void CWindowsConsoleRenderer::FlushToScreen()
 CSize CWindowsConsoleRenderer::Size()
 {
 	return CSize(m_Width, m_Height);
+}
+
+size_t CWindowsConsoleRenderer::MaxColours()
+{
+	return sizeof(m_ColourTable) / sizeof(m_ColourTable[0]);
+}
+
+void CWindowsConsoleRenderer::GetColours(size_t Count, CColour* pColours)
+{
+	assert(Count <= MaxColours());
+	assert(pColours);
+
+	for(size_t i = 0; i < Count; i++)
+		pColours[i] = m_ColourTable[i];
+}
+
+void CWindowsConsoleRenderer::SetColours(size_t Count, CColour* pColours)
+{
+	assert(Count <= MaxColours());
+	assert(pColours);
+	
+	CONSOLE_SCREEN_BUFFER_INFOEX info;
+	info.cbSize = sizeof(info);
+
+	GetConsoleScreenBufferInfoEx(m_STDOutHandle, &info);
+
+	for(size_t i = 0; i < Count; i++)
+	{
+		CColour& newcol = m_ColourTable[i];
+		newcol = pColours[i];
+		newcol.Normalize().A = 1.0;
+
+		int r = (int)(newcol.R * 255);
+		int g = (int)(newcol.G * 255);
+		int b = (int)(newcol.B * 255);
+
+		info.ColorTable[i] = RGB(r, g, b);
+	}
+
+	SetConsoleScreenBufferInfoEx(m_STDOutHandle, &info);
 }
 
 CHAR_INFO& CWindowsConsoleRenderer::_CharInfoAt(int x, int y)
@@ -220,13 +283,13 @@ void CWindowsCharInformation::SetForegroundColour(const CColour& col)
 
 	fg = CColour::Blend(col, fg);
 
-	CharAttributes atts = FromForegroundColour(fg) | FromBackgroundColour(bg);
+	CharAttributes atts = FromForegroundColour(*m_pRenderer, fg) | FromBackgroundColour(*m_pRenderer, bg);
 	SetAttributes(atts);
 }
 
 CColour CWindowsCharInformation::GetForegroundColour()
 {
-	return AttributeForegroundColour(GetAttributes());
+	return AttributeForegroundColour(*m_pRenderer, GetAttributes());
 }
 
 void CWindowsCharInformation::SetBackgroundColour(const CColour& col)
@@ -236,13 +299,13 @@ void CWindowsCharInformation::SetBackgroundColour(const CColour& col)
 
 	bg = CColour::Blend(col, bg);
 
-	CharAttributes atts = FromForegroundColour(fg) | FromBackgroundColour(bg);
+	CharAttributes atts = FromForegroundColour(*m_pRenderer, fg) | FromBackgroundColour(*m_pRenderer, bg);
 	SetAttributes(atts);
 }
 
 CColour CWindowsCharInformation::GetBackgroundColour()
 {
-	return AttributeBackgroundColour(GetAttributes());
+	return AttributeBackgroundColour(*m_pRenderer, GetAttributes());
 }
 
 void CWindowsCharInformation::SetChar(char val) 
@@ -253,6 +316,21 @@ void CWindowsCharInformation::SetChar(char val)
 char CWindowsCharInformation::GetChar()
 {
 	return m_pRenderer->_CharInfoAt(m_Position.X, m_Position.Y).Char.AsciiChar;
+}
+
+bool CWindowsCharInformation::SupportsUnicode() 
+{
+	return true;
+}
+
+void CWindowsCharInformation::SetUnicodeChar(char32_t val) 
+{
+	m_pRenderer->_CharInfoAt(m_Position.X, m_Position.Y).Char.UnicodeChar = val;
+}
+
+char32_t CWindowsCharInformation::GetUnicodeChar()
+{
+	return (size_t)m_pRenderer->_CharInfoAt(m_Position.X, m_Position.Y).Char.UnicodeChar;
 }
 
 #ifdef WINDOWS_CONSOLE_RENDERER_FAST

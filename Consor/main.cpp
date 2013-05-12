@@ -12,6 +12,7 @@
 #include "Controls/Button.hpp"
 #include "Controls/TextBox.hpp"
 #include "Controls/PasswordBox.hpp"
+#include "Controls/CheckBox.hpp"
 #include "Controls/HorizontalScrollbar.hpp"
 #include "Controls/VerticalScrollbar.hpp"
 
@@ -109,12 +110,20 @@ int main(int count, char** values)
 	flow_tests_lables.AddControl(lbl_pb);
 	flow_tests_controls.AddControl(pb);
 
+	// PasswordBox test
+	Consor::CLabel lbl_cb;
+	Consor::CCheckBox cb;
+	lbl_cb.SetText("CheckBox:");
+	cb.SetText("CheckBox Text");
+
+	flow_tests_lables.AddControl(lbl_cb);
+	flow_tests_controls.AddControl(cb);
+
 	// end test
 	main_flow.AddControl(flow_tests);
 
 	button_flow_align.ForceResize(main_flow.Size());
 	Consor::CWindowContainer window(main_flow, "Consor Test");
-
 
 	thread input_thread([&]()
 	{
@@ -145,7 +154,8 @@ int main(int count, char** values)
 		Consor::Util::CFrequencyController draw_fc("draw", 24);
 		Consor::Console::CWindowsConsoleRenderer renderer; 
 		Consor::CDefaultSkin skin;
-
+		skin.SetRendererColours(renderer);
+				
 		while(true)
 		{
 			if(draw_fc.Check())
