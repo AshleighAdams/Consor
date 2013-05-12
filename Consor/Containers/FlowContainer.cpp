@@ -127,7 +127,7 @@ bool CFlowContainer::HandleInput(Input::Key Key)
 		m_Focused--;
 		return true;
 	}
-	else if(Key == Next)
+	else if(Key == Next || Key == Input::Key::Tab)
 	{
 		size_t focusable = m_Focusable();
 

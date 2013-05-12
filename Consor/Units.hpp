@@ -58,13 +58,18 @@ namespace Consor
 		CColour(double R, double G, double B, double A);
 
 		CColour& Normalize();
+		
 		static CColour Blend(const CColour& A, const CColour& B);
+		static double Distance(const CColour& A, const CColour& B);
+
 		static const CColour& None();
 
 		CColour operator+(const CColour& A) const;
 		CColour operator-(const CColour& A) const;
 		CColour& operator+=(const CColour& A);
 		CColour& operator-=(const CColour& A);
+		bool operator==(const CColour& A) const;
+		bool operator!=(const CColour& A) const;
 	};
 
 	// literals

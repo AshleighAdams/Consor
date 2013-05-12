@@ -261,6 +261,16 @@ CColour CColour::Blend(const CColour& A, const CColour& B)
 	return out.Normalize();
 }
 
+double CColour::Distance(const CColour& A, const CColour& B)
+{
+	double dist_r = abs(A.R - B.R);
+	double dist_g = abs(A.G - B.G);
+	double dist_b = abs(A.B - B.B);
+	double dist_a = abs(A.A - B.A);
+
+	return dist_r + dist_g + dist_b + dist_a;
+}
+
 const CColour& CColour::None()
 {
 	static CColour none = CColour(0, 0, 0, 0);
@@ -296,4 +306,17 @@ CColour& CColour::operator-=(const CColour& A)
 	this->A -= A.A;
 
 	return this->Normalize();
+}
+
+bool CColour::operator==(const CColour& A) const
+{
+	return this->R == A.R &&
+		this->G == A.G &&
+		this->B == A.B &&
+		this->A == A.A;
+}
+
+bool CColour::operator!=(const CColour& A) const
+{
+	return !(*this == A);
 }
