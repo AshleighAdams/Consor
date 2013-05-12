@@ -88,10 +88,11 @@ CWindowsConsoleRenderer::CWindowsConsoleRenderer()
 	CONSOLE_SCREEN_BUFFER_INFOEX info;
 	info.cbSize = sizeof(info);
 
-	GetConsoleScreenBufferInfoEx(m_STDOutHandle, &info);
-	
+	BOOL gotinfo = GetConsoleScreenBufferInfoEx(m_STDOutHandle, &info);
+	assert(gotinfo == TRUE);
+
 	m_Width = info.dwSize.X;
-	m_Height = info.dwSize.Y;
+	m_Height = min(info.srWindow.Bottom + 1, info.dwSize.Y);
 
 	PushRenderBounds(CVector(), CSize(m_Width, m_Height));
 
@@ -234,7 +235,7 @@ void CWindowsConsoleRenderer::SetColours(size_t Count, CColour* pColours)
 	RECT r;
 	GetWindowRect(console, &r);
 
-	//info.dwSize.X;
+	info.dwSize.X;
 	SetConsoleScreenBufferInfoEx(m_BufferHandle, &info); // this function has a nasty habit of resizing the bloody window...
 	
 	MoveWindow(console, r.left, r.top, r.right - r.left, r.bottom - r.top, TRUE);
