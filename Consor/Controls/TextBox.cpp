@@ -7,6 +7,7 @@ CTextBox::CTextBox()
 {
 	m_Size = CSize();
 	SetText("");
+	m_InsertMode = false;
 }
 
 void CTextBox::SetText(const std::string& Text)
@@ -74,7 +75,7 @@ void CTextBox::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, 
 			if(HasFocus && fmod(Util::GetTime(), 1.0) > 0.5)
 			{
 				std::unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(pos + CVector(cursor_pos, 0));
-				info->SetChar('_');
+				info->SetChar(m_InsertMode ? (char)219 : '_');
 				info->SetForegroundColour(fg);
 			}
 		Renderer.PopRenderBounds();
@@ -133,10 +134,17 @@ bool CTextBox::HandleInput(Input::Key Key)
 		m_CursorPosition--;
 		return true;
 	}
+	else if(Key == Input::Key::Insert)
+	{
+		m_InsertMode = !m_InsertMode;
+		return true;
+	}
 
 	char letter;
 	if(m_IsTypedChar(Key, letter))
 	{
+		if(m_InsertMode)
+			m_Text.erase(m_CursorPosition, 1);
 		m_Text.insert(m_CursorPosition, 1, letter);
 		m_CursorPosition++;
 		return true;
