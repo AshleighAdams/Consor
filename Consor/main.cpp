@@ -127,62 +127,47 @@ int main(int count, char** values)
 
 	thread input_thread([&]()
 	{
-		Consor::Util::CFrequencyController input_fc("input", 30);
-
 		Consor::Input::CWindowsInputSystem input;
-
-		while(true)
-		{
-			if(input_fc.Check() && input.KeyWaiting())
-			{
-				main_mutex.lock();
-				
-				Consor::Input::Key kp = input.GetKeyPress();
-				window.HandleInput(kp);
-				
-				main_mutex.unlock();
-			}
-			else
-			{
-				Consor::Util::Sleep(1.0 / 30.0);
-			}
-		}
-	});
-
-	thread draw_thread([&]()
-	{
 		Consor::Util::CFrequencyController draw_fc("draw", 24);
 		Consor::Console::CWindowsConsoleRenderer renderer; 
 		Consor::CDefaultSkin skin;
 		skin.SetRendererColours(renderer);
-				
+
+		auto draw = [&]()
+		{
+			main_mutex.lock();
+			renderer.Clear(Consor::CColour());
+		
+			Consor::CSize size = window.Size();
+			Consor::CSize rsize = renderer.RenderSize();
+
+			Consor::CVector pos = Consor::CVector(rsize.Width / 2.0, rsize.Height / 2.0) - Consor::CVector(size.Width / 2, size.Height / 2);
+
+			renderer.PushRenderBounds(pos, window.Size());
+			window.Draw(renderer, true, skin);
+			renderer.PopRenderBounds();
+		
+			renderer.FlushToScreen();
+			main_mutex.unlock();
+		};
+
+		thread input_thread([&]() // so stuff still blinks, and updates slowly
+		{
+			while(true)
+			{
+				draw();
+				Consor::Util::Sleep(0.5);
+			}
+		});
+
 		while(true)
 		{
-			if(draw_fc.Check())
-			{
-				main_mutex.lock();
+			// input
+			Consor::Input::Key kp = input.GetKeyPress();
+			window.HandleInput(kp);
 
-				renderer.Clear(Consor::CColour());
-		
-				Consor::CSize size = window.Size();
-				Consor::CSize rsize = renderer.RenderSize();
-
-				Consor::CVector pos = Consor::CVector(rsize.Width / 2.0, rsize.Height / 2.0) - Consor::CVector(size.Width / 2, size.Height / 2);
-
-				renderer.PushRenderBounds(pos, window.Size());
-				window.Draw(renderer, true, skin);
-				renderer.PopRenderBounds();
-		
-				renderer.FlushToScreen();
-
-				main_mutex.unlock();
-			}
-			else
-			{
-				Consor::Util::Sleep(1.0 / 24.0);
-			}
-
-			
+			// draw
+			draw();
 		}
 	});
 

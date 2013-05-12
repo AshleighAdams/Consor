@@ -125,11 +125,14 @@ CWindowsConsoleRenderer::CWindowsConsoleRenderer()
 
 	// update the colour tables:
 
-	
+	CONSOLE_SCREEN_BUFFER_INFOEX info_newbuf;
+	info_newbuf.cbSize = sizeof(info_newbuf);
+
+	GetConsoleScreenBufferInfoEx(m_BufferHandle, &info_newbuf);
 	
 	for(int i = 0; i < MaxColours(); i++)
 	{
-		COLORREF ref = info.ColorTable[i]; // 0x00bbggrr
+		COLORREF ref = info_newbuf.ColorTable[i]; // 0x00bbggrr
 		int r = (ref & 0x000000FF) >> 0;
 		int g = (ref & 0x0000FF00) >> 8;
 		int b = (ref & 0x00FF0000) >> 16;
@@ -140,14 +143,22 @@ CWindowsConsoleRenderer::CWindowsConsoleRenderer()
 		m_ColourTable[i].B = (double)b / 255.0;
 	}
 
-	//info.ColorTable[14] = RGB(255, 128, 0);  // Replace yellow
-	//SetConsoleScreenBufferInfoEx(hConsole, &info);
-	//SetConsoleTextAttribute(hConsole, FOREGROUNDINTENSITY | FOREGROUND_RED | FOREGROUND_GREEN);
+	static_assert(sizeof(m_OriginalColourTable) == sizeof(m_ColourTable), "Colour table sizes do not match!");
+	memccpy(m_OriginalColourTable, m_ColourTable, 0, sizeof(m_OriginalColourTable));
 
+	//hide the cursor
+	CONSOLE_CURSOR_INFO cusor_info;
+ 
+	cusor_info.dwSize = sizeof cusor_info;
+	cusor_info.bVisible = false;
+ 
+	SetConsoleCursorInfo(m_BufferHandle, &cusor_info);
 }
 
 CWindowsConsoleRenderer::~CWindowsConsoleRenderer()
 {
+	ResetColours();
+
 	SetConsoleActiveScreenBuffer(m_STDOutHandle);
 	delete [] m_pBuffer;
 }
@@ -203,7 +214,7 @@ void CWindowsConsoleRenderer::SetColours(size_t Count, CColour* pColours)
 	CONSOLE_SCREEN_BUFFER_INFOEX info;
 	info.cbSize = sizeof(info);
 
-	GetConsoleScreenBufferInfoEx(m_STDOutHandle, &info);
+	GetConsoleScreenBufferInfoEx(m_BufferHandle, &info);
 
 	for(size_t i = 0; i < Count; i++)
 	{
@@ -218,7 +229,12 @@ void CWindowsConsoleRenderer::SetColours(size_t Count, CColour* pColours)
 		info.ColorTable[i] = RGB(r, g, b);
 	}
 
-	SetConsoleScreenBufferInfoEx(m_STDOutHandle, &info);
+	SetConsoleScreenBufferInfoEx(m_BufferHandle, &info);
+}
+
+void CWindowsConsoleRenderer::ResetColours()
+{
+	SetColours(MaxColours(), m_OriginalColourTable);
 }
 
 CHAR_INFO& CWindowsConsoleRenderer::_CharInfoAt(int x, int y)

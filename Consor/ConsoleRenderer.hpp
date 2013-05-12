@@ -52,6 +52,7 @@ namespace Consor
 			virtual size_t MaxColours() = 0;
 			virtual void GetColours(size_t Count, CColour* pColours) = 0;
 			virtual void SetColours(size_t Count, CColour* pColours) = 0;
+			virtual void ResetColours() = 0;
 
 			// other stuff
 			virtual ~IConsoleRenderer() {}
