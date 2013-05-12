@@ -8,8 +8,54 @@ namespace Consor
 {
 	class ISkin
 	{
+	protected:
+		size_t m_ColourPos;
 	public:
-		virtual void SetRendererColours(Console::IConsoleRenderer& Renderer) = 0;
+		// returns the closest colour it can get
+		virtual CColour RequestColour(Console::IConsoleRenderer& Renderer, const CColour& target)
+		{
+			size_t maxcols = Renderer.MaxColours();
+			CColour* pColours = new CColour[maxcols];
+			Renderer.GetColours(maxcols, pColours);
+			
+			if(m_ColourPos >= maxcols) // search for an existing colour
+			{
+				CColour closest = pColours[0];
+				double closest_distance = CColour::Distance(target, closest);
+
+				for(size_t i = 1; i < maxcols; i++)
+				{
+					double distance = CColour::Distance(target, pColours[i]);
+
+					if(distance < closest_distance)
+					{
+						closest_distance = distance;
+						closest = pColours[i];
+					}
+				}
+
+				delete [] pColours;
+				return closest;
+			}
+
+			for(size_t i = 0; i < m_ColourPos; i++)
+			{
+				if(pColours[i] == target)
+				{
+					delete [] pColours;
+					return target;
+				}
+			}
+
+			// we didn't find the colour, create a new one...
+
+			pColours[m_ColourPos] = target;
+			m_ColourPos++;
+			Renderer.SetColours(m_ColourPos, pColours);
+
+			delete [] pColours;
+			return target;
+		}
 
 		virtual CColour LabelForeground() const = 0;
 		virtual CColour LabelForegroundFocused() const = 0;
@@ -17,6 +63,7 @@ namespace Consor
 		virtual CColour WindowBorder() const = 0;
 		virtual CColour WindowBackground() const = 0;
 		virtual CColour WindowForeground() const = 0;
+		virtual CColour WindowForegroundShine() const = 0;
 
 		virtual CColour ScrollForeground() const = 0;
 		virtual CColour ScrollForegroundFocused() const = 0;
@@ -29,43 +76,27 @@ namespace Consor
 
 	class CDefaultSkin : public ISkin
 	{
-		int TotalColours;
+	protected:
 		CColour Foreground;
 		CColour White;
 		CColour Black;
 		CColour Background;
 		CColour AlternateBackground;
 		CColour FocusColour;
-	public:
+		CColour ForegroundShine;
+
 		CDefaultSkin()
 		{
-			Foreground = CColour(1, 0.5, 0);
-			White = CColour(1, 1, 1);
-			Black = CColour();
-			Background = Black;
-			AlternateBackground = CColour(0.25, 0.25*0.5, 0);
-			FocusColour = CColour(1, 0, 0);
 		}
-
-		virtual void SetRendererColours(Console::IConsoleRenderer& Renderer)
+	public:
+		CDefaultSkin(Console::IConsoleRenderer& Renderer)
 		{
-			const int TotalColours = 6;
-			size_t supported_colours = Renderer.MaxColours();
-
-			if(supported_colours < TotalColours)
-				throw std::exception("Not enough available colours for this skin");
-
-			CColour colours[TotalColours];
-			Renderer.GetColours(TotalColours, colours);
-			{
-				colours[0] = Foreground;
-				colours[1] = White;
-				colours[2] = Black;
-				colours[3] = Background;
-				colours[4] = AlternateBackground;
-				colours[5] = FocusColour;
-			}
-			Renderer.SetColours(TotalColours, colours);
+			m_ColourPos = 0;
+			Foreground = RequestColour(Renderer, CColour(1, 1, 1));
+			ForegroundShine = RequestColour(Renderer, CColour(1, 1, 1));
+			Background = RequestColour(Renderer, CColour(0, 0, 1));
+			AlternateBackground = RequestColour(Renderer, CColour(0, 0, 0.5));
+			FocusColour = RequestColour(Renderer, CColour(1, 0, 0));
 		}
 
 		virtual CColour LabelForeground() const
@@ -91,6 +122,11 @@ namespace Consor
 		virtual CColour WindowForeground() const
 		{
 			return Foreground;
+		}
+
+		virtual CColour WindowForegroundShine() const
+		{
+			return ForegroundShine;
 		}
 
 		virtual CColour ScrollForeground() const
@@ -122,6 +158,20 @@ namespace Consor
 		{
 			return CColour::None();
 		}
+	};
+
+	class CHackerSkin : public CDefaultSkin
+	{
+	public:
+		CHackerSkin(Console::IConsoleRenderer& Renderer)
+		{
+			m_ColourPos = 0;
+			Foreground = RequestColour(Renderer, CColour(1, 0.5, 0));
+			ForegroundShine = RequestColour(Renderer, CColour(1, 1, 1));
+			Background = RequestColour(Renderer, CColour(0, 0, 0));
+			AlternateBackground = RequestColour(Renderer, CColour(0.5, 0.25, 0));
+			FocusColour = RequestColour(Renderer, CColour(1, 0, 0));
+		};
 	};
 }
 

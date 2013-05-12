@@ -48,8 +48,7 @@ int main(int count, char** values)
 	thread program_thread([&]()
 	{
 		Consor::Input::CWindowsInputSystem input;
-		Consor::CDefaultSkin skin;
-		skin.SetRendererColours(renderer);
+		Consor::CHackerSkin skin(renderer);
 
 		auto draw = [&]()
 		{
@@ -122,7 +121,7 @@ int main(int count, char** values)
 
 		CTextBox un; CPasswordBox pw;
 		un.ForceResize(CSize(20, 1));
-		un.SetText("xkcd.com");
+		un.SetText("test");
 		pw.ForceResize(CSize(20, 1));
 
 		flow_table_col2.AddControl(un);
@@ -153,7 +152,7 @@ int main(int count, char** values)
 
 		ok.Click += [&]()
 		{
-			if(un.GetText() == "xkcd.com" && pw.GetPassword() == "correcthorsebatterystaple")
+			if(un.GetText() == "test" && pw.GetPassword() == "test")
 				loggedin = true;
 			else 
 			{

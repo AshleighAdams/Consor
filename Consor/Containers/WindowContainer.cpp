@@ -27,8 +27,23 @@ void CWindowContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool Ha
 {
 	CVector pos;
 	CSize size = Size();
-	Renderer.DrawBox(pos, Size(), Skin.WindowBackground());
-	Renderer.DrawRect(pos, Size(), Skin.WindowBorder(), CColour::None());
+	Renderer.DrawBox(pos, size, Skin.WindowBackground());
+	Renderer.DrawRect(pos, size, Skin.WindowBorder(), CColour::None());
+
+	CColour shine = Skin.WindowForegroundShine();
+	if(shine != Skin.WindowBorder())
+	{
+		for(int x = 1; x < size.Width; x++)
+		{
+			unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(pos + CVector(x, size.Height - 1));
+			info->SetForegroundColour(shine);
+		}
+		for(int y = 0; y < size.Height; y++)
+		{
+			unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(pos + CVector(size.Width - 1, y));
+			info->SetForegroundColour(shine);
+		}
+	}
 
 	Renderer.DrawString(m_Title, CVector(size.Width / 2 - m_Title.length() / 2, 0), Skin.WindowForeground(), CColour::None());
 
