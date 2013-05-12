@@ -3,6 +3,8 @@
 
 #include <sstream>
 #include <assert.h>
+#include <fcntl.h>
+#include <io.h>
 
 using namespace std;
 
@@ -155,6 +157,9 @@ CWindowsConsoleRenderer::CWindowsConsoleRenderer()
 	cusor_info.bVisible = false;
  
 	SetConsoleCursorInfo(m_BufferHandle, &cusor_info);
+
+	// Setup unicode
+	_setmode(_fileno(stdout), _O_U16TEXT);
 }
 
 CWindowsConsoleRenderer::~CWindowsConsoleRenderer()
@@ -170,6 +175,11 @@ string CWindowsConsoleRenderer::RendererName()
 	return "WindowsRenderer";
 }
 
+string to_string()
+{
+	return "";
+}
+
 template<typename T>
 string to_string(T x)
 {
@@ -177,6 +187,7 @@ string to_string(T x)
 	str << x;
 	return str.str();
 }
+
 
 string CWindowsConsoleRenderer::VersionString()
 {
@@ -196,6 +207,30 @@ string CWindowsConsoleRenderer::VersionString()
 	"; direct draw calls: none"
 	"; abstract draw calls: DrawBox, DrawRect, DrawString"
 #endif
+	"; built with: "
+
+
+#if defined(__clang__)
+	"Clang/LLVM " __VERSION__
+#elif defined(__ICC) || defined(__INTEL_COMPILER)
+	"Intel ICC/ICPC " + to_string(__INTEL_COMPILER_BUILD_DATE) + 
+#elif defined(__GNUC__) || defined(__GNUG__)
+	"GNU GCC/G++ " __VERSION__ 
+#elif defined(__HP_cc) || defined(__HP_aCC)
+	"Hewlett-Packard C/C++ " + to_string(__HP_aCC) + to_string(__HP_cc) +
+#elif defined(__IBMC__) || defined(__IBMCPP__)
+	"IBM XL C/C++ " __xlc__
+#elif defined(_MSC_VER)
+	"Microsoft Visual Studio " + to_string(_MSC_FULL_VER) +
+#elif defined(__PGI)
+	"Portland Group PGCC/PGCPP"
+#elif defined(__SUNPRO_C) || defined(__SUNPRO_CC)
+	"Oracle Solaris Studio"
+#else
+	" unknown compiler"
+#endif
+
+
 	"; C++ version: " + to_string(__cplusplus) +
 	"; bits: " + to_string(sizeof size_t * 8) + ";"
 	;
@@ -381,6 +416,11 @@ void CWindowsCharInformation::SetChar(char val)
 char CWindowsCharInformation::GetChar()
 {
 	return m_pRenderer->_CharInfoAt((int)m_Position.X, (int)m_Position.Y).Char.AsciiChar;
+}
+
+bool CWindowsConsoleRenderer::SupportsUnicode()
+{
+	return true;
 }
 
 bool CWindowsCharInformation::SupportsUnicode() 

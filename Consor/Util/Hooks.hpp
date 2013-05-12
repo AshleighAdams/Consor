@@ -71,9 +71,20 @@ namespace Consor
 		std::list<handle_p> m_Subscribed;
 		std::list<handle_p> m_ToRemove;
 		std::mutex m_CallMutex;
+		std::thread* m_pLastCallThread;
 
 		bool m_Itterating;
 	public:
+		CHook()
+		{
+			m_pLastCallThread = nullptr;
+		}
+
+		~CHook()
+		{
+			// leak memory yay
+			//delete m_pLastCallThread;
+		}
 
 		inline handle_p operator+=(const function_t& Function)
 		{
@@ -107,9 +118,14 @@ namespace Consor
 
 		inline void operator()(Args... args)
 		{
-			std::thread* pCall_thread = new std::thread([&]()
+			std::thread* pThread = new std::thread([&]()
 			{
 				m_CallMutex.lock();
+
+				// fuck it, lets just leak memory
+				//delete m_pLastCallThread;
+				//m_pLastCallThread = nullptr;
+
 				for(handle_p hand : m_ToRemove)
 					hand->Unregister();
 				m_ToRemove.clear();
@@ -122,10 +138,8 @@ namespace Consor
 					m_CallMutex.lock();
 				}
 				m_Itterating = false;
+				m_pLastCallThread = pThread;
 				m_CallMutex.unlock();
-
-				// free the thread
-				delete pCall_thread;
 			});
 		}
 	};

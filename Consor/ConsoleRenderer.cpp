@@ -1,5 +1,7 @@
 #include "ConsoleRenderer.hpp"
 #include <assert.h>
+#include <locale>
+#include <codecvt>
 
 using namespace std;
 
@@ -28,12 +30,21 @@ void IConsoleRenderer::DrawBox(const CVector& pos, const CSize& size, const CCol
 			info->SetBackgroundColour(col);
 		}
 }
+/*
+bool IConsoleRenderer::SupportsUnicode()
+{
+	return true;
+}
+*/
 
 void IConsoleRenderer::DrawString(const std::string& str, const CVector& Pos, const CColour& fgcol, const CColour& bgcol)
 {
 	CVector pos = Pos;
+	u32string unistr = wstring_convert<codecvt_utf8_utf16<char32_t>, char32_t>().from_bytes(str);
 
-	for(const char& letter : str)
+	bool unicode = SupportsUnicode();
+
+	for(const char32_t& letter : unistr)
 	{
 		if(letter == '\n')
 		{
@@ -44,7 +55,11 @@ void IConsoleRenderer::DrawString(const std::string& str, const CVector& Pos, co
 
 		unique_ptr<ICharInformation> info = GetCharInformation(pos);
 
-		info->SetChar(letter);
+		if(unicode)
+			info->SetUnicodeChar(letter);
+		else
+			info->SetChar(letter);
+
 		info->SetBackgroundColour( CColour::Blend(bgcol, info->GetBackgroundColour()) );
 		info->SetForegroundColour( CColour::Blend(fgcol, info->GetForegroundColour()) );
 		
