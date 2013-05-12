@@ -12,6 +12,7 @@ namespace Consor
 		std::string m_Text;
 		size_t m_CursorPosition;
 		bool m_InsertMode;
+		double m_LastTyped;
 
 		virtual bool m_IsTypedChar(Input::Key Key, char& letter);
 	public:
