@@ -10,13 +10,13 @@ CWindowsInputSystem::CWindowsInputSystem()
 
 bool CWindowsInputSystem::KeyWaiting()
 {
-	return _kbhit();
+	return _kbhit() != 0;
 }
 
 Key CWindowsInputSystem::GetKeyPress()
 {
 #ifndef WIN32
-	int cnt = kbhit(); // for ANSI escapes processing
+	int cnt = _kbhit(); // for ANSI escapes processing
 #endif
 	int k = _getch();
 	switch(k) 
@@ -64,7 +64,7 @@ Key CWindowsInputSystem::GetKeyPress()
 		case 155: // single-character CSI
 		case 27: {
 			// Process ANSI _getch sequences
-			if (cnt >= 3 && getch() == '[') 
+			if (cnt >= 3 && _getch() == '[') 
 			{
 				switch (k = _getch()) 
 				{

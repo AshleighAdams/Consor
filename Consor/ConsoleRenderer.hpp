@@ -54,6 +54,8 @@ namespace Consor
 			virtual void SetColours(size_t Count, CColour* pColours) = 0;
 			virtual void ResetColours() = 0;
 
+			virtual void SetTitle(const std::string& Title) = 0;
+
 			// other stuff
 			virtual ~IConsoleRenderer() {}
 			virtual void Clear(const CColour& col);

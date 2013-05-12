@@ -112,7 +112,8 @@ namespace Consor
 			void GetColours(size_t Count, CColour* pColours);
 			void SetColours(size_t Count, CColour* pColours);
 			void ResetColours();
-			
+
+			void SetTitle(const std::string& Title);
 #ifdef WINDOWS_CONSOLE_RENDERER_FAST
 			void DrawBox(const CVector& pos, const CSize& size, const CColour& col);
 			void DrawRect(const CVector& pos, const CSize& size, const CColour& fgcol, const CColour& bgcol);
