@@ -165,6 +165,42 @@ CWindowsConsoleRenderer::~CWindowsConsoleRenderer()
 	delete [] m_pBuffer;
 }
 
+string CWindowsConsoleRenderer::RendererName()
+{
+	return "WindowsRenderer";
+}
+
+template<typename T>
+string to_string(T x)
+{
+	stringstream str;
+	str << x;
+	return str.str();
+}
+
+string CWindowsConsoleRenderer::VersionString()
+{
+	return "built " __DATE__ " " __TIME__ ";"
+
+#ifdef WINDOWS_CONSOLE_RENDERER_FAST
+	" direct renderer;"
+#else
+	" abstract renderer;"
+#endif
+	" impliments and supports:"
+	" 16 custom colours, unicode"
+#ifdef WINDOWS_CONSOLE_RENDERER_FAST
+	"; direct draw calls: DrawBox, DrawRect, DrawString"
+	"; abstract draw calls: none"
+#else
+	"; direct draw calls: none"
+	"; abstract draw calls: DrawBox, DrawRect, DrawString"
+#endif
+	"; C++ version: " + to_string(__cplusplus) +
+	"; bits: " + to_string(sizeof size_t * 8) + ";"
+	;
+}
+
 void CWindowsConsoleRenderer::FlushToScreen()
 {
 	SMALL_RECT srctWriteRect; 
@@ -235,7 +271,6 @@ void CWindowsConsoleRenderer::SetColours(size_t Count, CColour* pColours)
 	RECT r;
 	GetWindowRect(console, &r);
 
-	info.dwSize.X;
 	SetConsoleScreenBufferInfoEx(m_BufferHandle, &info); // this function has a nasty habit of resizing the bloody window...
 	
 	MoveWindow(console, r.left, r.top, r.right - r.left, r.bottom - r.top, TRUE);

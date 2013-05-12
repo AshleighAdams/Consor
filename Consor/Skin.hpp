@@ -43,7 +43,7 @@ namespace Consor
 			White = CColour(1, 1, 1);
 			Black = CColour();
 			Background = Black;
-			AlternateBackground = CColour(0.25, 0.25, 0);
+			AlternateBackground = CColour(0.25, 0.25*0.5, 0);
 			FocusColour = CColour(1, 0, 0);
 		}
 

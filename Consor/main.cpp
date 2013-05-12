@@ -41,9 +41,13 @@ int main(int count, char** values)
 	*/
 	std::mutex main_mutex;
 	bool main_exit = false;
+	Consor::Console::CWindowsConsoleRenderer renderer;
 
 	Consor::CLabel msg;
-	msg.SetText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tempor metus sed ligula tempor tincidunt. Nullam quis condimentum augue. Nulla varius, nunc venenatis molestie egestas, neque lorem bibendum dui, vitae placerat magna nunc at nulla. In ultricies lectus quis purus bibendum eget ullamcorper metus tempus. Phasellus pulvinar, est sit amet auctor tempus, turpis nisl cursus mauris, vitae hendrerit felis tellus eu turpis. Vestibulum id leo sed magna vehicula aliquet. Fusce viverra auctor augue ut rutrum. Quisque quis nisl non turpis sollicitudin rutrum sit amet eget libero. Donec pretium egestas ante, eu aliquam mi porttitor quis.");
+	//msg.SetText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tempor metus sed ligula tempor tincidunt. Nullam quis condimentum augue. Nulla varius, nunc venenatis molestie egestas, neque lorem bibendum dui, vitae placerat magna nunc at nulla. In ultricies lectus quis purus bibendum eget ullamcorper metus tempus. Phasellus pulvinar, est sit amet auctor tempus, turpis nisl cursus mauris, vitae hendrerit felis tellus eu turpis. Vestibulum id leo sed magna vehicula aliquet. Fusce viverra auctor augue ut rutrum. Quisque quis nisl non turpis sollicitudin rutrum sit amet eget libero. Donec pretium egestas ante, eu aliquam mi porttitor quis.");
+	
+	msg.SetText(Consor::Util::FormatString("The current renderer is %, version string \"%\".\n\nSupports Unicode: %\nMaximium supported colours: %", renderer.RendererName(), renderer.VersionString(), renderer.GetCharInformation(Consor::CVector())->SupportsUnicode() ? "true" : "false", renderer.MaxColours()));
+
 	msg.ForceResize(Consor::CSize(36, 1));
 	Consor::CScrollContainer msg_scroll(msg, Consor::CSize(-1, 10));
 	
@@ -142,7 +146,6 @@ int main(int count, char** values)
 	thread program_thread([&]()
 	{
 		Consor::Input::CWindowsInputSystem input;
-		Consor::Console::CWindowsConsoleRenderer renderer;
 		Consor::CDefaultSkin skin;
 		skin.SetRendererColours(renderer);
 
@@ -165,7 +168,7 @@ int main(int count, char** values)
 			renderer.FlushToScreen();
 
 			double span = Consor::Util::GetTime() - start;
-			renderer.SetTitle(Consor::Util::FormatString("Rendered in %ms (% FPS)", span * 1000.0, 1.0 / span));
+			renderer.SetTitle(Consor::Util::FormatString("Rendered in %ms", (int)(span * 1000.0)));
 			main_mutex.unlock();
 		};
 

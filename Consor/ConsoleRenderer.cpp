@@ -6,6 +6,11 @@ using namespace std;
 using namespace Consor;
 using namespace Consor::Console;
 
+string IConsoleRenderer::RendererName()
+{
+	return "AbstractConsoleRenderer";
+}
+
 void IConsoleRenderer::Clear(const CColour& col)
 {
 	DrawBox(CVector(), Size(), col);

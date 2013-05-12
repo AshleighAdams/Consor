@@ -10,7 +10,7 @@
 #include <Windows.h>
 
 // not having to go through all the hoops of ICharInfo significantly speeds up the rendering process
-//#define WINDOWS_CONSOLE_RENDERER_FAST
+#define WINDOWS_CONSOLE_RENDERER_FAST
 
 namespace Consor
 {
@@ -103,6 +103,9 @@ namespace Consor
 		public:
 			CWindowsConsoleRenderer();
 			~CWindowsConsoleRenderer();
+
+			std::string RendererName();
+			std::string VersionString();
 
 			std::unique_ptr<ICharInformation> GetCharInformation(const CVector& pos);
 			void FlushToScreen();
