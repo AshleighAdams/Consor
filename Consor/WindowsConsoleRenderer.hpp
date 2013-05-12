@@ -10,7 +10,7 @@
 #include <Windows.h>
 
 // not having to go through all the hoops of ICharInfo significantly speeds up the rendering process
-#define WINDOWS_CONSOLE_RENDERER_FAST
+//#define WINDOWS_CONSOLE_RENDERER_FAST
 
 namespace Consor
 {
@@ -111,6 +111,7 @@ namespace Consor
 			void FlushToScreen();
 			CSize Size();
 
+			bool SupportsUnicode();
 			size_t MaxColours();
 			void GetColours(size_t Count, CColour* pColours);
 			void SetColours(size_t Count, CColour* pColours);

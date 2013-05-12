@@ -43,6 +43,8 @@ namespace Consor
 			CVector m_CurrentOffset;
 			renderbound_t m_CurrentRenderBound;
 		public:
+			virtual ~IConsoleRenderer(){}
+
 			// platform specific stuff
 			virtual std::string RendererName();
 			virtual std::string VersionString() = 0;
@@ -51,6 +53,7 @@ namespace Consor
 			virtual std::unique_ptr<ICharInformation> GetCharInformation(const CVector& pos) = 0;
 			virtual CSize Size() = 0;
 
+			virtual bool SupportsUnicode() = 0;
 			// this will probably replace existing colours
 			virtual size_t MaxColours() = 0;
 			virtual void GetColours(size_t Count, CColour* pColours) = 0;
@@ -60,7 +63,6 @@ namespace Consor
 			virtual void SetTitle(const std::string& Title) = 0;
 
 			// other stuff
-			virtual ~IConsoleRenderer() {}
 			virtual void Clear(const CColour& col);
 
 			virtual void DrawBox(const CVector& pos, const CSize& size, const CColour& col);
