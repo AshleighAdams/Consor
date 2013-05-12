@@ -26,7 +26,21 @@ using namespace std;
 
 int main(int count, char** values)
 {
+	/*
+	Consor::Input::CWindowsInputSystem input;
+	Consor::Console::CWindowsConsoleRenderer renderer; 
+	Consor::CDefaultSkin skin;
+	skin.SetRendererColours(renderer);
+
+	renderer.Clear(Consor::CColour());
+	renderer.DrawBox(Consor::CVector(), Consor::CSize(4, 4), Consor::CColour(1, 0.5, 0));
+
+	renderer.FlushToScreen();
+
+	return 0;
+	*/
 	std::mutex main_mutex;
+	bool main_exit = false;
 
 	Consor::CLabel msg;
 	msg.SetText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tempor metus sed ligula tempor tincidunt. Nullam quis condimentum augue. Nulla varius, nunc venenatis molestie egestas, neque lorem bibendum dui, vitae placerat magna nunc at nulla. In ultricies lectus quis purus bibendum eget ullamcorper metus tempus. Phasellus pulvinar, est sit amet auctor tempus, turpis nisl cursus mauris, vitae hendrerit felis tellus eu turpis. Vestibulum id leo sed magna vehicula aliquet. Fusce viverra auctor augue ut rutrum. Quisque quis nisl non turpis sollicitudin rutrum sit amet eget libero. Donec pretium egestas ante, eu aliquam mi porttitor quis.");
@@ -125,17 +139,18 @@ int main(int count, char** values)
 	button_flow_align.ForceResize(main_flow.Size());
 	Consor::CWindowContainer window(main_flow, "Consor Test");
 
-	thread input_thread([&]()
+	thread program_thread([&]()
 	{
 		Consor::Input::CWindowsInputSystem input;
-		Consor::Util::CFrequencyController draw_fc("draw", 24);
-		Consor::Console::CWindowsConsoleRenderer renderer; 
+		Consor::Console::CWindowsConsoleRenderer renderer;
 		Consor::CDefaultSkin skin;
 		skin.SetRendererColours(renderer);
 
 		auto draw = [&]()
 		{
 			main_mutex.lock();
+			double start = Consor::Util::GetTime();
+
 			renderer.Clear(Consor::CColour());
 		
 			Consor::CSize size = window.Size();
@@ -148,19 +163,23 @@ int main(int count, char** values)
 			renderer.PopRenderBounds();
 		
 			renderer.FlushToScreen();
+
+			double span = Consor::Util::GetTime() - start;
+			renderer.SetTitle(Consor::Util::FormatString("Rendered in %ms (% FPS)", span * 1000.0, 1.0 / span));
 			main_mutex.unlock();
 		};
 
 		thread input_thread([&]() // so stuff still blinks, and updates slowly
 		{
-			while(true)
+			while(!main_exit)
 			{
 				draw();
 				Consor::Util::Sleep(0.5);
 			}
 		});
 
-		while(true)
+
+		while(!main_exit)
 		{
 			// input
 			Consor::Input::Key kp = input.GetKeyPress();
@@ -169,13 +188,18 @@ int main(int count, char** values)
 			// draw
 			draw();
 		}
+
+		input_thread.join();
 	});
 
+	
 	while(true)
 	{
-		Consor::Util::Sleep(0.25);
+		Consor::Util::Sleep(1.0);
 	}
 
+	main_exit = true;
+	program_thread.join();
 
 	return 0;
 }

@@ -17,6 +17,8 @@
 #include <memory>
 #include <vector>
 #include <functional>
+#include <thread>
+#include <mutex>
 
 namespace Consor
 {
@@ -68,6 +70,7 @@ namespace Consor
 	private:
 		std::list<handle_p> m_Subscribed;
 		std::list<handle_p> m_ToRemove;
+		std::mutex m_CallMutex;
 
 		bool m_Itterating;
 	public:
@@ -104,14 +107,26 @@ namespace Consor
 
 		inline void operator()(Args... args)
 		{
-			for(handle_p hand : m_ToRemove)
-				hand->Unregister();
-			m_ToRemove.clear();
+			std::thread* pCall_thread = new std::thread([&]()
+			{
+				m_CallMutex.lock();
+				for(handle_p hand : m_ToRemove)
+					hand->Unregister();
+				m_ToRemove.clear();
 
-			m_Itterating = true;
-			for(handle_p hand : m_Subscribed)
-				(*hand)(args...);
-			m_Itterating = false;
+				m_Itterating = true;
+				for(handle_p hand : m_Subscribed)
+				{
+					m_CallMutex.unlock();
+					(*hand)(args...);
+					m_CallMutex.lock();
+				}
+				m_Itterating = false;
+				m_CallMutex.unlock();
+
+				// free the thread
+				delete pCall_thread;
+			});
 		}
 	};
 };

@@ -121,7 +121,7 @@ CWindowsConsoleRenderer::CWindowsConsoleRenderer()
 	srctWriteRect.Right = m_Width;
 	srctWriteRect.Bottom = m_Height;
 
-	bool success = ReadConsoleOutput(m_BufferHandle, m_pBuffer, coordBufSize, coordBufCoord, &srctWriteRect);
+	BOOL success = ReadConsoleOutput(m_BufferHandle, m_pBuffer, coordBufSize, coordBufCoord, &srctWriteRect);
 
 	// update the colour tables:
 
@@ -131,7 +131,7 @@ CWindowsConsoleRenderer::CWindowsConsoleRenderer()
 
 	GetConsoleScreenBufferInfoEx(m_BufferHandle, &info_newbuf);
 	
-	for(int i = 0; i < MaxColours(); i++)
+	for(size_t i = 0; i < MaxColours(); i++)
 	{
 		COLORREF ref = info_newbuf.ColorTable[i]; // 0x00bbggrr
 		int r = (ref & 0x000000FF) >> 0;
@@ -145,7 +145,7 @@ CWindowsConsoleRenderer::CWindowsConsoleRenderer()
 	}
 
 	static_assert(sizeof(m_OriginalColourTable) == sizeof(m_ColourTable), "Colour table sizes do not match!");
-	memccpy(m_OriginalColourTable, m_ColourTable, 0, sizeof(m_OriginalColourTable));
+	memcpy(m_OriginalColourTable, m_ColourTable, sizeof(m_OriginalColourTable));
 
 	//hide the cursor
 	CONSOLE_CURSOR_INFO cusor_info;
@@ -180,7 +180,7 @@ void CWindowsConsoleRenderer::FlushToScreen()
 	coordBufCoord.X = 0;
 	coordBufCoord.Y = 0;
 
-	bool success = WriteConsoleOutput( 
+	BOOL success = WriteConsoleOutput( 
 		m_BufferHandle, // screen buffer to write to 
 		m_pBuffer,        // buffer to copy from 
 		coordBufSize,     // col-row size of chiBuffer 
@@ -236,12 +236,18 @@ void CWindowsConsoleRenderer::SetColours(size_t Count, CColour* pColours)
 
 	//info.dwSize.X;
 	SetConsoleScreenBufferInfoEx(m_BufferHandle, &info); // this function has a nasty habit of resizing the bloody window...
+	
 	MoveWindow(console, r.left, r.top, r.right - r.left, r.bottom - r.top, TRUE);
 }
 
 void CWindowsConsoleRenderer::ResetColours()
 {
 	SetColours(MaxColours(), m_OriginalColourTable);
+}
+
+void CWindowsConsoleRenderer::SetTitle(const std::string& Title)
+{
+	::SetConsoleTitle(Title.c_str());
 }
 
 CHAR_INFO& CWindowsConsoleRenderer::_CharInfoAt(int x, int y)
@@ -255,8 +261,8 @@ CHAR_INFO& CWindowsConsoleRenderer::_CharInfoAt(int x, int y)
 
 	//x += m_CurrentRenderBound.Pos.X;
 	//y += m_CurrentRenderBound.Pos.Y;
-	x += m_CurrentOffset.X;
-	y += m_CurrentOffset.Y;
+	x += (int)m_CurrentOffset.X;
+	y += (int)m_CurrentOffset.Y;
 
 	if(x < (int)(m_CurrentRenderBound.Pos.X))
 		return dummy;
@@ -291,12 +297,12 @@ CWindowsCharInformation::CWindowsCharInformation(CWindowsConsoleRenderer* pRende
 
 void CWindowsCharInformation::SetAttributes(CharAttributes attr)
 {
-	m_pRenderer->_CharInfoAt(m_Position.X, m_Position.Y).Attributes = attr;
+	m_pRenderer->_CharInfoAt((int)m_Position.X, (int)m_Position.Y).Attributes = attr;
 }
 
 CharAttributes CWindowsCharInformation::GetAttributes()
 {
-	return (CharAttributes)(int)m_pRenderer->_CharInfoAt(m_Position.X, m_Position.Y).Attributes;
+	return (CharAttributes)(int)m_pRenderer->_CharInfoAt((int)m_Position.X, (int)m_Position.Y).Attributes;
 }
 
 void CWindowsCharInformation::SetForegroundColour(const CColour& col)
@@ -333,12 +339,12 @@ CColour CWindowsCharInformation::GetBackgroundColour()
 
 void CWindowsCharInformation::SetChar(char val) 
 {
-	m_pRenderer->_CharInfoAt(m_Position.X, m_Position.Y).Char.AsciiChar = val;
+	m_pRenderer->_CharInfoAt((int)m_Position.X, (int)m_Position.Y).Char.AsciiChar = val;
 }
 
 char CWindowsCharInformation::GetChar()
 {
-	return m_pRenderer->_CharInfoAt(m_Position.X, m_Position.Y).Char.AsciiChar;
+	return m_pRenderer->_CharInfoAt((int)m_Position.X, (int)m_Position.Y).Char.AsciiChar;
 }
 
 bool CWindowsCharInformation::SupportsUnicode() 
@@ -348,12 +354,12 @@ bool CWindowsCharInformation::SupportsUnicode()
 
 void CWindowsCharInformation::SetUnicodeChar(char32_t val) 
 {
-	m_pRenderer->_CharInfoAt(m_Position.X, m_Position.Y).Char.UnicodeChar = val;
+	m_pRenderer->_CharInfoAt((int)m_Position.X, (int)m_Position.Y).Char.UnicodeChar = val;
 }
 
 char32_t CWindowsCharInformation::GetUnicodeChar()
 {
-	return (size_t)m_pRenderer->_CharInfoAt(m_Position.X, m_Position.Y).Char.UnicodeChar;
+	return (size_t)m_pRenderer->_CharInfoAt((int)m_Position.X, (int)m_Position.Y).Char.UnicodeChar;
 }
 
 #ifdef WINDOWS_CONSOLE_RENDERER_FAST
@@ -368,8 +374,8 @@ void CWindowsConsoleRenderer::DrawBox(const CVector& pos, const CSize& size, con
 			CHAR_INFO& info = _CharInfoAt(x, y);
 			info.Char.AsciiChar = box;
 
-			CColour merged = CColour::Blend(col, AttributeBackgroundColour((CharAttributes)info.Attributes));
-			info.Attributes = FromBackgroundColour(merged);
+			CColour merged = CColour::Blend(col, AttributeBackgroundColour(*this, (CharAttributes)info.Attributes));
+			info.Attributes = FromBackgroundColour(*this, merged);
 		}
 }
 
@@ -499,9 +505,9 @@ void CWindowsConsoleRenderer::DrawRect(const CVector& pos, const CSize& size, co
 			CHAR_INFO& info_top = _CharInfoAt(x, pos.Y);
 			info_top.Char.AsciiChar = (CRectangleChar(info_top.Char.AsciiChar) + Horizontal).GetChar();
 			
-			CColour merged_fg = CColour::Blend(fgcol, AttributeForegroundColour((CharAttributes)info_top.Attributes));
-			CColour merged_bg = CColour::Blend(bgcol, AttributeBackgroundColour((CharAttributes)info_top.Attributes));
-			info_top.Attributes = FromForegroundColour(merged_fg) | FromBackgroundColour(merged_bg);
+			CColour merged_fg = CColour::Blend(fgcol, AttributeForegroundColour(*this, (CharAttributes)info_top.Attributes));
+			CColour merged_bg = CColour::Blend(bgcol, AttributeBackgroundColour(*this, (CharAttributes)info_top.Attributes));
+			info_top.Attributes = FromForegroundColour(*this, merged_fg) | FromBackgroundColour(*this, merged_bg);
 		}
 	else
 	for(int x = pos.X; x < pos.X + size.Width; x++)
@@ -520,13 +526,13 @@ void CWindowsConsoleRenderer::DrawRect(const CVector& pos, const CSize& size, co
 		info_bot.Char.AsciiChar = (CRectangleChar(info_bot.Char.AsciiChar) + cur).GetChar();
 		
 		
-		CColour merged_fg = CColour::Blend(fgcol, AttributeForegroundColour((CharAttributes)info_top.Attributes));
-		CColour merged_bg = CColour::Blend(bgcol, AttributeBackgroundColour((CharAttributes)info_top.Attributes));
-		info_top.Attributes = FromForegroundColour(merged_fg) | FromBackgroundColour(merged_bg);
+		CColour merged_fg = CColour::Blend(fgcol, AttributeForegroundColour(*this, (CharAttributes)info_top.Attributes));
+		CColour merged_bg = CColour::Blend(bgcol, AttributeBackgroundColour(*this, (CharAttributes)info_top.Attributes));
+		info_top.Attributes = FromForegroundColour(*this, merged_fg) | FromBackgroundColour(*this, merged_bg);
 
-		merged_fg = CColour::Blend(fgcol, AttributeForegroundColour((CharAttributes)info_bot.Attributes));
-		merged_bg = CColour::Blend(bgcol, AttributeBackgroundColour((CharAttributes)info_bot.Attributes));
-		info_bot.Attributes = FromForegroundColour(merged_fg) | FromBackgroundColour(merged_bg);
+		merged_fg = CColour::Blend(fgcol, AttributeForegroundColour(*this, (CharAttributes)info_bot.Attributes));
+		merged_bg = CColour::Blend(bgcol, AttributeBackgroundColour(*this, (CharAttributes)info_bot.Attributes));
+		info_bot.Attributes = FromForegroundColour(*this, merged_fg) | FromBackgroundColour(*this, merged_bg);
 	}
 
 	if(size.Height == 1)
@@ -537,9 +543,9 @@ void CWindowsConsoleRenderer::DrawRect(const CVector& pos, const CSize& size, co
 			CHAR_INFO& info_l = _CharInfoAt(pos.X, y);
 			info_l.Char.AsciiChar = (CRectangleChar(info_l.Char.AsciiChar) + Vertical).GetChar();
 		
-			CColour merged_fg = CColour::Blend(fgcol, AttributeForegroundColour((CharAttributes)info_l.Attributes));
-			CColour merged_bg = CColour::Blend(bgcol, AttributeBackgroundColour((CharAttributes)info_l.Attributes));
-			info_l.Attributes = FromForegroundColour(merged_fg) | FromBackgroundColour(merged_bg);
+			CColour merged_fg = CColour::Blend(fgcol, AttributeForegroundColour(*this, (CharAttributes)info_l.Attributes));
+			CColour merged_bg = CColour::Blend(bgcol, AttributeBackgroundColour(*this, (CharAttributes)info_l.Attributes));
+			info_l.Attributes = FromForegroundColour(*this, merged_fg) | FromBackgroundColour(*this, merged_bg);
 		}
 	else
 	for(int y = pos.Y; y < pos.Y + size.Height; y++)
@@ -557,13 +563,13 @@ void CWindowsConsoleRenderer::DrawRect(const CVector& pos, const CSize& size, co
 		info_l.Char.AsciiChar = (CRectangleChar(info_l.Char.AsciiChar) + cur).GetChar();
 		info_r.Char.AsciiChar = (CRectangleChar(info_r.Char.AsciiChar) + cur).GetChar();
 
-		CColour merged_fg = CColour::Blend(fgcol, AttributeForegroundColour((CharAttributes)info_l.Attributes));
-		CColour merged_bg = CColour::Blend(bgcol, AttributeBackgroundColour((CharAttributes)info_l.Attributes));
-		info_l.Attributes = FromForegroundColour(merged_fg) | FromBackgroundColour(merged_bg);
+		CColour merged_fg = CColour::Blend(fgcol, AttributeForegroundColour(*this, (CharAttributes)info_l.Attributes));
+		CColour merged_bg = CColour::Blend(bgcol, AttributeBackgroundColour(*this, (CharAttributes)info_l.Attributes));
+		info_l.Attributes = FromForegroundColour(*this, merged_fg) | FromBackgroundColour(*this, merged_bg);
 
-		merged_fg = CColour::Blend(fgcol, AttributeForegroundColour((CharAttributes)info_r.Attributes));
-		merged_bg = CColour::Blend(bgcol, AttributeBackgroundColour((CharAttributes)info_r.Attributes));
-		info_r.Attributes = FromForegroundColour(merged_fg) | FromBackgroundColour(merged_bg);
+		merged_fg = CColour::Blend(fgcol, AttributeForegroundColour(*this, (CharAttributes)info_r.Attributes));
+		merged_bg = CColour::Blend(bgcol, AttributeBackgroundColour(*this, (CharAttributes)info_r.Attributes));
+		info_r.Attributes = FromForegroundColour(*this, merged_fg) | FromBackgroundColour(*this, merged_bg);
 	}
 }
 
@@ -586,9 +592,9 @@ void CWindowsConsoleRenderer::DrawString(const std::string& str, const CVector& 
 
 		int bg_col = info.Attributes & CharAttributes::BackgroundWhite;
 
-		CColour merged_fg = CColour::Blend(fgcol, AttributeForegroundColour((CharAttributes)info.Attributes));
-		CColour merged_bg = CColour::Blend(bgcol, AttributeBackgroundColour((CharAttributes)info.Attributes));
-		info.Attributes = FromForegroundColour(merged_fg) | FromBackgroundColour(merged_bg);
+		CColour merged_fg = CColour::Blend(fgcol, AttributeForegroundColour(*this, (CharAttributes)info.Attributes));
+		CColour merged_bg = CColour::Blend(bgcol, AttributeBackgroundColour(*this, (CharAttributes)info.Attributes));
+		info.Attributes = FromForegroundColour(*this, merged_fg) | FromBackgroundColour(*this, merged_bg);
 
 		pos.X++;
 
