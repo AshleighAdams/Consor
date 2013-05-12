@@ -126,6 +126,7 @@ CWindowsConsoleRenderer::CWindowsConsoleRenderer()
 	// update the colour tables:
 
 	CONSOLE_SCREEN_BUFFER_INFOEX info_newbuf;
+
 	info_newbuf.cbSize = sizeof(info_newbuf);
 
 	GetConsoleScreenBufferInfoEx(m_BufferHandle, &info_newbuf);
@@ -229,7 +230,13 @@ void CWindowsConsoleRenderer::SetColours(size_t Count, CColour* pColours)
 		info.ColorTable[i] = RGB(r, g, b);
 	}
 
-	SetConsoleScreenBufferInfoEx(m_BufferHandle, &info);
+	HWND console = GetConsoleWindow();
+	RECT r;
+	GetWindowRect(console, &r);
+
+	//info.dwSize.X;
+	SetConsoleScreenBufferInfoEx(m_BufferHandle, &info); // this function has a nasty habit of resizing the bloody window...
+	MoveWindow(console, r.left, r.top, r.right - r.left, r.bottom - r.top, TRUE);
 }
 
 void CWindowsConsoleRenderer::ResetColours()
