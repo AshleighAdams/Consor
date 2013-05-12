@@ -76,21 +76,29 @@ namespace Consor
 
 			void SetChar(char val);
 			char GetChar();
+
+			bool SupportsUnicode();
+			void SetUnicodeChar(char32_t val);
+			char32_t GetUnicodeChar();
 		};
 
 		class CWindowsConsoleRenderer : public IConsoleRenderer
 		{
 			friend class CWindowsCharInformation;
 
-			HANDLE			m_BufferHandle;
-			HANDLE			m_STDOutHandle;
-			int				m_Width;
-			int				m_Height;
-			CHAR_INFO*		m_pBuffer;
+//#ifdef WINDOWS_CONSOLERENDERER_FRIENDS
+		public:
+//#endif
+
+			HANDLE          m_BufferHandle;
+			HANDLE          m_STDOutHandle;
+			int             m_Width;
+			int             m_Height;
+			CHAR_INFO*      m_pBuffer;
 
 			CHAR_INFO& _CharInfoAt(int x, int y);
 
-
+			CColour         m_ColourTable[16];
 		public:
 			CWindowsConsoleRenderer();
 			~CWindowsConsoleRenderer();
@@ -98,6 +106,11 @@ namespace Consor
 			std::unique_ptr<ICharInformation> GetCharInformation(const CVector& pos);
 			void FlushToScreen();
 			CSize Size();
+
+			size_t MaxColours();
+			void GetColours(size_t Count, CColour* pColours);
+			void SetColours(size_t Count, CColour* pColours);
+
 
 #ifdef WINDOWS_CONSOLE_RENDERER_FAST
 			void DrawBox(const CVector& pos, const CSize& size, const CColour& col);

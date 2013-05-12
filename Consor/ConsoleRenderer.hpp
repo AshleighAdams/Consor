@@ -22,6 +22,11 @@ namespace Consor
 
 			virtual void SetChar(char val) = 0;
 			virtual char GetChar() = 0;
+
+			virtual bool SupportsUnicode() = 0;
+			virtual void SetUnicodeChar(char32_t val) = 0;
+			virtual char32_t GetUnicodeChar() = 0;
+
 		};
 
 		struct renderbound_t
@@ -42,6 +47,11 @@ namespace Consor
 			virtual void FlushToScreen() = 0;
 			virtual std::unique_ptr<ICharInformation> GetCharInformation(const CVector& pos) = 0;
 			virtual CSize Size() = 0;
+
+			// this will probably replace existing colours
+			virtual size_t MaxColours() = 0;
+			virtual void GetColours(size_t Count, CColour* pColours) = 0;
+			virtual void SetColours(size_t Count, CColour* pColours) = 0;
 
 			// other stuff
 			virtual ~IConsoleRenderer() {}
