@@ -87,6 +87,9 @@
     <ClCompile Include="Controls\CheckBox.cpp">
       <Filter>Source Files\Controls</Filter>
     </ClCompile>
+    <ClCompile Include="Util\Debug.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Util\FrequencyController.hpp">
@@ -157,6 +160,9 @@
     </ClInclude>
     <ClInclude Include="Controls\CheckBox.hpp">
       <Filter>Source Files\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Debug.hpp">
+      <Filter>Source Files\Util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,6 +1,10 @@
 #ifndef UNITS_H
 #define UNITS_H
 
+#include <iostream>
+#include <ostream>
+#include <istream>
+
 namespace Consor
 {
 	class CSize
@@ -72,6 +76,8 @@ namespace Consor
 		bool operator!=(const CColour& A) const;
 	};
 
+
+
 	// literals
 	/*
 	CSize operator "" _w(long double Value);
@@ -81,5 +87,11 @@ namespace Consor
 	CVector operator "" _t(long double Value);
 	*/
 };
+
+// outside namespace
+// tostring:
+std::ostream& operator<<(std::ostream& stream, const Consor::CSize& value);
+std::ostream& operator<<(std::ostream& stream, const Consor::CVector& value);
+std::ostream& operator<<(std::ostream& stream, const Consor::CColour& value);
 
 #endif

@@ -85,6 +85,7 @@
     <ClCompile Include="Controls\VerticalScrollbar.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Units.cpp" />
+    <ClCompile Include="Util\Debug.cpp" />
     <ClCompile Include="Util\FrequencyController.cpp" />
     <ClCompile Include="Util\StringUtils.cpp" />
     <ClCompile Include="Util\Time.cpp" />
@@ -109,6 +110,7 @@
     <ClInclude Include="InputSystem.hpp" />
     <ClInclude Include="Skin.hpp" />
     <ClInclude Include="Units.hpp" />
+    <ClInclude Include="Util\Debug.hpp" />
     <ClInclude Include="Util\FrequencyController.hpp" />
     <ClInclude Include="Util\Hooks.hpp" />
     <ClInclude Include="Util\StringUtils.hpp" />

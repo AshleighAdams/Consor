@@ -3,6 +3,7 @@
 
 #include "Units.hpp"
 #include "ConsoleRenderer.hpp"
+#include "Util/Debug.hpp"
 
 namespace Consor
 {
@@ -18,8 +19,18 @@ namespace Consor
 			CColour* pColours = new CColour[maxcols];
 			Renderer.GetColours(maxcols, pColours);
 			
+
 			if(m_ColourPos >= maxcols) // search for an existing colour
 			{
+				for(size_t i = 0; i < maxcols; i++) // look for an exact match
+				{
+					if(pColours[i] == target)
+					{
+						delete [] pColours;
+						return target;
+					}
+				}
+
 				CColour closest = pColours[0];
 				double closest_distance = CColour::Distance(target, closest);
 
@@ -33,6 +44,8 @@ namespace Consor
 						closest = pColours[i];
 					}
 				}
+
+				Util::Log("out of colours, using closest match % for % (dist: %)", closest, target, closest_distance);
 
 				delete [] pColours;
 				return closest;
@@ -48,7 +61,8 @@ namespace Consor
 			}
 
 			// we didn't find the colour, create a new one...
-
+			Util::Log("creating console colour #% %", m_ColourPos, target);
+			
 			pColours[m_ColourPos] = target;
 			m_ColourPos++;
 			Renderer.SetColours(m_ColourPos, pColours);
@@ -64,6 +78,8 @@ namespace Consor
 		virtual CColour WindowBackground() const = 0;
 		virtual CColour WindowForeground() const = 0;
 		virtual CColour WindowForegroundShine() const = 0;
+		virtual char32_t WindowTitleLeftChar() const = 0;
+		virtual char32_t WindowTitleRightChar() const = 0;
 
 		virtual CColour ScrollForeground() const = 0;
 		virtual CColour ScrollForegroundFocused() const = 0;
@@ -84,13 +100,20 @@ namespace Consor
 		CColour AlternateBackground;
 		CColour FocusColour;
 		CColour ForegroundShine;
+		char32_t WindowLeft;
+		char32_t WindowRight;
 
 		CDefaultSkin()
 		{
+			WindowLeft = 196;
+			WindowRight = 196;
 		}
 	public:
 		CDefaultSkin(Console::IConsoleRenderer& Renderer)
 		{
+			WindowLeft = 196;
+			WindowRight = 196;
+
 			m_ColourPos = 0;
 			Foreground = RequestColour(Renderer, CColour(1, 1, 1));
 			ForegroundShine = RequestColour(Renderer, CColour(1, 1, 1));
@@ -129,6 +152,16 @@ namespace Consor
 			return ForegroundShine;
 		}
 
+		virtual char32_t WindowTitleLeftChar() const
+		{
+			return WindowLeft;
+		}
+
+		virtual char32_t WindowTitleRightChar() const
+		{
+			return WindowRight;
+		}
+
 		virtual CColour ScrollForeground() const
 		{
 			return Foreground;
@@ -165,9 +198,12 @@ namespace Consor
 	public:
 		CHackerSkin(Console::IConsoleRenderer& Renderer)
 		{
+			WindowLeft = 217;
+			WindowRight = 192;
+
 			m_ColourPos = 0;
 			Foreground = RequestColour(Renderer, CColour(1, 0.5, 0));
-			ForegroundShine = RequestColour(Renderer, CColour(1, 1, 1));
+			ForegroundShine = RequestColour(Renderer, CColour(1, 0.5, 0.25));
 			Background = RequestColour(Renderer, CColour(0, 0, 0));
 			AlternateBackground = RequestColour(Renderer, CColour(0.5, 0.25, 0));
 			FocusColour = RequestColour(Renderer, CColour(1, 0, 0));

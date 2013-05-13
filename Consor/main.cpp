@@ -26,6 +26,7 @@ using namespace std;
 
 int main(int count, char** values)
 {
+	cout << "a\nb\na\nb\na\nb\na\nb\na\nb\na\nb\na\nb\na\nb\na\nb\na\nb\na\nb\na\nb\na\nb\na\nb\na\nb\na\nb\n";
 	/*
 	Consor::Input::CWindowsInputSystem input;
 	Consor::Console::CWindowsConsoleRenderer renderer; 
@@ -48,7 +49,7 @@ int main(int count, char** values)
 	thread program_thread([&]()
 	{
 		Consor::Input::CWindowsInputSystem input;
-		Consor::CHackerSkin skin(renderer);
+		Consor::CDefaultSkin skin(renderer);
 
 		auto draw = [&]()
 		{
@@ -90,6 +91,11 @@ int main(int count, char** values)
 		{
 			// input
 			Consor::Input::Key kp = input.GetKeyPress();
+
+			if(kp == Consor::Input::Key::F8)
+				skin = Consor::CHackerSkin(renderer);
+			else if(kp == Consor::Input::Key::F9)
+				skin = Consor::CDefaultSkin(renderer);
 
 			if(pWindow)
 				pWindow->HandleInput(kp);
@@ -164,8 +170,10 @@ int main(int count, char** values)
 		{
 			main_exit = true;
 		};
-
+		
+		main_mutex.lock();
 		pWindow = &window;
+		main_mutex.unlock();
 
 		while(!loggedin)
 		{
@@ -176,8 +184,10 @@ int main(int count, char** values)
 				return 0;
 			}
 		}
-
+		
+		main_mutex.lock();
 		pWindow = nullptr;
+		main_mutex.unlock();
 	}
 
 	{
@@ -289,17 +299,24 @@ int main(int count, char** values)
 
 		button_flow_align.ForceResize(main_flow.Size());
 		Consor::CWindowContainer window(main_flow, "Consor Test");
+
+		main_mutex.lock();
 		pWindow = &window;
+		main_mutex.unlock();
 	
 		while(!main_exit)
 		{
 			Consor::Util::Sleep(1.0);
 		}
 
+		main_mutex.lock();
 		pWindow = nullptr;
+		main_mutex.unlock();
 		program_thread.join();
 		return 0;
 	}
+
+	//symantic ideas:
 
 	main_exit = true;
 	program_thread.join();

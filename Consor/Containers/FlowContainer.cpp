@@ -145,6 +145,7 @@ bool CFlowContainer::CanFocus()
 	for(CControl* Control : m_Controls) // return true if one of hour controls can obtain focus
 		if(Control->CanFocus())
 			return true;
+	return false;
 }
 
 void CFlowContainer::AddControl(CControl& Control)

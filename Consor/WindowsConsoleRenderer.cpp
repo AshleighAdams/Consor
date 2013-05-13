@@ -6,6 +6,8 @@
 #include <fcntl.h>
 #include <io.h>
 
+#include "Util/Debug.hpp"
+
 using namespace std;
 
 using namespace Consor;
@@ -94,7 +96,9 @@ CWindowsConsoleRenderer::CWindowsConsoleRenderer()
 	assert(gotinfo == TRUE);
 
 	m_Width = info.dwSize.X;
-	m_Height = min(info.srWindow.Bottom + 1, info.dwSize.Y);
+	m_Height = min(info.srWindow.Bottom - info.srWindow.Top + 1, info.srWindow.Right - info.srWindow.Left + 1);
+
+	Util::Log("detected console size: %, %", m_Width, m_Height);
 
 	PushRenderBounds(CVector(), CSize(m_Width, m_Height));
 
@@ -107,11 +111,16 @@ CWindowsConsoleRenderer::CWindowsConsoleRenderer()
 	);
 
 	if (stdout == INVALID_HANDLE_VALUE || m_BufferHandle == INVALID_HANDLE_VALUE)
+	{
+		Util::Log("failed to create output buffer. version string: %", VersionString());
 		throw std::exception("failed to create output buffer");
+	}
 
-	if (!SetConsoleActiveScreenBuffer(m_BufferHandle)) 
+	if (!SetConsoleActiveScreenBuffer(m_BufferHandle))
+	{
+		Util::Log("failed to activate output buffer. version string: %", VersionString());
 		throw std::exception("failed to activate output buffer");
-
+	}
 
 	m_pBuffer = new CHAR_INFO[m_Width * m_Height];
 
@@ -302,13 +311,16 @@ void CWindowsConsoleRenderer::SetColours(size_t Count, CColour* pColours)
 		info.ColorTable[i] = RGB(r, g, b);
 	}
 
-	HWND console = GetConsoleWindow();
-	RECT r;
-	GetWindowRect(console, &r);
+	//HWND console = GetConsoleWindow();
+	//RECT r;
+	//GetWindowRect(console, &r);
 
+	// this fixes the window resizing bug! fuck yeah!
+	info.srWindow.Top -= 1;
+	info.srWindow.Right += 2;
 	SetConsoleScreenBufferInfoEx(m_BufferHandle, &info); // this function has a nasty habit of resizing the bloody window...
 	
-	MoveWindow(console, r.left, r.top, r.right - r.left, r.bottom - r.top, TRUE);
+	//MoveWindow(console, r.left, r.top, r.right - r.left, r.bottom - r.top, TRUE);
 }
 
 void CWindowsConsoleRenderer::ResetColours()
