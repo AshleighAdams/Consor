@@ -38,10 +38,10 @@ void CCheckBox::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus,
 	
 	if(Checked())
 	{
-		if(info->SupportsUnicode())
-			info->SetUnicodeChar((char32_t)0x25CB);
-		else
-			info->SetChar('x');
+		//if(info->SupportsUnicode())
+		//	info->SetUnicodeChar((char32_t)0x25CB);
+		//else
+		info->SetChar('x');
 	}
 
 	Renderer.PushRenderBounds(CVector(4, 0), m_Label.Size());
