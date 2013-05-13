@@ -93,6 +93,9 @@
     <ClCompile Include="Controls\ProgressBar.cpp">
       <Filter>Source Files\Controls</Filter>
     </ClCompile>
+    <ClCompile Include="Util\Math.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Util\FrequencyController.hpp">
@@ -169,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="Controls\ProgressBar.hpp">
       <Filter>Source Files\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Math.hpp">
+      <Filter>Source Files\Util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -5,7 +5,7 @@ using namespace Consor;
 
 CPasswordBox::CPasswordBox()
 {
-	m_Size = CSize();
+	m_Size = CSize(20, 1);
 	SetText("");
 	SetPasswordChar('*');
 }

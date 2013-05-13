@@ -105,6 +105,7 @@ namespace Consor
 		CColour FocusColour;
 		CColour ForegroundShine;
 		CColour ProgressPercent;
+		CColour ProgressForeground;
 		char32_t WindowLeft;
 		char32_t WindowRight;
 
@@ -116,8 +117,16 @@ namespace Consor
 	public:
 		CDefaultSkin(Console::IConsoleRenderer& Renderer)
 		{
-			WindowLeft = 196;
-			WindowRight = 196;
+			if(!Renderer.SupportsUnicode())
+			{
+				WindowLeft = 196;
+				WindowRight = 196;
+			}
+			else
+			{
+				WindowLeft = 0x2500;
+				WindowRight = 0x2500;
+			}
 
 			m_ColourPos = 0;
 			Foreground = RequestColour(Renderer, CColour(1, 1, 1));
@@ -126,6 +135,7 @@ namespace Consor
 			AlternateBackground = RequestColour(Renderer, CColour(0, 0, 0.5));
 			FocusColour = RequestColour(Renderer, CColour(1, 0, 0));
 			ProgressPercent = RequestColour(Renderer, CColour(1, 1, 1));
+			ProgressForeground = RequestColour(Renderer, CColour(0, 1, 1));
 		}
 
 		virtual CColour LabelForeground() const
@@ -205,7 +215,7 @@ namespace Consor
 
 		virtual CColour ProgressBarForeground(double Percent) const
 		{
-			return Foreground;
+			return ProgressForeground;
 		}
 
 		virtual CColour ProgressBarBackground(double Percent) const
@@ -219,16 +229,27 @@ namespace Consor
 	public:
 		CHackerSkin(Console::IConsoleRenderer& Renderer)
 		{
-			WindowLeft = 217;
-			WindowRight = 192;
+			if(!Renderer.SupportsUnicode())
+			{
+				WindowLeft = 217;
+				WindowRight = 192;
 
+			}
+			else
+			{
+				WindowLeft = 0x2518;
+				WindowRight = 0x2514;
+			}
+
+			
 			m_ColourPos = 0;
 			Foreground = RequestColour(Renderer, CColour(1, 0.5, 0));
 			ForegroundShine = RequestColour(Renderer, CColour(1, 0.5, 0.25));
 			Background = RequestColour(Renderer, CColour(0, 0, 0));
 			AlternateBackground = RequestColour(Renderer, CColour(0.5, 0.25, 0));
-			FocusColour = RequestColour(Renderer, CColour(1, 0, 0));
+			FocusColour = RequestColour(Renderer, CColour(1, 1, 1));
 			ProgressPercent = RequestColour(Renderer, CColour(1, 1, 1));
+			ProgressForeground = RequestColour(Renderer, CColour(1, 0.5, 0));
 		};
 	};
 }

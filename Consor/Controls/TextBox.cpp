@@ -5,7 +5,7 @@ using namespace Consor;
 
 CTextBox::CTextBox()
 {
-	m_Size = CSize();
+	m_Size = CSize(20, 1);
 	SetText("");
 	m_InsertMode = false;
 	m_LastTyped = Util::GetTime();
@@ -102,7 +102,7 @@ bool CTextBox::m_IsTypedChar(Input::Key Key, char& letter)
 	return false;
 }
 
-bool CTextBox::HandleInput(Input::Key Key)
+bool CTextBox::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
 	if(Key == Input::Key::Left)
 	{

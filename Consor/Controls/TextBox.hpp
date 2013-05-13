@@ -20,7 +20,7 @@ namespace Consor
 		void SetText(const std::string& Text);
 		virtual std::string GetText();
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);
-		virtual bool HandleInput(Input::Key Key);
+		virtual bool HandleInput(Input::Key Key, Input::IInputSystem& System);
 		virtual bool CanFocus();
 	};
 }

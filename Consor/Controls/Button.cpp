@@ -54,7 +54,7 @@ void CButton::ForceResize(const CSize& Size)
 	OnResize(m_Size);
 }
 
-bool CButton::HandleInput(Input::Key Key)
+bool CButton::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
 	if(Key == Input::Key::Enter || Key == Input::Key::Space)
 	{

@@ -64,7 +64,7 @@ void CCheckBox::ForceResize(const CSize& Size)
 	OnResize(Size);
 }
 
-bool CCheckBox::HandleInput(Input::Key Key)
+bool CCheckBox::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
 	if(Key == Input::Key::Enter || Key == Input::Key::Space)
 	{

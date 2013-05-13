@@ -90,9 +90,9 @@ void CAlignContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool Has
 	Renderer.PopRenderBounds();
 }
 
-bool CAlignContainer::HandleInput(Input::Key Key)
+bool CAlignContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
-	return m_pClient->HandleInput(Key);
+	return m_pClient->HandleInput(Key, System);
 }
 
 bool CAlignContainer::CanFocus()

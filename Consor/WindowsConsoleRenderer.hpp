@@ -10,7 +10,7 @@
 #include <Windows.h>
 
 // not having to go through all the hoops of ICharInfo significantly speeds up the rendering process
-//#define WINDOWS_CONSOLE_RENDERER_FAST
+#define WINDOWS_CONSOLE_RENDERER_FAST
 
 namespace Consor
 {
@@ -67,7 +67,8 @@ namespace Consor
 			CWindowsCharInformation(CWindowsConsoleRenderer* pRenderer, CVector pos);
 			void SetAttributes(CharAttributes attr);
 			CharAttributes GetAttributes();
-			
+			void SetPosition(const CVector& pos);
+
 			void SetForegroundColour(const CColour& col);
 			CColour GetForegroundColour();
 
@@ -120,7 +121,8 @@ namespace Consor
 			void SetTitle(const std::string& Title);
 #ifdef WINDOWS_CONSOLE_RENDERER_FAST
 			void DrawBox(const CVector& pos, const CSize& size, const CColour& col);
-			void DrawRect(const CVector& pos, const CSize& size, const CColour& fgcol, const CColour& bgcol);
+			//leave DrawRect to the abstract renderer, it's way, way too messy for us to keep it up to date here
+			//void DrawRect(const CVector& pos, const CSize& size, const CColour& fgcol, const CColour& bgcol);
 			void DrawString(const std::string& str, const CVector& pos, const CColour& fgcol, const CColour& bgcol);
 #endif
 		};

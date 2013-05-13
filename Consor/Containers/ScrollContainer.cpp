@@ -50,71 +50,166 @@ void CScrollContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool Ha
 
 	CSize vscrollsize = m_VScrollbar.Size();
 	CSize hscrollsize = m_HScrollbar.Size();
+	CSize clientsize = m_pClient->Size();
 
-	if(m_Size.Width > 0) // if the width isn't automatic
+	if(m_Size.Width > 0 && childsize.Width > m_Size.Width) // if the width isn't automatic
 	{
-		offset.X = (int)-(m_HScrollbar.GetPercent() * (childsize.Width - selfsize.Width));
+		offset.X = (int)-(m_HScrollbar.GetPercent() * (childsize.Width - (selfsize.Width - vscrollsize.Width)));
+
+		double incremant = 1.0 / (clientsize.Width - selfsize.Width);
+		m_HScrollbar.SetChangeSize(incremant);
 
 		Renderer.PushRenderBounds(CVector(0, selfsize.Height - hscrollsize.Height), hscrollsize);
 			m_HScrollbar.Draw(Renderer, HasFocus, Skin);
 		Renderer.PopRenderBounds();
 	}
-	if(m_Size.Height > 0) // if the hieht isn't automatic
+	else hscrollsize.Height = 0;
+
+	if(m_Size.Height > 0 && childsize.Height > m_Size.Height) // if the hieht isn't automatic
 	{
-		offset.Y = (int)-(m_VScrollbar.GetPercent() * (childsize.Height - selfsize.Height));
+		offset.Y = (int)-(m_VScrollbar.GetPercent() * (childsize.Height - (selfsize.Height - hscrollsize.Height)));
+
+		double incremant = 1.0 / (clientsize.Height - selfsize.Height);
+		m_VScrollbar.SetChangeSize(incremant);
 
 		Renderer.PushRenderBounds(CVector(selfsize.Width - vscrollsize.Width, 0), vscrollsize);
 			m_VScrollbar.Draw(Renderer, HasFocus, Skin);
 		Renderer.PopRenderBounds();
 	}
+	else vscrollsize.Width = 0;
 
 	Renderer.PushRenderBounds(offset, selfsize - CSize(vscrollsize.Width, hscrollsize.Height));
 		m_pClient->Draw(Renderer, HasFocus && m_pClient->CanFocus(), Skin);
 	Renderer.PopRenderBounds();
 }
 
-bool CScrollContainer::HandleInput(Input::Key Key)
+bool CScrollContainer::ScrollDown()
 {
-	if(m_pClient->HandleInput(Key))
-		return true;
-
 	CSize clientsize = m_pClient->Size();
 	CSize selfsize = Size();
+
+	if(clientsize.Height < selfsize.Height)
+		return false;
+
+	double perc = m_VScrollbar.GetPercent();
+	double incremant = 1.0 / (clientsize.Height - selfsize.Height);
+
+	perc += incremant;
+
+	if(perc > 1.0)
+		perc = 1.0;
+
+	if(perc == m_VScrollbar.GetPercent()) // allow shallower scrollcontainers to also scroll
+		return false;
+
+	m_VScrollbar.SetPercent(perc);
+	return true;
+}
+
+bool CScrollContainer::ScrollUp()
+{
+	CSize clientsize = m_pClient->Size();
+	CSize selfsize = Size();
+
+	if(clientsize.Height < selfsize.Height)
+		return false;
+
+	double perc = m_VScrollbar.GetPercent();
+	double incremant = 1.0 / (clientsize.Height - selfsize.Height);
+
+	perc -= incremant;
+
+	if(perc < 0)
+		perc = 0;
+
+	if(perc == m_VScrollbar.GetPercent()) // allow shallower scrollcontainers to also scroll
+		return false;
+
+	m_VScrollbar.SetPercent(perc);
+	return true;
+}
+
+bool CScrollContainer::ScrollLeft()
+{
+	CSize clientsize = m_pClient->Size();
+	CSize selfsize = Size();
+
+	if(clientsize.Width < selfsize.Width)
+		return false;
+
+	double perc = m_HScrollbar.GetPercent();
+	double incremant = 1.0 / (clientsize.Width - selfsize.Width);
+
+	perc -= incremant;
+
+	if(perc < 0)
+		perc = 0;
+
+	if(perc == m_HScrollbar.GetPercent()) // allow shallower scrollcontainers to also scroll
+		return false;
+
+	m_HScrollbar.SetPercent(perc);
+	return true;
+}
+
+bool CScrollContainer::ScrollRight()
+{
+	CSize clientsize = m_pClient->Size();
+	CSize selfsize = Size();
+
+	if(clientsize.Width < selfsize.Width)
+		return false;
+	double perc = m_HScrollbar.GetPercent();
+	double incremant = 1.0 / (clientsize.Width - selfsize.Width);
+
+	perc += incremant;
+
+	if(perc > 1.0)
+		perc = 1.0;
+
+	if(perc == m_HScrollbar.GetPercent()) // allow shallower scrollcontainers to also scroll
+		return false;
+
+	m_HScrollbar.SetPercent(perc);
+	return true;
+}
+
+bool CScrollContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
+{
+	if(System.ControlDown())
+	{
+		char x = (char)Key;
+		bool handeled = false;
+
+		switch(Key)
+		{
+		case Input::Key::Left:
+			handeled = ScrollLeft();
+			break;
+		case Input::Key::Right:
+			handeled = ScrollRight();
+			break;
+		case Input::Key::Up:
+			handeled = ScrollUp();
+			break;
+		case Input::Key::Down:
+			handeled = ScrollDown();
+			break;
+		}
+
+		if(handeled)
+			return true;
+	}
+
+	if(m_pClient->HandleInput(Key, System))
+		return true;
 
 	if(m_Size.Height > 0)
 	{
 		if(Key == Input::Key::PageDown || Key == Input::Key::Numpad3)
-		{
-			double perc = m_VScrollbar.GetPercent();
-			double incremant = 1.0 / (clientsize.Height - selfsize.Height);
-
-			perc += incremant;
-
-			if(perc > 1.0)
-				perc = 1.0;
-
-			if(perc == m_VScrollbar.GetPercent()) // allow shallower scrollcontainers to also scroll
-				return false;
-
-			m_VScrollbar.SetPercent(perc);
-			return true;
-		}
+			return ScrollDown();
 		else if(Key == Input::Key::PageUp || Key == Input::Key::Numpad9)
-		{
-			double perc = m_VScrollbar.GetPercent();
-			double incremant = 1.0 / (clientsize.Height - selfsize.Height);
-
-			perc -= incremant;
-
-			if(perc < 0)
-				perc = 0;
-
-			if(perc == m_VScrollbar.GetPercent())
-				return false;
-
-			m_VScrollbar.SetPercent(perc);
-			return true;
-		}
+			return ScrollUp();
 	}
 
 	return false;

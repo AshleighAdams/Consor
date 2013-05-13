@@ -40,10 +40,14 @@ public:
 		AlternateBackground = RequestColour(Renderer, Consor::CColour(0.3, 0.3, 0.3));
 		FocusColour = RequestColour(Renderer, Consor::CColour(0, 0, 1));
 		ProgressPercent = RequestColour(Renderer, Consor::CColour(1, 1, 1));
+		ProgressForeground = RequestColour(Renderer, Consor::CColour(0, 1, 1));
 	};
 };
 
-int main(int count, char** values)
+#include <codecvt>
+#include <locale>
+
+int main(int count, wchar_t** values)
 {
 	/*
 	Consor::Input::CWindowsInputSystem input;
@@ -67,7 +71,7 @@ int main(int count, char** values)
 	thread program_thread([&]()
 	{
 		Consor::Input::CWindowsInputSystem input;
-		Consor::ISkin& skin = Consor::CHackerSkin(renderer);
+		Consor::CDefaultSkin skin = Consor::CDefaultSkin(renderer);
 
 		auto draw = [&]()
 		{
@@ -118,7 +122,7 @@ int main(int count, char** values)
 				skin = Consor::CDefaultSkin(renderer);
 
 			if(pWindow)
-				pWindow->HandleInput(kp);
+				pWindow->HandleInput(kp, input);
 
 			// draw
 			draw();
@@ -146,9 +150,7 @@ int main(int count, char** values)
 		flow_table_col1.AddControl(lbl_pw);
 
 		CTextBox un; CPasswordBox pw;
-		un.ForceResize(CSize(20, 1));
 		un.SetText("test");
-		pw.ForceResize(CSize(20, 1));
 
 		flow_table_col2.AddControl(un);
 		flow_table_col2.AddControl(pw);
@@ -205,6 +207,59 @@ int main(int count, char** values)
 			}
 		}
 		
+		main_mutex.lock();
+		pWindow = nullptr;
+		main_mutex.unlock();
+	}
+
+	// the pretend "logging in" window
+	{
+		using namespace Consor;
+
+		CLabel consoletext;
+		CScrollContainer scroll(consoletext, CSize(40, 8));
+
+		string total = "";
+		bool notscrolled = true;
+		auto addtext = [&](const std::string& msg)
+		{
+			main_mutex.lock(); // we're messing with something that the main draw thread will be too
+			total += msg + "\n";
+			consoletext.SetText(total);
+			consoletext.ForceResize(scroll.Size() - CSize(1, 1));
+			
+			if(notscrolled && scroll.ScrollDown())
+				notscrolled = false;
+			main_mutex.unlock();
+		};
+
+		CWindowContainer window(scroll, "Logging in");
+
+		main_mutex.lock();
+		pWindow = &window;
+		main_mutex.unlock();
+
+		addtext("commencing the ScrollContainer auto scrolling test..."); Util::Sleep(0.5);
+		addtext("connecting to login server..."); Util::Sleep(0.5);
+		addtext("logging in..."); Util::Sleep(2);
+
+		string reasons[] = {"information", "datapack", "members", "updates", "earth", "universe", "lorem ipsum", "oxford dictionary"};
+
+		for(int i = 0; i < (sizeof reasons / sizeof reasons[0]); i++)
+		{
+			addtext(Util::FormatString("downloading \"%\"...", reasons[i])); Util::Sleep(0.75);
+		}
+
+		addtext("launching..."); Util::Sleep(1);
+		addtext("loading UI..."); Util::Sleep(1);
+		addtext("okay, now I'm going to print numbers 0 to 99"); Util::Sleep(1);
+
+		for(int i = 0; i < 100; i++)
+		{
+			addtext(Util::FormatString("%", i)); Util::Sleep(0.1);
+		}
+		Util::Sleep(1);
+
 		main_mutex.lock();
 		pWindow = nullptr;
 		main_mutex.unlock();
@@ -284,7 +339,7 @@ int main(int count, char** values)
 		};
 
 		flow_tests_lables.AddControl(lbl_btn);
-		flow_tests_controls.AddControl(btn);
+		flow_tests_controls.AddControl(btn, 20);
 
 		//HScrollbar test
 		Consor::CLabel lbl_scroll;
@@ -318,7 +373,7 @@ int main(int count, char** values)
 		Consor::CLabel lbl_prog;
 		Consor::CProgressBar prog;
 		lbl_prog.SetText("ProgressBar:");
-		prog.SetPercent(0.5);
+		prog.SetPercent(0.275);
 
 		flow_tests_lables.AddControl(lbl_prog);
 		flow_tests_controls.AddControl(prog);
@@ -328,7 +383,7 @@ int main(int count, char** values)
 
 		button_flow_align.ForceResize(main_flow.Size());
 
-		Consor::CScrollContainer main_scroll(main_flow, Consor::CSize(-1, 20));
+		Consor::CScrollContainer main_scroll(main_flow, Consor::CSize(30, 15));
 		Consor::CWindowContainer window(main_scroll, "Consor Test");
 
 		main_mutex.lock();

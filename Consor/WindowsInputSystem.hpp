@@ -13,6 +13,8 @@ namespace Consor
 			CWindowsInputSystem();
 			virtual bool KeyWaiting();
 			virtual Key GetKeyPress();
+			virtual bool ControlDown();
+			virtual bool ShiftDown();
 		};
 	}
 }

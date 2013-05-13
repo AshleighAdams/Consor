@@ -59,6 +59,8 @@ namespace Consor
 		public:
 			virtual bool KeyWaiting() = 0;
 			virtual Key GetKeyPress() = 0;
+			virtual bool ControlDown() = 0;
+			virtual bool ShiftDown() = 0;
 		};
 	}
 }

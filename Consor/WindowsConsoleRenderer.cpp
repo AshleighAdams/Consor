@@ -5,6 +5,8 @@
 #include <assert.h>
 #include <fcntl.h>
 #include <io.h>
+#include <locale>
+#include <codecvt>
 
 #include "Util/Debug.hpp"
 
@@ -133,7 +135,7 @@ CWindowsConsoleRenderer::CWindowsConsoleRenderer()
 	srctWriteRect.Right = m_Width;
 	srctWriteRect.Bottom = m_Height;
 
-	BOOL success = ReadConsoleOutput(m_BufferHandle, m_pBuffer, coordBufSize, coordBufCoord, &srctWriteRect);
+	BOOL success = ReadConsoleOutputW(m_BufferHandle, m_pBuffer, coordBufSize, coordBufCoord, &srctWriteRect);
 
 	// update the colour tables:
 
@@ -210,8 +212,8 @@ string CWindowsConsoleRenderer::VersionString()
 	" impliments and supports:"
 	" 16 custom colours, unicode"
 #ifdef WINDOWS_CONSOLE_RENDERER_FAST
-	"; direct draw calls: DrawBox, DrawRect, DrawString"
-	"; abstract draw calls: none"
+	"; direct draw calls: DrawBox, DrawString"
+	"; abstract draw calls: DrawRect"
 #else
 	"; direct draw calls: none"
 	"; abstract draw calls: DrawBox, DrawRect, DrawString"
@@ -236,7 +238,7 @@ string CWindowsConsoleRenderer::VersionString()
 #elif defined(__SUNPRO_C) || defined(__SUNPRO_CC)
 	"Oracle Solaris Studio"
 #else
-	" unknown compiler"
+	"unknown compiler"
 #endif
 
 
@@ -261,7 +263,7 @@ void CWindowsConsoleRenderer::FlushToScreen()
 	coordBufCoord.X = 0;
 	coordBufCoord.Y = 0;
 
-	BOOL success = WriteConsoleOutput( 
+	BOOL success = WriteConsoleOutputW( 
 		m_BufferHandle, // screen buffer to write to 
 		m_pBuffer,        // buffer to copy from 
 		coordBufSize,     // col-row size of chiBuffer 
@@ -378,6 +380,11 @@ CWindowsCharInformation::CWindowsCharInformation(CWindowsConsoleRenderer* pRende
 	m_Position = pos;
 }
 
+void CWindowsCharInformation::SetPosition(const CVector& pos)
+{
+	m_Position = pos;
+}
+
 void CWindowsCharInformation::SetAttributes(CharAttributes attr)
 {
 	m_pRenderer->_CharInfoAt((int)m_Position.X, (int)m_Position.Y).Attributes = attr;
@@ -422,7 +429,9 @@ CColour CWindowsCharInformation::GetBackgroundColour()
 
 void CWindowsCharInformation::SetChar(char val) 
 {
-	m_pRenderer->_CharInfoAt((int)m_Position.X, (int)m_Position.Y).Char.AsciiChar = val;
+	CHAR_INFO& info = m_pRenderer->_CharInfoAt((int)m_Position.X, (int)m_Position.Y);
+	info.Char.UnicodeChar = 0;
+	info.Char.AsciiChar = val;
 }
 
 char CWindowsCharInformation::GetChar()
@@ -460,6 +469,7 @@ void CWindowsConsoleRenderer::DrawBox(const CVector& pos, const CSize& size, con
 		for(int y = pos.Y; y < pos.Y + size.Height; y++)
 		{
 			CHAR_INFO& info = _CharInfoAt(x, y);
+			info.Char.UnicodeChar = 0;
 			info.Char.AsciiChar = box;
 
 			CColour merged = CColour::Blend(col, AttributeBackgroundColour(*this, (CharAttributes)info.Attributes));
@@ -467,6 +477,7 @@ void CWindowsConsoleRenderer::DrawBox(const CVector& pos, const CSize& size, con
 		}
 }
 
+/*
 
 class CRectangleChar
 {
@@ -661,11 +672,15 @@ void CWindowsConsoleRenderer::DrawRect(const CVector& pos, const CSize& size, co
 	}
 }
 
+*/
+
 void CWindowsConsoleRenderer::DrawString(const std::string& str, const CVector& Pos, const CColour& fgcol, const CColour& bgcol)
 {
 	CVector pos = Pos;
+	unique_ptr<ICharInformation> info = GetCharInformation(pos);
 
-	for(const char& letter : str)
+	u32string unistr = wstring_convert<codecvt_utf8_utf16<char32_t>, char32_t>().from_bytes(str);
+	for(const char32_t& letter : unistr)
 	{
 		if(letter == '\n')
 		{
@@ -676,7 +691,7 @@ void CWindowsConsoleRenderer::DrawString(const std::string& str, const CVector& 
 
 
 		CHAR_INFO& info = _CharInfoAt(pos.X, pos.Y);
-		info.Char.AsciiChar = letter;
+		info.Char.UnicodeChar = letter;
 
 		int bg_col = info.Attributes & CharAttributes::BackgroundWhite;
 
@@ -689,7 +704,11 @@ void CWindowsConsoleRenderer::DrawString(const std::string& str, const CVector& 
 		if(pos.X >= m_Width)
 		{
 			for(int i = 1; i <= 3; i++) // make a ... effect, as if it has been snipped off
-				_CharInfoAt(pos.X - i, pos.Y).Char.AsciiChar = '.';
+			{
+				CHAR_INFO& info = _CharInfoAt(pos.X - i, pos.Y);
+				info.Char.UnicodeChar = 0;
+				info.Char.AsciiChar = '.';
+			}
 			break;
 		}
 	}
