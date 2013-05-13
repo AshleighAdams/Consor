@@ -45,7 +45,16 @@ void CWindowContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool Ha
 		}
 	}
 
-	Renderer.DrawString(m_Title, CVector(size.Width / 2 - m_Title.length() / 2, 0), Skin.WindowForeground(), CColour::None());
+	CVector titlepos = CVector(size.Width / 2 - m_Title.length() / 2, 0);
+	Renderer.DrawString(m_Title, titlepos, Skin.WindowForeground(), CColour::None());
+
+	{
+		unique_ptr<Console::ICharInformation> infol = Renderer.GetCharInformation(titlepos - CVector(1, 0));
+		unique_ptr<Console::ICharInformation> infor = Renderer.GetCharInformation(titlepos + CVector(m_Title.length(), 0));
+
+		infol->SetUnicodeChar(Skin.WindowTitleLeftChar()); // 180
+		infor->SetUnicodeChar(Skin.WindowTitleRightChar()); // 195
+	}
 
 	// draw the child
 

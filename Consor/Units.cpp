@@ -320,3 +320,28 @@ bool CColour::operator!=(const CColour& A) const
 {
 	return !(*this == A);
 }
+
+
+// tostring
+
+std::ostream& operator<<(std::ostream& stream, const CSize& value)
+{
+	stream << value.Width << ", " << value.Height;
+	return stream;
+}
+
+std::ostream& operator<<(std::ostream& stream, const CVector& value)
+{
+	stream << value.X << ", " << value.Y;
+	return stream;
+}
+
+std::ostream& operator<<(std::ostream& stream, const CColour& value)
+{
+	if(value.A == 1.0)
+		stream << "rgb(" << value.R << ", " << value.G << ", " << value.B << ")";
+	else
+		stream << "rgba(" << value.R << ", " << value.G << ", " << value.B << ", " << value.A << ")";
+	
+	return stream;
+}
