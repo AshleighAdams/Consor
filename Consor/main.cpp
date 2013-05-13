@@ -13,6 +13,7 @@
 #include "Controls/TextBox.hpp"
 #include "Controls/PasswordBox.hpp"
 #include "Controls/CheckBox.hpp"
+#include "Controls/ProgressBar.hpp"
 #include "Controls/HorizontalScrollbar.hpp"
 #include "Controls/VerticalScrollbar.hpp"
 
@@ -24,9 +25,26 @@
 
 using namespace std;
 
+class CSaneSkin : public Consor::CDefaultSkin
+{
+public:
+	CSaneSkin(Consor::Console::IConsoleRenderer& Renderer)
+	{
+		WindowLeft = ' ';
+		WindowRight = ' ';
+
+		m_ColourPos = 0;
+		Foreground = RequestColour(Renderer, Consor::CColour(0, 0, 0));
+		ForegroundShine = RequestColour(Renderer, Consor::CColour(1, 1, 1));
+		Background = RequestColour(Renderer, Consor::CColour(0.7, 0.7, 0.7));
+		AlternateBackground = RequestColour(Renderer, Consor::CColour(0.3, 0.3, 0.3));
+		FocusColour = RequestColour(Renderer, Consor::CColour(0, 0, 1));
+		ProgressPercent = RequestColour(Renderer, Consor::CColour(1, 1, 1));
+	};
+};
+
 int main(int count, char** values)
 {
-	cout << "a\nb\na\nb\na\nb\na\nb\na\nb\na\nb\na\nb\na\nb\na\nb\na\nb\na\nb\na\nb\na\nb\na\nb\na\nb\na\nb\n";
 	/*
 	Consor::Input::CWindowsInputSystem input;
 	Consor::Console::CWindowsConsoleRenderer renderer; 
@@ -49,7 +67,7 @@ int main(int count, char** values)
 	thread program_thread([&]()
 	{
 		Consor::Input::CWindowsInputSystem input;
-		Consor::CDefaultSkin skin(renderer);
+		Consor::ISkin& skin = Consor::CHackerSkin(renderer);
 
 		auto draw = [&]()
 		{
@@ -65,6 +83,8 @@ int main(int count, char** values)
 			Consor::CSize rsize = renderer.RenderSize();
 
 			Consor::CVector pos = Consor::CVector(rsize.Width / 2.0, rsize.Height / 2.0) - Consor::CVector(size.Width / 2, size.Height / 2);
+			//pos.X = (int)pos.X;
+			//pos.Y = (int)pos.Y;
 
 			renderer.PushRenderBounds(pos, pWindow->Size());
 			pWindow->Draw(renderer, true, skin);
@@ -214,7 +234,7 @@ int main(int count, char** values)
 			Consor::CAlignContainer::Axis::Horizotal, Consor::CAlignContainer::Align::Center);
 
 		Consor::CFlowContainer main_flow(Consor::CFlowContainer::FlowAxis::Vertical, 1);
-		main_flow.AddControl(msg_scroll);
+		main_flow.AddControl(msg);
 		main_flow.AddControl(button_flow_align);
 
 	
@@ -285,7 +305,7 @@ int main(int count, char** values)
 		flow_tests_lables.AddControl(lbl_pb);
 		flow_tests_controls.AddControl(pb);
 
-		// PasswordBox test
+		// CheckBox test
 		Consor::CLabel lbl_cb;
 		Consor::CCheckBox cb;
 		lbl_cb.SetText("CheckBox:");
@@ -294,11 +314,22 @@ int main(int count, char** values)
 		flow_tests_lables.AddControl(lbl_cb);
 		flow_tests_controls.AddControl(cb);
 
+		// ProgressBar test
+		Consor::CLabel lbl_prog;
+		Consor::CProgressBar prog;
+		lbl_prog.SetText("ProgressBar:");
+		prog.SetPercent(0.5);
+
+		flow_tests_lables.AddControl(lbl_prog);
+		flow_tests_controls.AddControl(prog);
+
 		// end test
 		main_flow.AddControl(flow_tests);
 
 		button_flow_align.ForceResize(main_flow.Size());
-		Consor::CWindowContainer window(main_flow, "Consor Test");
+
+		Consor::CScrollContainer main_scroll(main_flow, Consor::CSize(-1, 20));
+		Consor::CWindowContainer window(main_scroll, "Consor Test");
 
 		main_mutex.lock();
 		pWindow = &window;

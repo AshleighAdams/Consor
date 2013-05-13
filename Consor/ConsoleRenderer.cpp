@@ -67,10 +67,13 @@ void IConsoleRenderer::DrawString(const std::string& str, const CVector& Pos, co
 	}
 }
 
-void IConsoleRenderer::PushRenderBounds(const CVector& from, const CSize& size)
+void IConsoleRenderer::PushRenderBounds(const CVector& from_a, const CSize& size_a)
 {
 	renderbound_t rb;
 
+	CVector from = CVector((int)from_a.X, (int)from_a.Y);
+	CSize size = CSize((int)size_a.Width, (int)size_a.Height);
+	
 	//rb.Pos = from + m_CurrentRenderBound.Pos; // this is added as the new renderbounds will apear to be the full console size
 	rb.Pos = from + m_CurrentOffset; // this should be correc,t but not fully tested...
 	rb.Size = size;

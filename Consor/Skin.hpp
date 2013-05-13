@@ -88,6 +88,10 @@ namespace Consor
 		virtual CColour TextBoxForeground() const = 0;
 		virtual CColour TextBoxForegroundFocused() const = 0;
 		virtual CColour TextBoxBackground() const = 0;
+
+		virtual CColour ProgressBarForeground(double Percent) const = 0;
+		virtual CColour ProgressBarBackground(double Percent) const = 0;
+		virtual CColour ProgressBarPercent(double Percent) const = 0;
 	};
 
 	class CDefaultSkin : public ISkin
@@ -100,6 +104,7 @@ namespace Consor
 		CColour AlternateBackground;
 		CColour FocusColour;
 		CColour ForegroundShine;
+		CColour ProgressPercent;
 		char32_t WindowLeft;
 		char32_t WindowRight;
 
@@ -120,6 +125,7 @@ namespace Consor
 			Background = RequestColour(Renderer, CColour(0, 0, 1));
 			AlternateBackground = RequestColour(Renderer, CColour(0, 0, 0.5));
 			FocusColour = RequestColour(Renderer, CColour(1, 0, 0));
+			ProgressPercent = RequestColour(Renderer, CColour(1, 1, 1));
 		}
 
 		virtual CColour LabelForeground() const
@@ -191,6 +197,21 @@ namespace Consor
 		{
 			return CColour::None();
 		}
+
+		virtual CColour ProgressBarPercent(double Percent) const
+		{
+			return ProgressPercent;
+		}
+
+		virtual CColour ProgressBarForeground(double Percent) const
+		{
+			return Foreground;
+		}
+
+		virtual CColour ProgressBarBackground(double Percent) const
+		{
+			return AlternateBackground;
+		}
 	};
 
 	class CHackerSkin : public CDefaultSkin
@@ -207,6 +228,7 @@ namespace Consor
 			Background = RequestColour(Renderer, CColour(0, 0, 0));
 			AlternateBackground = RequestColour(Renderer, CColour(0.5, 0.25, 0));
 			FocusColour = RequestColour(Renderer, CColour(1, 0, 0));
+			ProgressPercent = RequestColour(Renderer, CColour(1, 1, 1));
 		};
 	};
 }
