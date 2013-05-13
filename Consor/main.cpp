@@ -6,6 +6,7 @@
 #include "Util/StringUtils.hpp"
 #include "Util/Time.hpp"
 #include "Util/FrequencyController.hpp"
+#include "Util/Math.hpp"
 #include "WindowsInputSystem.hpp"
 
 #include "Controls/Label.hpp"
@@ -67,6 +68,7 @@ int main(int count, wchar_t** values)
 	Consor::Console::CWindowsConsoleRenderer renderer;
 
 	Consor::CWindowContainer* pWindow = nullptr;
+	std::function<void()> forcedraw;
 
 	thread program_thread([&]()
 	{
@@ -97,8 +99,13 @@ int main(int count, wchar_t** values)
 			renderer.FlushToScreen();
 
 			double span = Consor::Util::GetTime() - start;
-			renderer.SetTitle(Consor::Util::FormatString("Rendered in %ms", (int)(span * 1000.0)));
+			renderer.SetTitle(Consor::Util::FormatString("Rendered in %ms", Consor::Util::Round(span * 1000.0, 0.01)));
 			main_mutex.unlock();
+		};
+
+		forcedraw = [&]()
+		{
+			draw();
 		};
 
 		thread input_thread([&]() // so stuff still blinks, and updates slowly
@@ -217,7 +224,10 @@ int main(int count, wchar_t** values)
 		using namespace Consor;
 
 		CLabel consoletext;
-		CScrollContainer scroll(consoletext, CSize(40, 8));
+		CFlowContainer flow(CFlowContainer::FlowAxis::Vertical, 0);
+		flow.AddControl(consoletext);
+
+		CScrollContainer scroll(flow, CSize(40, 8));
 
 		string total = "";
 		bool notscrolled = true;
@@ -254,9 +264,18 @@ int main(int count, wchar_t** values)
 		addtext("loading UI..."); Util::Sleep(1);
 		addtext("okay, now I'm going to print numbers 0 to 99"); Util::Sleep(1);
 
+		CProgressBar progbar;
+		progbar.ForceResize(CSize(flow.Size().Width - 2, 1));
+
+		main_mutex.lock();
+		flow.AddControl(progbar);
+		main_mutex.unlock();
+
 		for(int i = 0; i < 100; i++)
 		{
-			addtext(Util::FormatString("%", i)); Util::Sleep(0.1);
+			progbar.SetPercent((double)i / 100.0);
+			forcedraw();
+			Util::Sleep(0.1);
 		}
 		Util::Sleep(1);
 

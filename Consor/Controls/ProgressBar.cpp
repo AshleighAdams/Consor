@@ -33,17 +33,20 @@ void CProgressBar::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFoc
 	CSize barsz = CSize(size.Width * GetPercent(), size.Height);
 	Renderer.DrawBox(pos, size, bg);
 	
-	char32_t block = 0x2588;
+	char32_t block = 0x2584; //0x2588;
 	if(!Renderer.SupportsUnicode())
 		block = 219;
+
+	std::unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(CVector());
 
 	for(int x = 0; x < barsz.Width; x++)
 	{
 		for(int y = 0; y < barsz.Height; y++)
 		{
-			std::unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(CVector(x, y));
+			info->SetPosition(CVector(x, y));
 			info->SetUnicodeChar(block);
 			info->SetForegroundColour(fg);
+			info->SetBackgroundColour(fg);
 		}
 	}
 
@@ -51,8 +54,7 @@ void CProgressBar::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFoc
 	{
 		for(int y = 0; y < barsz.Height; y++)
 		{
-			std::unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(CVector(barsz.Width + 1, y));
-			
+			info->SetPosition(CVector(barsz.Width, y));
 			char32_t lefthalf = 0x258c;
 			info->SetUnicodeChar(lefthalf);
 			info->SetForegroundColour(fg);
