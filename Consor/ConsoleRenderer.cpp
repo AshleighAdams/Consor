@@ -22,10 +22,12 @@ void IConsoleRenderer::DrawBox(const CVector& pos, const CSize& size, const CCol
 {
 	char box = ' ';
 
+	unique_ptr<ICharInformation> info = GetCharInformation(CVector());
+
 	for(int x = pos.X; x < pos.X + size.Width; x++)
 		for(int y = pos.Y; y < pos.Y + size.Height; y++)
 		{
-			unique_ptr<ICharInformation> info = GetCharInformation(CVector(x, y));
+			info->SetPosition(CVector(x, y));
 			info->SetChar(box);
 			info->SetBackgroundColour(col);
 		}
@@ -44,17 +46,19 @@ void IConsoleRenderer::DrawString(const std::string& str, const CVector& Pos, co
 
 	bool unicode = SupportsUnicode();
 
+	unique_ptr<ICharInformation> info = GetCharInformation(pos);
+
 	for(const char32_t& letter : unistr)
 	{
+		info->SetPosition(pos);
+
 		if(letter == '\n')
 		{
 			pos.X = Pos.X;
 			pos.Y++;
 			continue;
 		}
-
-		unique_ptr<ICharInformation> info = GetCharInformation(pos);
-
+		
 		if(unicode)
 			info->SetUnicodeChar(letter);
 		else
@@ -134,15 +138,17 @@ CSize IConsoleRenderer::RenderSize()
 class CRectangleChar
 {
 	int m_State;
+	bool m_Unicode;
 public:
 	const static int LEFT	= (1 << 0);
 	const static int RIGHT	= (1 << 1);
 	const static int UP		= (1 << 2);
 	const static int DOWN	= (1 << 3);
 	
-	CRectangleChar(const bool left, const bool right, const bool up, const bool down)
+	CRectangleChar(bool unicode, const bool left, const bool right, const bool up, const bool down)
 	{
 		m_State = 0;
+		m_Unicode = unicode;
 
 		if(left)
 			m_State |= LEFT;
@@ -154,75 +160,133 @@ public:
 			m_State |= DOWN;
 	}
 		
-	CRectangleChar(unsigned char type)
+	CRectangleChar(bool unicode, char32_t type)
 	{
+		m_Unicode = unicode;
+
 		#define CHAR_STATE(ltr, val) \
 		case ltr: \
 			m_State = (val); \
 			break
-
-		switch(type)
+		if(!m_Unicode)
 		{
-			CHAR_STATE(1, LEFT);
-			CHAR_STATE(2, RIGHT);
-			CHAR_STATE(3, UP);
-			CHAR_STATE(4, DOWN);
+			switch(type)
+			{
+				CHAR_STATE(1, LEFT);
+				CHAR_STATE(2, RIGHT);
+				CHAR_STATE(3, UP);
+				CHAR_STATE(4, DOWN);
 			
-			CHAR_STATE(179, UP | DOWN);
-			CHAR_STATE(180, UP | DOWN | LEFT);
-			CHAR_STATE(191, DOWN | LEFT);
-			CHAR_STATE(192, UP | RIGHT);
-			CHAR_STATE(193, LEFT | UP | RIGHT);
-			CHAR_STATE(194, LEFT | DOWN | RIGHT);
-			CHAR_STATE(195, UP | DOWN | RIGHT);
-			CHAR_STATE(196, LEFT | RIGHT);
-			CHAR_STATE(197, LEFT | RIGHT | UP | DOWN);
-			CHAR_STATE(217, UP | LEFT);
-			CHAR_STATE(218, RIGHT | DOWN);
+				CHAR_STATE(179, UP | DOWN);
+				CHAR_STATE(180, UP | DOWN | LEFT);
+				CHAR_STATE(191, DOWN | LEFT);
+				CHAR_STATE(192, UP | RIGHT);
+				CHAR_STATE(193, LEFT | UP | RIGHT);
+				CHAR_STATE(194, LEFT | DOWN | RIGHT);
+				CHAR_STATE(195, UP | DOWN | RIGHT);
+				CHAR_STATE(196, LEFT | RIGHT);
+				CHAR_STATE(197, LEFT | RIGHT | UP | DOWN);
+				CHAR_STATE(217, UP | LEFT);
+				CHAR_STATE(218, RIGHT | DOWN);
 
-		default:
-			m_State = 0;
+			default:
+				m_State = 0;
+			}
+		}
+		else
+		{
+			switch(type)
+			{
+				CHAR_STATE(0x2574, LEFT);
+				CHAR_STATE(0x2576, RIGHT);
+				CHAR_STATE(0x2575, UP);
+				CHAR_STATE(0x2577, DOWN);
+			
+				CHAR_STATE(0x2502, UP | DOWN);
+				CHAR_STATE(0x2524, UP | DOWN | LEFT);
+				CHAR_STATE(0x2510, DOWN | LEFT);
+				CHAR_STATE(0x2514, UP | RIGHT);
+				CHAR_STATE(0x2534, LEFT | UP | RIGHT);
+				CHAR_STATE(0x252C, LEFT | DOWN | RIGHT);
+				CHAR_STATE(0x251C, UP | DOWN | RIGHT);
+				CHAR_STATE(0x2500, LEFT | RIGHT);
+				CHAR_STATE(0x253C, LEFT | RIGHT | UP | DOWN);
+				CHAR_STATE(0x2518, UP | LEFT);
+				CHAR_STATE(0x250C, RIGHT | DOWN);
+
+			default:
+				m_State = 0;
+			}
 		}
 
 		#undef CHAR_STATE
 	}
 
-	char GetChar()
+	char32_t GetChar()
 	{
 		 // same as the one up there ^, but the only difference is it translated the other way
 		#define CHAR_STATE(ltr, val) \
 		case (val): \
-			return (char)ltr;
+			return (char32_t)ltr;
 
-		switch(m_State)
+		if(!m_Unicode)
 		{
-			CHAR_STATE(1, LEFT);
-			CHAR_STATE(2, RIGHT);
-			CHAR_STATE(3, UP);
-			CHAR_STATE(4, DOWN);
+			switch(m_State)
+			{
+				CHAR_STATE(1, LEFT);
+				CHAR_STATE(2, RIGHT);
+				CHAR_STATE(3, UP);
+				CHAR_STATE(4, DOWN);
 
-			CHAR_STATE(179, UP | DOWN);
-			CHAR_STATE(180, UP | DOWN | LEFT);
-			CHAR_STATE(191, DOWN | LEFT);
-			CHAR_STATE(192, UP | RIGHT);
-			CHAR_STATE(193, LEFT | UP | RIGHT);
-			CHAR_STATE(194, LEFT | DOWN | RIGHT);
-			CHAR_STATE(195, UP | DOWN | RIGHT);
-			CHAR_STATE(196, LEFT | RIGHT);
-			CHAR_STATE(197, LEFT | RIGHT | UP | DOWN);
-			CHAR_STATE(217, UP | LEFT);
-			CHAR_STATE(218, RIGHT | DOWN);
+				CHAR_STATE(179, UP | DOWN);
+				CHAR_STATE(180, UP | DOWN | LEFT);
+				CHAR_STATE(191, DOWN | LEFT);
+				CHAR_STATE(192, UP | RIGHT);
+				CHAR_STATE(193, LEFT | UP | RIGHT);
+				CHAR_STATE(194, LEFT | DOWN | RIGHT);
+				CHAR_STATE(195, UP | DOWN | RIGHT);
+				CHAR_STATE(196, LEFT | RIGHT);
+				CHAR_STATE(197, LEFT | RIGHT | UP | DOWN);
+				CHAR_STATE(217, UP | LEFT);
+				CHAR_STATE(218, RIGHT | DOWN);
 
-		default:
-			return '?';
+			default:
+				return '?';
+			}
 		}
+		else
+		{
+			switch(m_State)
+			{
+				CHAR_STATE(0x2574, LEFT);
+				CHAR_STATE(0x2576, RIGHT);
+				CHAR_STATE(0x2575, UP);
+				CHAR_STATE(0x2577, DOWN);
+			
+				CHAR_STATE(0x2502, UP | DOWN);
+				CHAR_STATE(0x2524, UP | DOWN | LEFT);
+				CHAR_STATE(0x2510, DOWN | LEFT);
+				CHAR_STATE(0x2514, UP | RIGHT);
+				CHAR_STATE(0x2534, LEFT | UP | RIGHT);
+				CHAR_STATE(0x252C, LEFT | DOWN | RIGHT);
+				CHAR_STATE(0x251C, UP | DOWN | RIGHT);
+				CHAR_STATE(0x2500, LEFT | RIGHT);
+				CHAR_STATE(0x253C, LEFT | RIGHT | UP | DOWN);
+				CHAR_STATE(0x2518, UP | LEFT);
+				CHAR_STATE(0x250C, RIGHT | DOWN);
+
+			default:
+				m_State = 0;
+			}
+		}
+
 
 		#undef CHAR_STATE
 	}
 
 	CRectangleChar operator+(const CRectangleChar& other)
 	{
-		CRectangleChar ret(0);
+		CRectangleChar ret(m_Unicode, 0);
 		ret.m_State = this->m_State | other.m_State;
 
 		return ret;
@@ -230,7 +294,7 @@ public:
 
 	CRectangleChar operator-(const CRectangleChar& other)
 	{
-		CRectangleChar ret(0);
+		CRectangleChar ret(m_Unicode, 0);
 		ret.m_State = this->m_State & ~other.m_State;
 
 		return ret;
@@ -239,31 +303,37 @@ public:
 
 void IConsoleRenderer::DrawRect(const CVector& pos, const CSize& size, const CColour& fgcol, const CColour& bgcol)
 {
-	CRectangleChar Horizontal(true, true, false, false);
-	CRectangleChar Vertical(false, false, true, true);
+	bool unicode = SupportsUnicode();
+	CRectangleChar Horizontal(unicode, true, true, false, false);
+	CRectangleChar Vertical(unicode, false, false, true, true);
 
-	CRectangleChar Left(true, false, false, false);
-	CRectangleChar Right(false, true, false, false);
+	CRectangleChar Left(unicode, true, false, false, false);
+	CRectangleChar Right(unicode, false, true, false, false);
 
-	CRectangleChar Top(false, false, true, false);
-	CRectangleChar Bottom(false, false, false, true);
+	CRectangleChar Top(unicode, false, false, true, false);
+	CRectangleChar Bottom(unicode, false, false, false, true);
 	
+	unique_ptr<ICharInformation> info_top = GetCharInformation(CVector());
+	unique_ptr<ICharInformation> info_bot = GetCharInformation(CVector());
+	unique_ptr<ICharInformation> info_l = GetCharInformation(CVector());
+	unique_ptr<ICharInformation> info_r = GetCharInformation(CVector());
+
 	if(size.Width == 1)
 		;
 	else if(size.Height == 1)
 		for(int x = pos.X; x < pos.X + size.Width; x++)
 		{
-			unique_ptr<ICharInformation> info_top = GetCharInformation(CVector(x, pos.Y));
+			info_top->SetPosition(CVector(x, pos.Y));
 			
-			info_top->SetChar((CRectangleChar(info_top->GetChar()) + Horizontal).GetChar());
+			info_top->SetUnicodeChar((CRectangleChar(unicode, info_top->GetUnicodeChar()) + Horizontal).GetChar());
 			info_top->SetForegroundColour(CColour::Blend(fgcol, info_top->GetForegroundColour()));
 			info_top->SetBackgroundColour(CColour::Blend(bgcol, info_top->GetBackgroundColour()));
 		}
 	else
 	for(int x = pos.X; x < pos.X + size.Width; x++)
 	{
-		unique_ptr<ICharInformation> info_top = GetCharInformation(CVector(x, pos.Y));
-		unique_ptr<ICharInformation> info_bot = GetCharInformation(CVector(x, pos.Y + size.Height - 1));
+		info_top->SetPosition(CVector(x, pos.Y));
+		info_bot->SetPosition(CVector(x, pos.Y + size.Height - 1));
 
 		CRectangleChar cur = Horizontal;
 
@@ -272,31 +342,31 @@ void IConsoleRenderer::DrawRect(const CVector& pos, const CSize& size, const CCo
 		else if(x == pos.X + size.Width - 1)
 			cur = cur - Right;
 
-		info_top->SetChar((CRectangleChar(info_top->GetChar()) + cur).GetChar());
+		info_top->SetUnicodeChar((CRectangleChar(unicode, info_top->GetUnicodeChar()) + cur).GetChar());
 		info_top->SetForegroundColour(fgcol);
 		info_top->SetBackgroundColour(bgcol);
 
-		info_bot->SetChar((CRectangleChar(info_bot->GetChar()) + cur).GetChar());
+		info_bot->SetUnicodeChar((CRectangleChar(unicode, info_bot->GetUnicodeChar()) + cur).GetChar());
 		info_bot->SetForegroundColour(fgcol);
 		info_bot->SetBackgroundColour(bgcol);
 	}
-
+	
 	if(size.Height == 1)
 		;
 	else if(size.Width == 1)
 		for(int y = pos.Y; y < pos.Y + size.Height; y++)
 		{
-			unique_ptr<ICharInformation> info_l = GetCharInformation(CVector(pos.X, y));
+			info_l->SetPosition(CVector(pos.X, y));
 
-			info_l->SetChar( (CRectangleChar(info_l->GetChar()) + Vertical).GetChar() );
+			info_l->SetUnicodeChar( (CRectangleChar(unicode, info_l->GetUnicodeChar()) + Vertical).GetChar() );
 			info_l->SetForegroundColour(fgcol);
 			info_l->SetBackgroundColour(bgcol);
 		}
 	else
 	for(int y = pos.Y; y < pos.Y + size.Height; y++)
 	{
-		unique_ptr<ICharInformation> info_l = GetCharInformation(CVector(pos.X, y));
-		unique_ptr<ICharInformation> info_r = GetCharInformation(CVector(pos.X + size.Width - 1, y));
+		info_l->SetPosition(CVector(pos.X, y));
+		info_r->SetPosition(CVector(pos.X + size.Width - 1, y));
 
 		CRectangleChar cur = Vertical;
 
@@ -305,11 +375,11 @@ void IConsoleRenderer::DrawRect(const CVector& pos, const CSize& size, const CCo
 		else if(y == pos.Y + size.Height - 1)
 			cur = cur - Bottom;
 
-		info_l->SetChar( (CRectangleChar(info_l->GetChar()) + cur).GetChar() );
+		info_l->SetUnicodeChar( (CRectangleChar(unicode, info_l->GetUnicodeChar()) + cur).GetChar() );
 		info_l->SetForegroundColour(fgcol);
 		info_l->SetBackgroundColour(bgcol);
 
-		info_r->SetChar( (CRectangleChar(info_r->GetChar()) + cur).GetChar() );
+		info_r->SetUnicodeChar( (CRectangleChar(unicode, info_r->GetUnicodeChar()) + cur).GetChar() );
 		info_r->SetForegroundColour(fgcol);
 		info_r->SetBackgroundColour(bgcol);
 	}

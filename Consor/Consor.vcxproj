@@ -88,6 +88,7 @@
     <ClCompile Include="Units.cpp" />
     <ClCompile Include="Util\Debug.cpp" />
     <ClCompile Include="Util\FrequencyController.cpp" />
+    <ClCompile Include="Util\Math.cpp" />
     <ClCompile Include="Util\StringUtils.cpp" />
     <ClCompile Include="Util\Time.cpp" />
     <ClCompile Include="WindowsConsoleRenderer.cpp" />
@@ -115,6 +116,7 @@
     <ClInclude Include="Util\Debug.hpp" />
     <ClInclude Include="Util\FrequencyController.hpp" />
     <ClInclude Include="Util\Hooks.hpp" />
+    <ClInclude Include="Util\Math.hpp" />
     <ClInclude Include="Util\StringUtils.hpp" />
     <ClInclude Include="Util\Time.hpp" />
     <ClInclude Include="WindowsConsoleRenderer.hpp" />

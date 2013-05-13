@@ -30,10 +30,11 @@ namespace Consor
 		virtual void OnResize(const CSize& Size);
 		virtual void ForceResize(const CSize& Size);
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);
-		virtual bool HandleInput(Input::Key Key);
+		virtual bool HandleInput(Input::Key Key, Input::IInputSystem& System);
 		virtual bool CanFocus();
 
-		virtual void AddControl(CControl& Control);
+		// Size is length along the FlowContainer's axis (width, if vertical), 0 to not resize control
+		virtual void AddControl(CControl& Control, double Size = 0);
 	};
 };
 

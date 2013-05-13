@@ -48,9 +48,9 @@ void CBorderContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool Ha
 	Renderer.PopRenderBounds();
 }
 
-bool CBorderContainer::HandleInput(Input::Key Key)
+bool CBorderContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
-	return m_pClient->HandleInput(Key);
+	return m_pClient->HandleInput(Key, System);
 }
 
 bool CBorderContainer::CanFocus()

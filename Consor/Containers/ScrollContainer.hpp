@@ -22,8 +22,13 @@ namespace Consor
 		virtual void OnResize(const CSize& Size);
 		virtual void ForceResize(const CSize& Size);
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);
-		virtual bool HandleInput(Input::Key Key);
+		virtual bool HandleInput(Input::Key Key, Input::IInputSystem& System);
 		virtual bool CanFocus();
+
+		virtual bool ScrollLeft();
+		virtual bool ScrollRight();
+		virtual bool ScrollUp();
+		virtual bool ScrollDown();
 	};
 };
 

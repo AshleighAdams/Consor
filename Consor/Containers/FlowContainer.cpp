@@ -104,11 +104,11 @@ void CFlowContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasF
 	}
 }
 
-bool CFlowContainer::HandleInput(Input::Key Key)
+bool CFlowContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
 	CControl* pFocused = m_GetFocused();
 
-	if(pFocused && pFocused->HandleInput(Key))
+	if(pFocused && pFocused->HandleInput(Key, System))
 		return true;
 
 	Input::Key Next = Input::Key::Down;
@@ -148,7 +148,18 @@ bool CFlowContainer::CanFocus()
 	return false;
 }
 
-void CFlowContainer::AddControl(CControl& Control)
+void CFlowContainer::AddControl(CControl& Control, double Size)
 {
+	CSize size = Control.Size();
+	
+	if(Size  > 0)
+	{
+		if(m_Axis == FlowAxis::Horizontal)
+			size.Height = Size;
+		else
+			size.Width = Size;
+
+		Control.ForceResize(size);
+	}
 	m_Controls.push_back(&Control);
 }

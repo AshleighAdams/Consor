@@ -1,6 +1,7 @@
 #include "WindowsInputSystem.hpp"
 
 #include <conio.h>
+#include <Windows.h>
 
 using namespace Consor::Input;
 
@@ -11,6 +12,16 @@ CWindowsInputSystem::CWindowsInputSystem()
 bool CWindowsInputSystem::KeyWaiting()
 {
 	return _kbhit() != 0;
+}
+
+bool CWindowsInputSystem::ControlDown()
+{
+	return (bool)(GetKeyState(VK_CONTROL) & 0x8000);
+}
+
+bool CWindowsInputSystem::ShiftDown()
+{
+	return (bool)(GetKeyState(VK_SHIFT) & 0x8000);
 }
 
 Key CWindowsInputSystem::GetKeyPress()
@@ -54,6 +65,10 @@ Key CWindowsInputSystem::GetKeyPress()
 				case 81: return Key::PageDown;
 				case 82: return Key::Insert;
 				case 83: return Key::Delete;
+				case 145: return Key::Down; // ctrl is down too
+				case 141: return Key::Up; // ctrl is down too
+				case 115: return Key::Left; // ctrl is down too
+				case 116: return Key::Right; // ctrl is down too
 				default: return (Key)(kk-123+(int)Key::F1); // Function keys
 			}
 		}

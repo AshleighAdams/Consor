@@ -14,6 +14,7 @@ namespace Consor
 		{
 		public:
 			virtual ~ICharInformation() {}
+			virtual void SetPosition(const CVector& pos) = 0;
 			virtual void SetForegroundColour(const CColour& col) = 0;
 			virtual CColour GetForegroundColour() = 0;
 
