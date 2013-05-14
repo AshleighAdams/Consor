@@ -24,6 +24,8 @@
 #include "Containers/AlignContainer.hpp"
 #include "Containers/ScrollContainer.hpp"
 
+#include "WindowSystem.hpp"
+
 using namespace std;
 
 class CSaneSkin : public Consor::CDefaultSkin
@@ -63,80 +65,9 @@ int main(int count, wchar_t** values)
 
 	return 0;
 	*/
-	std::mutex main_mutex;
-	bool main_exit = false;
-	Consor::Console::CWindowsConsoleRenderer renderer;
-
-	Consor::CWindowContainer* pWindow = nullptr;
-	std::function<void()> forcedraw;
-
-	thread program_thread([&]()
-	{
-		Consor::Input::CWindowsInputSystem input;
-		Consor::CDefaultSkin skin = Consor::CDefaultSkin(renderer);
-
-		auto draw = [&]()
-		{
-			if(!pWindow)
-				return;
-
-			main_mutex.lock();
-			double start = Consor::Util::GetTime();
-
-			renderer.Clear(Consor::CColour());
-		
-			Consor::CSize size = pWindow->Size();
-			Consor::CSize rsize = renderer.RenderSize();
-
-			Consor::CVector pos = Consor::CVector(rsize.Width / 2.0, rsize.Height / 2.0) - Consor::CVector(size.Width / 2, size.Height / 2);
-			//pos.X = (int)pos.X;
-			//pos.Y = (int)pos.Y;
-
-			renderer.PushRenderBounds(pos, pWindow->Size());
-			pWindow->Draw(renderer, true, skin);
-			renderer.PopRenderBounds();
-		
-			renderer.FlushToScreen();
-
-			double span = Consor::Util::GetTime() - start;
-			renderer.SetTitle(Consor::Util::FormatString("Rendered in %ms", Consor::Util::Round(span * 1000.0, 0.01)));
-			main_mutex.unlock();
-		};
-
-		forcedraw = [&]()
-		{
-			draw();
-		};
-
-		thread input_thread([&]() // so stuff still blinks, and updates slowly
-		{
-			while(!main_exit)
-			{
-				draw();
-				Consor::Util::Sleep(0.5);
-			}
-		});
-
-
-		while(!main_exit)
-		{
-			// input
-			Consor::Input::Key kp = input.GetKeyPress();
-
-			if(kp == Consor::Input::Key::F8)
-				skin = Consor::CHackerSkin(renderer);
-			else if(kp == Consor::Input::Key::F9)
-				skin = Consor::CDefaultSkin(renderer);
-
-			if(pWindow)
-				pWindow->HandleInput(kp, input);
-
-			// draw
-			draw();
-		}
-
-		input_thread.join();
-	});
+	Consor::WindowSystem::Setup(new Consor::Console::CWindowsConsoleRenderer(),
+		new Consor::Input::CWindowsInputSystem());
+	Consor::WindowSystem::SetSkin<Consor::CHackerSkin>();
 
 	// the login box (not for real, just a test)
 	{
@@ -197,26 +128,16 @@ int main(int count, wchar_t** values)
 		};
 		cancel.Click += [&]()
 		{
-			main_exit = true;
 		};
 		
-		main_mutex.lock();
-		pWindow = &window;
-		main_mutex.unlock();
+		WindowSystem::RegisterWindow(window, CVector(-1, -1));
 
 		while(!loggedin)
 		{
 			Util::Sleep(0.1);
-			if(main_exit)
-			{
-				program_thread.join();
-				return 0;
-			}
 		}
 		
-		main_mutex.lock();
-		pWindow = nullptr;
-		main_mutex.unlock();
+		WindowSystem::UnregisterWindow(window);
 	}
 
 	// the pretend "logging in" window
@@ -233,21 +154,19 @@ int main(int count, wchar_t** values)
 		bool notscrolled = true;
 		auto addtext = [&](const std::string& msg)
 		{
-			main_mutex.lock(); // we're messing with something that the main draw thread will be too
+			WindowSystem::Lock(); // we're messing with something that the main draw thread will be too
 			total += msg + "\n";
 			consoletext.SetText(total);
 			consoletext.ForceResize(scroll.Size() - CSize(1, 1));
 			
 			if(notscrolled && scroll.ScrollDown())
 				notscrolled = false;
-			main_mutex.unlock();
+			WindowSystem::Unlock();
 		};
 
 		CWindowContainer window(scroll, "Logging in");
 
-		main_mutex.lock();
-		pWindow = &window;
-		main_mutex.unlock();
+		WindowSystem::RegisterWindow(window, CVector(-1, -1));
 
 		addtext("commencing the ScrollContainer auto scrolling test..."); Util::Sleep(0.5);
 		addtext("connecting to login server..."); Util::Sleep(0.5);
@@ -267,28 +186,26 @@ int main(int count, wchar_t** values)
 		CProgressBar progbar;
 		progbar.ForceResize(CSize(flow.Size().Width - 2, 1));
 
-		main_mutex.lock();
+		WindowSystem::Lock();
 		flow.AddControl(progbar);
-		main_mutex.unlock();
+		WindowSystem::Unlock();
 
 		for(int i = 0; i < 100; i++)
 		{
 			progbar.SetPercent((double)i / 100.0);
-			forcedraw();
+			WindowSystem::Draw();
 			Util::Sleep(0.1);
 		}
 		Util::Sleep(1);
 
-		main_mutex.lock();
-		pWindow = nullptr;
-		main_mutex.unlock();
+		WindowSystem::UnregisterWindow(window);
 	}
 
 	{
 		Consor::CLabel msg;
-		//msg.SetText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tempor metus sed ligula tempor tincidunt. Nullam quis condimentum augue. Nulla varius, nunc venenatis molestie egestas, neque lorem bibendum dui, vitae placerat magna nunc at nulla. In ultricies lectus quis purus bibendum eget ullamcorper metus tempus. Phasellus pulvinar, est sit amet auctor tempus, turpis nisl cursus mauris, vitae hendrerit felis tellus eu turpis. Vestibulum id leo sed magna vehicula aliquet. Fusce viverra auctor augue ut rutrum. Quisque quis nisl non turpis sollicitudin rutrum sit amet eget libero. Donec pretium egestas ante, eu aliquam mi porttitor quis.");
+		msg.SetText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tempor metus sed ligula tempor tincidunt. Nullam quis condimentum augue. Nulla varius, nunc venenatis molestie egestas, neque lorem bibendum dui, vitae placerat magna nunc at nulla. In ultricies lectus quis purus bibendum eget ullamcorper metus tempus. Phasellus pulvinar, est sit amet auctor tempus, turpis nisl cursus mauris, vitae hendrerit felis tellus eu turpis. Vestibulum id leo sed magna vehicula aliquet. Fusce viverra auctor augue ut rutrum. Quisque quis nisl non turpis sollicitudin rutrum sit amet eget libero. Donec pretium egestas ante, eu aliquam mi porttitor quis.");
 	
-		msg.SetText(Consor::Util::FormatString("The current renderer is %, version string \"%\".\n\nSupports Unicode: %\nMaximium supported colours: %", renderer.RendererName(), renderer.VersionString(), renderer.GetCharInformation(Consor::CVector())->SupportsUnicode() ? "true" : "false", renderer.MaxColours()));
+		//msg.SetText(Consor::Util::FormatString("The current renderer is %, version string \"%\".\n\nSupports Unicode: %\nMaximium supported colours: %", renderer.RendererName(), renderer.VersionString(), renderer.GetCharInformation(Consor::CVector())->SupportsUnicode() ? "true" : "false", renderer.MaxColours()));
 
 		msg.ForceResize(Consor::CSize(36, 1));
 		Consor::CScrollContainer msg_scroll(msg, Consor::CSize(-1, 10));
@@ -301,7 +218,6 @@ int main(int count, wchar_t** values)
 
 		exit.Click += [&]()
 		{
-			main_exit = true;
 		};
 
 		Consor::CAlignContainer button_flow_align(button_flow, Consor::CSize(),
@@ -405,25 +321,16 @@ int main(int count, wchar_t** values)
 		Consor::CScrollContainer main_scroll(main_flow, Consor::CSize(30, 15));
 		Consor::CWindowContainer window(main_scroll, "Consor Test");
 
-		main_mutex.lock();
-		pWindow = &window;
-		main_mutex.unlock();
+		Consor::WindowSystem::RegisterWindow(window, Consor::CVector(-1, -1));
 	
-		while(!main_exit)
+		while(true)
 		{
 			Consor::Util::Sleep(1.0);
 		}
 
-		main_mutex.lock();
-		pWindow = nullptr;
-		main_mutex.unlock();
-		program_thread.join();
+		Consor::WindowSystem::UnregisterWindow(window);
 		return 0;
 	}
 
-	//symantic ideas:
-
-	main_exit = true;
-	program_thread.join();
 	return 0;
 }

@@ -71,6 +71,8 @@ namespace Consor
 			return target;
 		}
 
+		virtual CColour Canvas() const = 0;
+
 		virtual CColour LabelForeground() const = 0;
 		virtual CColour LabelForegroundFocused() const = 0;
 
@@ -97,6 +99,7 @@ namespace Consor
 	class CDefaultSkin : public ISkin
 	{
 	protected:
+		CColour CanvasColour;
 		CColour Foreground;
 		CColour White;
 		CColour Black;
@@ -129,6 +132,7 @@ namespace Consor
 			}
 
 			m_ColourPos = 0;
+			CanvasColour = RequestColour(Renderer, CColour());
 			Foreground = RequestColour(Renderer, CColour(1, 1, 1));
 			ForegroundShine = RequestColour(Renderer, CColour(1, 1, 1));
 			Background = RequestColour(Renderer, CColour(0, 0, 1));
@@ -136,6 +140,11 @@ namespace Consor
 			FocusColour = RequestColour(Renderer, CColour(1, 0, 0));
 			ProgressPercent = RequestColour(Renderer, CColour(1, 1, 1));
 			ProgressForeground = RequestColour(Renderer, CColour(0, 1, 1));
+		}
+
+		virtual CColour Canvas() const
+		{
+			return CanvasColour;
 		}
 
 		virtual CColour LabelForeground() const
@@ -243,6 +252,7 @@ namespace Consor
 
 			
 			m_ColourPos = 0;
+			CanvasColour = RequestColour(Renderer, CColour());
 			Foreground = RequestColour(Renderer, CColour(1, 0.5, 0));
 			ForegroundShine = RequestColour(Renderer, CColour(1, 0.5, 0.25));
 			Background = RequestColour(Renderer, CColour(0, 0, 0));

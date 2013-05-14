@@ -96,6 +96,9 @@
     <ClCompile Include="Util\Math.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
+    <ClCompile Include="WindowSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Util\FrequencyController.hpp">
@@ -175,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="Util\Math.hpp">
       <Filter>Source Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowSystem.hpp">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
