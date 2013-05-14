@@ -7,6 +7,7 @@
 
 #include "Controls/Button.hpp"
 #include "Controls/Label.hpp"
+#include "Controls/RadioBox.hpp"
 
 #include "WindowSystem.hpp"
 
@@ -57,4 +58,66 @@ std::string Util::MessageBox(const std::string& Message, const std::string& Titl
 
 	WindowSystem::UnregisterWindow(window);
 	return ret;
+}
+
+std::string Util::ChoiceList(const std::string& Message, const std::string& Title, std::list<std::string> Choices)
+{
+	bool running = true;
+	bool cancled = false;
+
+	CRadioBox radio;
+
+	for(const string& choice : Choices)
+		radio.AddChoice(choice);
+
+
+	CFlowContainer flow_buttons(CFlowContainer::FlowAxis::Horizontal, 1.0);
+	CLabel msg;
+	msg.SetText(Message);
+	CButton ok,cancel;
+	ok.SetText("OK");
+	cancel.SetText("Cancel");
+
+	ok.Click += [&]()
+	{
+		if(radio.GetChoice() == "")
+			return;
+
+		running = false;
+	};
+
+	cancel.Click += [&]()
+	{
+		cancled = true;
+		running = false;
+	};
+
+	flow_buttons.AddControl(ok);
+	flow_buttons.AddControl(cancel);
+
+	CAlignContainer align_buttons(flow_buttons, CSize(), CAlignContainer::Axis::Horizotal, CAlignContainer::Align::Center);
+
+
+	CFlowContainer main_flow(CFlowContainer::FlowAxis::Vertical, 0);
+	main_flow.AddControl(msg);
+	main_flow.AddControl(radio);
+	main_flow.AddControl(align_buttons);
+
+	align_buttons.ForceResize(main_flow.Size());
+	CWindowContainer window(main_flow, Title);
+	WindowSystem::RegisterWindow(window, CVector(-1, -1));
+
+	while(running)
+	{
+		Util::Sleep(0.1);
+	}
+
+	WindowSystem::UnregisterWindow(window);
+
+	return cancled ? "" : radio.GetChoice();
+}
+
+std::string Util::InputBox(const std::string& Message, const std::string& Title)
+{
+	return "";
 }
