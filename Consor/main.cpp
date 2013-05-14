@@ -126,8 +126,11 @@ int main(int count, wchar_t** values)
 				pw.SetText("");
 			}
 		};
+
+		bool close = false;
 		cancel.Click += [&]()
 		{
+			close = true;
 		};
 		
 		WindowSystem::RegisterWindow(window, CVector(-1, -1));
@@ -135,6 +138,11 @@ int main(int count, wchar_t** values)
 		while(!loggedin)
 		{
 			Util::Sleep(0.1);
+			if(close)
+			{
+				WindowSystem::Close();
+				return 0;
+			}
 		}
 		
 		WindowSystem::UnregisterWindow(window);
@@ -181,7 +189,6 @@ int main(int count, wchar_t** values)
 
 		addtext("launching..."); Util::Sleep(1);
 		addtext("loading UI..."); Util::Sleep(1);
-		addtext("okay, now I'm going to print numbers 0 to 99"); Util::Sleep(1);
 
 		CProgressBar progbar;
 		progbar.ForceResize(CSize(flow.Size().Width - 2, 1));
@@ -190,9 +197,9 @@ int main(int count, wchar_t** values)
 		flow.AddControl(progbar);
 		WindowSystem::Unlock();
 
-		for(int i = 0; i < 100; i++)
+		for(int i = 0; i < 10; i++)
 		{
-			progbar.SetPercent((double)i / 100.0);
+			progbar.SetPercent((double)i / 10.0);
 			WindowSystem::Draw();
 			Util::Sleep(0.1);
 		}
@@ -216,8 +223,10 @@ int main(int count, wchar_t** values)
 
 		button_flow.AddControl(exit);
 
+		bool close = false;
 		exit.Click += [&]()
 		{
+			close = true;
 		};
 
 		Consor::CAlignContainer button_flow_align(button_flow, Consor::CSize(),
@@ -323,7 +332,7 @@ int main(int count, wchar_t** values)
 
 		Consor::WindowSystem::RegisterWindow(window, Consor::CVector(-1, -1));
 	
-		while(true)
+		while(!close)
 		{
 			Consor::Util::Sleep(1.0);
 		}
@@ -332,5 +341,6 @@ int main(int count, wchar_t** values)
 		return 0;
 	}
 
+	Consor::WindowSystem::Close();
 	return 0;
 }

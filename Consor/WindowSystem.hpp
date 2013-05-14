@@ -28,6 +28,7 @@ namespace Consor
 			static std::thread m_DrawThread;
 			static std::list<windowinfo_t> m_Registered;
 			static bool m_Running;
+			static bool m_Close;
 
 			extern void m_SetSkin(std::shared_ptr<ISkin> skin);
 		};
@@ -41,6 +42,9 @@ namespace Consor
 		extern void HandleInput(Input::Key key, Input::IInputSystem& is);
 		extern void RegisterWindow(CControl& control, CVector pos);
 		extern void UnregisterWindow(CControl& control);
+
+		extern bool Running();
+		extern void Close();
 
 		template <class Skin>
 		static std::shared_ptr<ISkin> SetSkin()

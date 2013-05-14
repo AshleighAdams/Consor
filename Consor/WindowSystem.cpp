@@ -17,11 +17,12 @@ bool WindowSystem::Setup(Console::IConsoleRenderer* Renderer, Input::IInputSyste
 	m_pInput = input;
 	m_pSkin = std::shared_ptr<ISkin>(new CDefaultSkin(*Renderer));
 	m_Running = true;
+	m_Close = false;
 
 	// create the threads
 	m_DrawThread = thread([&]()
 	{
-		while(m_Running)
+		while(!m_Close)
 		{
 			WindowSystem::Draw();
 			Util::Sleep(0.5);
@@ -30,7 +31,7 @@ bool WindowSystem::Setup(Console::IConsoleRenderer* Renderer, Input::IInputSyste
 
 	m_InputThread = thread([&]()
 	{
-		while(m_Running)
+		while(!m_Close)
 		{
 			Input::Key k = m_pInput->GetKeyPress();
 			HandleInput(k, *m_pInput);
@@ -124,4 +125,17 @@ void WindowSystem::Lock()
 void WindowSystem::Unlock()
 {
 	m_Mutex.unlock();
+}
+
+void WindowSystem::Close()
+{
+	m_Close = true;
+	m_DrawThread.join();
+	m_InputThread.join();
+	m_Running = false;
+}
+
+bool WindowSystem::Running()
+{
+	return m_Running;
 }
