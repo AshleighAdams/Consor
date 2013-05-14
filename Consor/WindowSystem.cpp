@@ -6,6 +6,16 @@ using namespace Consor;
 using namespace std;
 using namespace WindowSystem::_priv_WindowSystem;
 
+static std::mutex m_Mutex;
+static Console::IConsoleRenderer* m_pRenderer;
+static Input::IInputSystem* m_pInput;
+static std::shared_ptr<ISkin> m_pSkin;
+static std::thread m_InputThread;
+static std::thread m_DrawThread;
+static std::list<windowinfo_t> m_Registered;
+static bool m_Running;
+static bool m_Close;
+
 bool WindowSystem::Setup(Console::IConsoleRenderer* Renderer, Input::IInputSystem* input)
 {
 	static bool ran = false;
@@ -100,6 +110,7 @@ void WindowSystem::HandleInput(Input::Key key, Input::IInputSystem& is)
 	m_Mutex.lock();
 	m_Registered.push_back(info);
 	m_Mutex.unlock();
+	Draw();
  }
 
 void WindowSystem::UnregisterWindow(CControl& control)
@@ -110,6 +121,7 @@ void WindowSystem::UnregisterWindow(CControl& control)
 		return info.pControl == &control;
 	});
 	m_Mutex.unlock();
+	Draw();
 }
 
 Console::IConsoleRenderer& WindowSystem::Renderer()

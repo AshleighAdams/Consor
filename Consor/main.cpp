@@ -7,6 +7,8 @@
 #include "Util/Time.hpp"
 #include "Util/FrequencyController.hpp"
 #include "Util/Math.hpp"
+#include "Util/Prompts.hpp"
+
 #include "WindowsInputSystem.hpp"
 
 #include "Controls/Label.hpp"
@@ -275,15 +277,15 @@ int main(int count, wchar_t** values)
 		Consor::CButton btn;
 		lbl_btn.SetText("Button:");
 		btn.SetText("Button");
-		size_t clicked = 0;
 		btn.Click += [&]()
 		{
-			clicked++;
-			btn.SetText(Consor::Util::FormatString("Button (pushed x%)", clicked));
+			std::list<std::string> buttons; // why no {"OK"} windows?
+			buttons.push_back("OK");
+			Consor::Util::MessageBox("You pressed the button", "Button Pressed", buttons);
 		};
 
 		flow_tests_lables.AddControl(lbl_btn);
-		flow_tests_controls.AddControl(btn, 20);
+		flow_tests_controls.AddControl(btn);
 
 		//HScrollbar test
 		Consor::CLabel lbl_scroll;
