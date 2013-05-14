@@ -82,6 +82,7 @@
     <ClCompile Include="Controls\Label.cpp" />
     <ClCompile Include="Controls\PasswordBox.cpp" />
     <ClCompile Include="Controls\ProgressBar.cpp" />
+    <ClCompile Include="Controls\RadioBox.cpp" />
     <ClCompile Include="Controls\TextBox.cpp" />
     <ClCompile Include="Controls\VerticalScrollbar.cpp" />
     <ClCompile Include="main.cpp" />
@@ -110,6 +111,7 @@
     <ClInclude Include="Controls\Label.hpp" />
     <ClInclude Include="Controls\PasswordBox.hpp" />
     <ClInclude Include="Controls\ProgressBar.hpp" />
+    <ClInclude Include="Controls\RadioBox.hpp" />
     <ClInclude Include="Controls\TextBox.hpp" />
     <ClInclude Include="Controls\VerticalScrollbar.hpp" />
     <ClInclude Include="InputSystem.hpp" />

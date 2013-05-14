@@ -44,32 +44,34 @@ public:
 		Background = RequestColour(Renderer, Consor::CColour(0.7, 0.7, 0.7));
 		AlternateBackground = RequestColour(Renderer, Consor::CColour(0.3, 0.3, 0.3));
 		FocusColour = RequestColour(Renderer, Consor::CColour(0, 0, 1));
-		ProgressPercent = RequestColour(Renderer, Consor::CColour(1, 1, 1));
-		ProgressForeground = RequestColour(Renderer, Consor::CColour(0, 1, 1));
+		ProgressPercent = Consor::CColour(0, 0, 0, 0);
+		ProgressForeground = RequestColour(Renderer, Consor::CColour(0, 1, 0));
+		CanvasColour = RequestColour(Renderer, Consor::CColour(0.392, 0.548, 0.929));
 	};
 };
 
 #include <codecvt>
 #include <locale>
 
-int main(int count, wchar_t** values)
+int main(int count, char** values)
 {
-	/*
-	Consor::Input::CWindowsInputSystem input;
-	Consor::Console::CWindowsConsoleRenderer renderer; 
-	Consor::CDefaultSkin skin;
-	skin.SetRendererColours(renderer);
-
-	renderer.Clear(Consor::CColour());
-	renderer.DrawBox(Consor::CVector(), Consor::CSize(4, 4), Consor::CColour(1, 0.5, 0));
-
-	renderer.FlushToScreen();
-
-	return 0;
-	*/
 	Consor::WindowSystem::Setup(new Consor::Console::CWindowsConsoleRenderer(),
 		new Consor::Input::CWindowsInputSystem());
-	Consor::WindowSystem::SetSkin<Consor::CHackerSkin>();
+
+	list<string> skins;
+	skins.push_back("Default");
+	skins.push_back("Sane");
+	skins.push_back("Hacker");
+	string selected = Consor::Util::ChoiceList("Please select a skin.", "Select Skin", skins);
+
+	if(selected == "Sane")
+	{
+		Consor::WindowSystem::SetSkin<CSaneSkin>();
+	}
+	else if(selected == "Hacker")
+	{
+		Consor::WindowSystem::SetSkin<Consor::CHackerSkin>();
+	}
 
 	// the login box (not for real, just a test)
 	{

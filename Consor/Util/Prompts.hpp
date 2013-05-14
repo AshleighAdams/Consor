@@ -13,6 +13,8 @@ namespace Consor
 	namespace Util
 	{
 		extern std::string MessageBox(const std::string& Message, const std::string& Title, std::list<std::string> Buttons);
+		extern std::string ChoiceList(const std::string& Message, const std::string& Title, std::list<std::string> Options);
+		extern std::string InputBox(const std::string& Message, const std::string& Title);
 	};
 };
 
