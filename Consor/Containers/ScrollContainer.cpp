@@ -24,15 +24,19 @@ CSize CScrollContainer::Size()
 
 void CScrollContainer::OnResize(const CSize& Size)
 {
+	CSize hsize, vsize;
 	if(m_Size.Width > 0)
-		m_HScrollbar.ForceResize(CSize(Size.Width - 1, 1)); // The -1 because HScrollbar has priority
+		hsize = CSize(Size.Width - 1, 1); // The -1 because VScrollbar has priority
 	else // set its size to nothing
-		m_HScrollbar.ForceResize(CSize(0, 0));
+		hsize = CSize(0, 0);
 	
 	if(m_Size.Height > 0)
-		m_VScrollbar.ForceResize(CSize(1, Size.Height));
+		vsize = CSize(1, Size.Height - hsize.Height);
 	else
-		m_VScrollbar.ForceResize(CSize(0, 0));
+		vsize = CSize(0, 0);
+
+	m_HScrollbar.ForceResize(hsize);
+	m_VScrollbar.ForceResize(vsize);
 }
 
 void CScrollContainer::ForceResize(const CSize& Size)

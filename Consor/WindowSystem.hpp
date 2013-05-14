@@ -20,16 +20,6 @@ namespace Consor
 	{
 		namespace _priv_WindowSystem
 		{
-			static std::mutex m_Mutex;
-			static Console::IConsoleRenderer* m_pRenderer;
-			static Input::IInputSystem* m_pInput;
-			static std::shared_ptr<ISkin> m_pSkin;
-			static std::thread m_InputThread;
-			static std::thread m_DrawThread;
-			static std::list<windowinfo_t> m_Registered;
-			static bool m_Running;
-			static bool m_Close;
-
 			extern void m_SetSkin(std::shared_ptr<ISkin> skin);
 		};
 
@@ -50,10 +40,10 @@ namespace Consor
 		static std::shared_ptr<ISkin> SetSkin()
 		{
 			using namespace _priv_WindowSystem;
-			m_Mutex.lock();
+			Lock();
 			std::shared_ptr<ISkin> skin = std::shared_ptr<ISkin>(new Skin(Renderer()));
 			m_SetSkin(skin);
-			m_Mutex.unlock();
+			Unlock();
 			return skin;
 		}
 
