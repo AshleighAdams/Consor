@@ -176,6 +176,16 @@ CVector& CVector::operator/=(double A)
 	return *this;
 }
 
+bool CVector::operator==(const CVector& A) const
+{
+	return this->X == A.X && this->Y == A.Y;
+}
+
+bool CVector::operator!=(const CVector& A) const
+{
+	return !(*this == A);
+}
+
 // CColour
 
 CColour::CColour()

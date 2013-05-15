@@ -96,6 +96,8 @@ namespace Consor
 			int             m_Width;
 			int             m_Height;
 			CHAR_INFO*      m_pBuffer;
+			CHAR_INFO*      m_pBufferDelta;
+			bool            m_WroteOnce;
 
 			CHAR_INFO& _CharInfoAt(int x, int y);
 
