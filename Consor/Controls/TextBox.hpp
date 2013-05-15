@@ -1,7 +1,7 @@
 #ifndef CONTROLS_TEXTBOX_H
 #define CONTROLS_TEXTBOX_H
 
-#include "Control.hpp"
+#include "../Control.hpp"
 #include <string>
 
 namespace Consor

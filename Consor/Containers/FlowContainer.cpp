@@ -93,10 +93,15 @@ void CFlowContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasF
 	{
 		CSize ctrl_size = ctrl->Size();
 
-		Renderer.PushRenderBounds(pos, ctrl_size);
-		ctrl->Draw(Renderer, HasFocus && ctrl == pFocused, Skin);
-		Renderer.PopRenderBounds();
-		
+		if(Renderer.InRenderBounds(pos, ctrl_size))
+		{
+			Renderer.PushRenderBounds(pos, ctrl_size);
+			ctrl->Draw(Renderer, HasFocus && ctrl == pFocused, Skin);
+			Renderer.PopRenderBounds();
+		}
+		//else
+		//	Renderer.SetTitle("Control out of renderbounds!");
+
 		if(m_Axis == CFlowContainer::FlowAxis::Vertical)
 			pos.Y += ctrl_size.Height + m_Seperation;
 		else
