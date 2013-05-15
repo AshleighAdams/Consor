@@ -97,8 +97,8 @@ CWindowsConsoleRenderer::CWindowsConsoleRenderer()
 	BOOL gotinfo = GetConsoleScreenBufferInfoEx(m_STDOutHandle, &info);
 	assert(gotinfo == TRUE);
 
-	m_Width = info.dwSize.X;
-	m_Height = min(info.srWindow.Bottom - info.srWindow.Top + 1, info.srWindow.Right - info.srWindow.Left + 1);
+	m_Width = info.srWindow.Right - info.srWindow.Left + 1;
+	m_Height = info.srWindow.Bottom - info.srWindow.Top + 1;
 
 	Util::Log("detected console size: %, %", m_Width, m_Height);
 

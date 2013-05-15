@@ -58,6 +58,12 @@ int main(int count, char** values)
 	Consor::WindowSystem::Setup(new Consor::Console::CWindowsConsoleRenderer(),
 		new Consor::Input::CWindowsInputSystem());
 
+	atexit([]()
+	{
+		// safley close the window system at exit
+		Consor::WindowSystem::Close();
+	});
+
 	list<string> skins;
 	skins.push_back("Default");
 	skins.push_back("Sane");
@@ -126,7 +132,9 @@ int main(int count, char** values)
 				loggedin = true;
 			else 
 			{
-				msg.SetText("Invalid user/password");
+				std::list<string> btns;
+				btns.push_back("OK");
+				Util::MessageBox("The username or password you supplied is invalid!", "Error", btns);
 				pw.SetText("");
 			}
 		};
@@ -214,9 +222,9 @@ int main(int count, char** values)
 
 	{
 		Consor::CLabel msg;
-		msg.SetText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tempor metus sed ligula tempor tincidunt. Nullam quis condimentum augue. Nulla varius, nunc venenatis molestie egestas, neque lorem bibendum dui, vitae placerat magna nunc at nulla. In ultricies lectus quis purus bibendum eget ullamcorper metus tempus. Phasellus pulvinar, est sit amet auctor tempus, turpis nisl cursus mauris, vitae hendrerit felis tellus eu turpis. Vestibulum id leo sed magna vehicula aliquet. Fusce viverra auctor augue ut rutrum. Quisque quis nisl non turpis sollicitudin rutrum sit amet eget libero. Donec pretium egestas ante, eu aliquam mi porttitor quis.");
+		//msg.SetText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tempor metus sed ligula tempor tincidunt. Nullam quis condimentum augue. Nulla varius, nunc venenatis molestie egestas, neque lorem bibendum dui, vitae placerat magna nunc at nulla. In ultricies lectus quis purus bibendum eget ullamcorper metus tempus. Phasellus pulvinar, est sit amet auctor tempus, turpis nisl cursus mauris, vitae hendrerit felis tellus eu turpis. Vestibulum id leo sed magna vehicula aliquet. Fusce viverra auctor augue ut rutrum. Quisque quis nisl non turpis sollicitudin rutrum sit amet eget libero. Donec pretium egestas ante, eu aliquam mi porttitor quis.");
 	
-		//msg.SetText(Consor::Util::FormatString("The current renderer is %, version string \"%\".\n\nSupports Unicode: %\nMaximium supported colours: %", renderer.RendererName(), renderer.VersionString(), renderer.GetCharInformation(Consor::CVector())->SupportsUnicode() ? "true" : "false", renderer.MaxColours()));
+		msg.SetText(Consor::Util::FormatString("The current renderer is %, version string \"%\".", Consor::WindowSystem::RendererName(), Consor::WindowSystem::RendererVersionString()));
 
 		msg.ForceResize(Consor::CSize(36, 1));
 		Consor::CScrollContainer msg_scroll(msg, Consor::CSize(-1, 10));
@@ -334,7 +342,7 @@ int main(int count, char** values)
 		Consor::CScrollContainer main_scroll(main_flow, Consor::CSize(30, 15));
 		Consor::CWindowContainer window(main_scroll, "Consor Test");
 
-		Consor::WindowSystem::RegisterWindow(window, Consor::CVector(-1, -1));
+		Consor::WindowSystem::RegisterWindow(window, Consor::CVector(1, 1));
 	
 		while(!close)
 		{

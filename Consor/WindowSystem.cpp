@@ -45,7 +45,6 @@ bool WindowSystem::Setup(Console::IConsoleRenderer* Renderer, Input::IInputSyste
 		{
 			Input::Key k = m_pInput->GetKeyPress();
 			HandleInput(k, *m_pInput);
-			Draw();
 		}
 	});
 
@@ -99,6 +98,7 @@ void WindowSystem::HandleInput(Input::Key key, Input::IInputSystem& is)
 	m_Registered.back().pControl->HandleInput(key, is);
 
 	m_Mutex.unlock();
+	Draw();
 }
 
  void WindowSystem::RegisterWindow(CControl& control, CVector pos)
@@ -150,4 +150,14 @@ void WindowSystem::Close()
 bool WindowSystem::Running()
 {
 	return m_Running;
+}
+
+std::string WindowSystem::RendererName()
+{
+	return Renderer().RendererName();
+}
+
+std::string WindowSystem::RendererVersionString()
+{
+	return Renderer().VersionString();
 }
