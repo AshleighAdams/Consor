@@ -100,6 +100,12 @@ std::string Consor::Util::WrapText(const std::string& input, size_t width, size_
 
 		const char& x = input[pos];
 
+		if(line_len == 0 && x == ' ')
+		{
+			pos++;
+			continue; // we don't want these anymore
+		}
+
 		if(line_len + 1 > width)
 		{
 			int retries = min<size_t>(width, 10);

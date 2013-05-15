@@ -87,7 +87,7 @@ void CScrollContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool Ha
 	Renderer.PopRenderBounds();
 }
 
-bool CScrollContainer::ScrollDown()
+bool CScrollContainer::ScrollDown(size_t count)
 {
 	CSize clientsize = m_pClient->Size();
 	CSize selfsize = this->Size();
@@ -98,7 +98,7 @@ bool CScrollContainer::ScrollDown()
 	double perc = m_VScrollbar.GetPercent();
 	double incremant = 1.0 / (clientsize.Height - selfsize.Height);
 
-	perc += incremant;
+	perc += incremant * (double)count;
 
 	if(perc > 1.0)
 		perc = 1.0;
@@ -110,7 +110,7 @@ bool CScrollContainer::ScrollDown()
 	return true;
 }
 
-bool CScrollContainer::ScrollUp()
+bool CScrollContainer::ScrollUp(size_t count)
 {
 	CSize clientsize = m_pClient->Size();
 	CSize selfsize = this->Size();
@@ -121,7 +121,7 @@ bool CScrollContainer::ScrollUp()
 	double perc = m_VScrollbar.GetPercent();
 	double incremant = 1.0 / (clientsize.Height - selfsize.Height);
 
-	perc -= incremant;
+	perc -= incremant * (double)count;
 
 	if(perc < 0)
 		perc = 0;
@@ -133,7 +133,7 @@ bool CScrollContainer::ScrollUp()
 	return true;
 }
 
-bool CScrollContainer::ScrollLeft()
+bool CScrollContainer::ScrollLeft(size_t count)
 {
 	CSize clientsize = m_pClient->Size();
 	CSize selfsize = this->Size();
@@ -144,7 +144,7 @@ bool CScrollContainer::ScrollLeft()
 	double perc = m_HScrollbar.GetPercent();
 	double incremant = 1.0 / (clientsize.Width - selfsize.Width);
 
-	perc -= incremant;
+	perc -= incremant * (double)count;
 
 	if(perc < 0)
 		perc = 0;
@@ -156,7 +156,7 @@ bool CScrollContainer::ScrollLeft()
 	return true;
 }
 
-bool CScrollContainer::ScrollRight()
+bool CScrollContainer::ScrollRight(size_t count)
 {
 	CSize clientsize = m_pClient->Size();
 	CSize selfsize = this->Size();
@@ -166,7 +166,7 @@ bool CScrollContainer::ScrollRight()
 	double perc = m_HScrollbar.GetPercent();
 	double incremant = 1.0 / (clientsize.Width - selfsize.Width);
 
-	perc += incremant;
+	perc += incremant * (double)count;
 
 	if(perc > 1.0)
 		perc = 1.0;
@@ -210,10 +210,12 @@ bool CScrollContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
 
 	if(m_Size.Height > 0)
 	{
+		const double context = 1.0 - 0.1; //10% context
+
 		if(Key == Input::Key::PageDown || Key == Input::Key::Numpad3)
-			return ScrollDown();
+			return ScrollDown(m_Size.Height * context);
 		else if(Key == Input::Key::PageUp || Key == Input::Key::Numpad9)
-			return ScrollUp();
+			return ScrollUp(m_Size.Height * context);
 	}
 
 	return false;
