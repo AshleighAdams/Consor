@@ -51,6 +51,8 @@ namespace Consor
 		CVector& operator/=(const CVector& A);
 		CVector& operator*=(double A);
 		CVector& operator/=(double A);
+		bool operator==(const CVector& A) const;
+		bool operator!=(const CVector& A) const;
 	};
 
 	class CColour

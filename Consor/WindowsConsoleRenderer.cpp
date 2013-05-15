@@ -9,6 +9,7 @@
 #include <codecvt>
 
 #include "Util/Debug.hpp"
+#include "Util/Time.hpp"
 
 using namespace std;
 
@@ -89,6 +90,7 @@ CharAttributes FromBackgroundColour(CWindowsConsoleRenderer& Renderer, const CCo
 
 CWindowsConsoleRenderer::CWindowsConsoleRenderer()
 {
+	m_WroteOnce = false;
 	m_STDOutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	CONSOLE_SCREEN_BUFFER_INFOEX info;
@@ -125,6 +127,7 @@ CWindowsConsoleRenderer::CWindowsConsoleRenderer()
 	}
 
 	m_pBuffer = new CHAR_INFO[m_Width * m_Height];
+	m_pBufferDelta = new CHAR_INFO[m_Width * m_Height];
 
 	COORD coordBufSize = {m_Width, m_Height};
 	COORD coordBufCoord = {0, 0};
@@ -179,6 +182,7 @@ CWindowsConsoleRenderer::~CWindowsConsoleRenderer()
 
 	SetConsoleActiveScreenBuffer(m_STDOutHandle);
 	delete [] m_pBuffer;
+	delete [] m_pBufferDelta;
 }
 
 string CWindowsConsoleRenderer::RendererName()
@@ -255,6 +259,46 @@ void CWindowsConsoleRenderer::FlushToScreen()
 	srctWriteRect.Bottom = m_Height;
 	srctWriteRect.Right = m_Width;
 
+	if(m_WroteOnce == true)
+	{
+		// only write the region that changed (could be the hole screen)
+		CVector top_left_delta = CVector(m_Width, m_Height);
+		CVector bot_right_delta = CVector(0, 0);
+
+		for(size_t x = 0; x < m_Width; x++)
+		{
+			for(size_t y = 0; y < m_Height; y++)
+			{
+				CHAR_INFO& new_ = m_pBuffer[x + m_Width * y];
+				CHAR_INFO& old = m_pBufferDelta[x + m_Width * y];
+
+				if(new_.Attributes != old.Attributes || new_.Char.UnicodeChar != old.Char.UnicodeChar)
+				{
+					if(x < top_left_delta.X)
+						top_left_delta.X = x;
+					if(x > bot_right_delta.X)
+						bot_right_delta.X = x;
+
+					if(y < top_left_delta.Y)
+						top_left_delta.Y = y;
+					if(y > bot_right_delta.Y)
+						bot_right_delta.Y = y;
+				}
+			}
+		}
+
+		if(top_left_delta == CVector(m_Width, m_Height) && bot_right_delta == CVector(0, 0))
+			return;
+
+		srctWriteRect.Top = top_left_delta.Y;
+		srctWriteRect.Left = top_left_delta.X;
+		srctWriteRect.Bottom = bot_right_delta.Y;
+		srctWriteRect.Right = bot_right_delta.X;
+	}
+	
+
+	// end delta
+
 	COORD coordBufSize;
 	COORD coordBufCoord;
 	
@@ -263,14 +307,20 @@ void CWindowsConsoleRenderer::FlushToScreen()
 	coordBufCoord.X = 0;
 	coordBufCoord.Y = 0;
 
-	LockWindowUpdate(GetConsoleWindow());
+	//LockWindowUpdate(GetConsoleWindow());
 	BOOL success = WriteConsoleOutputW( 
 		m_BufferHandle, // screen buffer to write to 
-		m_pBuffer,        // buffer to copy from 
+		&m_pBuffer[srctWriteRect.Left + m_Width * srctWriteRect.Top],        // buffer to copy from 
 		coordBufSize,     // col-row size of chiBuffer 
 		coordBufCoord,    // top left src cell in chiBuffer 
 		&srctWriteRect);
-	LockWindowUpdate(0);
+	//LockWindowUpdate(0);
+
+	if(success)
+	{
+		m_WroteOnce = true;
+		memcpy(m_pBufferDelta, m_pBuffer, m_Width * m_Height * sizeof CHAR_INFO);
+	}
 }
 
 CSize CWindowsConsoleRenderer::Size()
