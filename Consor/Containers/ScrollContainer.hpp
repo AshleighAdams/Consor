@@ -1,9 +1,9 @@
 #ifndef CONSOR_SCROLLCONTAINER_H
 #define CONSOR_SCROLLCONTAINER_H
 
-#include "Control.hpp"
-#include "Controls/HorizontalScrollbar.hpp"
-#include "Controls/VerticalScrollbar.hpp"
+#include "../Control.hpp"
+#include "../Controls/HorizontalScrollbar.hpp"
+#include "../Controls/VerticalScrollbar.hpp"
 
 #include <string>
 

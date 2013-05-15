@@ -1,7 +1,7 @@
 #ifndef CONTROLS_PROGRESSBAR_H
 #define CONTROLS_PROGRESSBAR_H
 
-#include "Control.hpp"
+#include "../Control.hpp"
 #include <string>
 
 namespace Consor

@@ -1,7 +1,7 @@
 #ifndef CONTROLS_LABLE_H
 #define CONTROLS_LABLE_H
 
-#include "Control.hpp"
+#include "../Control.hpp"
 #include <string>
 
 namespace Consor

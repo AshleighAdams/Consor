@@ -1,7 +1,7 @@
 #ifndef CONTROLS_CHECKBOX_H
 #define CONTROLS_CHECKBOX_H
 
-#include "Control.hpp"
+#include "../Control.hpp"
 #include "Label.hpp"
 
 #include <string>

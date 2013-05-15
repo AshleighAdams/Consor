@@ -71,7 +71,7 @@ bool CCheckBox::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
 	if(Key == Input::Key::Enter || Key == Input::Key::Space)
 	{
-		SetChecked(!Checked());
+		this->SetChecked(!this->Checked());
 		return true;
 	}
 

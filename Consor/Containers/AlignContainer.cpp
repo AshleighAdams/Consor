@@ -37,7 +37,7 @@ CSize CAlignContainer::Size()
 
 CVector CAlignContainer::m_ClientPos()
 {
-	CSize size = Size();
+	CSize size = this->Size();
 	CSize clientsize = m_pClient->Size();
 
 	CVector ret;

@@ -90,7 +90,7 @@ void CScrollContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool Ha
 bool CScrollContainer::ScrollDown()
 {
 	CSize clientsize = m_pClient->Size();
-	CSize selfsize = Size();
+	CSize selfsize = this->Size();
 
 	if(clientsize.Height < selfsize.Height)
 		return false;
@@ -113,7 +113,7 @@ bool CScrollContainer::ScrollDown()
 bool CScrollContainer::ScrollUp()
 {
 	CSize clientsize = m_pClient->Size();
-	CSize selfsize = Size();
+	CSize selfsize = this->Size();
 
 	if(clientsize.Height < selfsize.Height)
 		return false;
@@ -136,7 +136,7 @@ bool CScrollContainer::ScrollUp()
 bool CScrollContainer::ScrollLeft()
 {
 	CSize clientsize = m_pClient->Size();
-	CSize selfsize = Size();
+	CSize selfsize = this->Size();
 
 	if(clientsize.Width < selfsize.Width)
 		return false;
@@ -159,7 +159,7 @@ bool CScrollContainer::ScrollLeft()
 bool CScrollContainer::ScrollRight()
 {
 	CSize clientsize = m_pClient->Size();
-	CSize selfsize = Size();
+	CSize selfsize = this->Size();
 
 	if(clientsize.Width < selfsize.Width)
 		return false;

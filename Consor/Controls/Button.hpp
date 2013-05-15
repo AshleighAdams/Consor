@@ -1,10 +1,10 @@
 #ifndef CONTROLS_BUTTON_H
 #define CONTROLS_BUTTON_H
 
-#include "Control.hpp"
+#include "../Control.hpp"
 #include "Label.hpp"
-#include "Containers/AlignContainer.hpp"
-#include "Util/Hooks.hpp"
+#include "../Containers/AlignContainer.hpp"
+#include "../Util/Hooks.hpp"
 
 #include <string>
 

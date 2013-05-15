@@ -1,7 +1,7 @@
 #ifndef CONSOR_FLOWCONTAINER_H
 #define CONSOR_FLOWCONTAINER_H
 
-#include "Control.hpp"
+#include "../Control.hpp"
 #include <string>
 #include <list>
 

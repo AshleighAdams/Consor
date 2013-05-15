@@ -1,7 +1,7 @@
 #ifndef CONSOR_ALIGNCONTAINER_H
 #define CONSOR_ALIGNCONTAINER_H
 
-#include "Control.hpp"
+#include "../Control.hpp"
 #include <string>
 
 namespace Consor

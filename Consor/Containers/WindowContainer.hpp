@@ -1,7 +1,7 @@
 #ifndef CONSOR_WINDOWCONTAINER_H
 #define CONSOR_WINDOWCONTAINER_H
 
-#include "Control.hpp"
+#include "../Control.hpp"
 #include <string>
 
 namespace Consor
@@ -11,6 +11,7 @@ namespace Consor
 	protected:
 		CControl* m_pClient;
 		std::string m_Title;
+		CWindowContainer();
 	public:
 		CWindowContainer(CControl& Client, const std::string& Title);
 		virtual CSize Size();
