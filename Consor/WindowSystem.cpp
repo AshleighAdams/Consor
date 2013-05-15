@@ -141,6 +141,9 @@ void WindowSystem::Unlock()
 
 void WindowSystem::Close()
 {
+	if(m_Close)
+		return;
+
 	m_Close = true;
 	m_DrawThread.join();
 	m_InputThread.join();

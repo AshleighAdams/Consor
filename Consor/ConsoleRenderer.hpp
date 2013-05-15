@@ -73,6 +73,8 @@ namespace Consor
 			virtual void PushRenderBounds(const CVector& from, const CSize& size);
 			virtual void PopRenderBounds();
 			virtual CSize RenderSize();
+			virtual bool InRenderBounds(const CVector& pos, CVector* dir);
+			virtual bool InRenderBounds(const CVector& pos, const CSize& size);
 		};
 	}
 }

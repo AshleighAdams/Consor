@@ -384,3 +384,94 @@ void IConsoleRenderer::DrawRect(const CVector& pos, const CSize& size, const CCo
 		info_r->SetBackgroundColour(bgcol);
 	}
 }
+
+bool IConsoleRenderer::InRenderBounds(const CVector& pos, CVector* dir)
+{
+	CSize size = this->Size();
+	bool ret = true;
+
+	if(dir)
+		*dir = CVector();
+
+	int x = (int)pos.X, y = (int)pos.Y;
+	x += (int)m_CurrentOffset.X;
+	y += (int)m_CurrentOffset.Y;
+
+	if(x < (int)(m_CurrentRenderBound.Pos.X))
+	{
+		if(!dir)
+			return false;
+		dir->X = -1;
+		ret = false;
+	}
+	if(y < (int)(m_CurrentRenderBound.Pos.Y))
+	{
+		if(!dir)
+			return false;
+		dir->Y = -1;
+
+		if(dir->X != 0) // both directioons have been found
+			return false;
+
+		ret = false;
+	}
+
+	if(x > (int)(m_CurrentRenderBound.Pos.X + m_CurrentRenderBound.Size.Width - 1))
+	{
+		if(!dir)
+			return false;
+		dir->X = 1;
+		if(dir->Y != 0)
+			return false;
+		ret = false;
+	}
+	if(y > (int)(m_CurrentRenderBound.Pos.Y + m_CurrentRenderBound.Size.Height - 1))
+	{
+		if(!dir)
+			return false;
+		dir->Y = 1;
+		if(dir->X != 0) // both set, ret false
+			return false;
+		ret = false;
+	}
+
+	if(x < 0 || (int)(x >= size.Width))
+	{
+		if(!ret)
+			return false;
+		dir->X = x < 0 ? -1 : 1;
+		if(dir->Y != 0) // again, both are figgured wrong, return
+			return false;
+		ret = false;
+	}
+	if(y < 0 || (int)(y >= size.Height))
+	{
+		if(!ret)
+			return false;
+		dir->Y = y < 0 ? -1 : 1;
+		ret = false;
+	}
+
+	return ret;
+}
+
+bool IConsoleRenderer::InRenderBounds(const CVector& pos, const CSize& size)
+{
+	CVector dir1, dir2;
+
+	CVector test1, test2;
+	test1 = pos;
+	test2 = pos + CVector(size.Width, size.Height);
+
+	bool inside1 = this->InRenderBounds(test1, &dir1);
+	bool inside2 = this->InRenderBounds(test2, &dir2);
+
+	if(dir1.Y == dir2.Y && dir1.Y != 0) // completley out of bounds in Y
+		return false;
+	
+	if(dir1.X == dir2.X && dir1.X != 0) // completley out of bounds in X
+		return false;
+
+	// there's something in bounds
+	return true;
+}
