@@ -47,7 +47,7 @@ void CHorizontalScrollbar::Draw(Consor::Console::IConsoleRenderer& Renderer, boo
 	if(HasFocus)
 		fgcol = Skin.ScrollForegroundFocused();
 
-	CSize selfsize = Size();
+	CSize selfsize = this->Size();
 
 	Renderer.DrawBox(CVector(), selfsize, bgcol);
 	

@@ -1,7 +1,7 @@
 #ifndef CONTROLS_HSCROLL_H
 #define CONTROLS_HSCROLL_H
 
-#include "Control.hpp"
+#include "../Control.hpp"
 #include <string>
 
 namespace Consor

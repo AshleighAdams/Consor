@@ -25,7 +25,7 @@ double CProgressBar::GetPercent()
 
 void CProgressBar::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
-	CSize size = Size();
+	CSize size = this->Size();
 	CColour bg = Skin.ProgressBarBackground(GetPercent());
 	CColour fg = Skin.ProgressBarForeground(GetPercent());
 	CVector pos;

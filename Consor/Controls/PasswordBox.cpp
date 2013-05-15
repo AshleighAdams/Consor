@@ -6,13 +6,13 @@ using namespace Consor;
 CPasswordBox::CPasswordBox()
 {
 	m_Size = CSize(20, 1);
-	SetText("");
+	this->SetText("");
 	SetPasswordChar('*');
 }
 
 std::string CPasswordBox::GetText()
 {
-	std::string ret = GetPassword();
+	std::string ret = this->GetPassword();
 
 	for(char& c : ret)
 		c = '*';

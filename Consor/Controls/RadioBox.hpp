@@ -1,9 +1,9 @@
 #ifndef CONTROLS_RADIOBOX_H
 #define CONTROLS_RADIOBOX_H
 
-#include "Control.hpp"
+#include "../Control.hpp"
 #include "CheckBox.hpp"
-#include "Containers/FlowContainer.hpp"
+#include "../Containers/FlowContainer.hpp"
 
 #include <string>
 #include <tuple>

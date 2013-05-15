@@ -1,7 +1,7 @@
 #ifndef CONTROLS_PASSWORDBOX_H
 #define CONTROLS_PASSWORDBOX_H
 
-#include "Control.hpp"
+#include "../Control.hpp"
 #include "TextBox.hpp"
 #include <string>
 

@@ -1,7 +1,7 @@
 #ifndef CONSOR_BORDERCONTAINER_H
 #define CONSOR_BORDERCONTAINER_H
 
-#include "Control.hpp"
+#include "../Control.hpp"
 #include <string>
 
 namespace Consor

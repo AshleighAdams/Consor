@@ -9,6 +9,12 @@ CWindowContainer::CWindowContainer(CControl& Client, const string& Title)
 	m_Title = Title;
 }
 
+CWindowContainer::CWindowContainer()
+{
+	m_pClient = nullptr;
+	m_Title = "None";
+}
+
 CSize CWindowContainer::Size()
 {
 	return m_pClient->Size() + CSize(2, 2); // an aditional 2 for the border
@@ -26,7 +32,7 @@ void CWindowContainer::ForceResize(const CSize& Size)
 void CWindowContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
 	CVector pos;
-	CSize size = Size();
+	CSize size = this->Size();
 	Renderer.DrawBox(pos, size, Skin.WindowBackground());
 	Renderer.DrawRect(pos, size, Skin.WindowBorder(), CColour::None());
 

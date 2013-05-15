@@ -51,7 +51,7 @@ void CVerticalScrollbar::Draw(Consor::Console::IConsoleRenderer& Renderer, bool 
 	if(HasFocus)
 		fgcol = Skin.ScrollForegroundFocused();
 
-	CSize selfsize = Size();
+	CSize selfsize = this->Size();
 
 	Renderer.DrawBox(CVector(), selfsize, bgcol);
 	

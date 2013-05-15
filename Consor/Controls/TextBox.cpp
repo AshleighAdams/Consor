@@ -6,7 +6,7 @@ using namespace Consor;
 CTextBox::CTextBox()
 {
 	m_Size = CSize(20, 1);
-	SetText("");
+	this->SetText("");
 	m_InsertMode = false;
 	m_LastTyped = Util::GetTime();
 }
@@ -24,7 +24,7 @@ std::string CTextBox::GetText()
 
 void CTextBox::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
-	CSize size = Size();
+	CSize size = this->Size();
 
 	Renderer.DrawBox(CVector(), size, Skin.TextBoxBackground());
 
