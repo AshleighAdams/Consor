@@ -263,12 +263,14 @@ void CWindowsConsoleRenderer::FlushToScreen()
 	coordBufCoord.X = 0;
 	coordBufCoord.Y = 0;
 
+	LockWindowUpdate(GetConsoleWindow());
 	BOOL success = WriteConsoleOutputW( 
 		m_BufferHandle, // screen buffer to write to 
 		m_pBuffer,        // buffer to copy from 
 		coordBufSize,     // col-row size of chiBuffer 
 		coordBufCoord,    // top left src cell in chiBuffer 
 		&srctWriteRect);
+	LockWindowUpdate(0);
 }
 
 CSize CWindowsConsoleRenderer::Size()
