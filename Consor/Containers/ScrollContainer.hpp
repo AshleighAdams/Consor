@@ -25,10 +25,10 @@ namespace Consor
 		virtual bool HandleInput(Input::Key Key, Input::IInputSystem& System);
 		virtual bool CanFocus();
 
-		virtual bool ScrollLeft();
-		virtual bool ScrollRight();
-		virtual bool ScrollUp();
-		virtual bool ScrollDown();
+		virtual bool ScrollLeft(size_t count = 1);
+		virtual bool ScrollRight(size_t count = 1);
+		virtual bool ScrollUp(size_t count = 1);
+		virtual bool ScrollDown(size_t count = 1);
 	};
 };
 
