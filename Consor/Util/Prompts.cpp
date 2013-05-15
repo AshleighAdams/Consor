@@ -23,20 +23,20 @@ std::string Util::MessageBox(const std::string& Message, const std::string& Titl
 
 
 	CFlowContainer main_buttons(CFlowContainer::FlowAxis::Horizontal, 0.0);
-	CButton buttons[8];
-	size_t pos = 0;
+
+	list<tuple<CButton*, string>> CreatedButtons;
 
 	for(const string& btn : Buttons)
 	{
-		string btnname = btn;
-		buttons[pos].SetText(btnname);
-		buttons[pos].Click += [&]()
-		{
-			ret = btnname;
-		};
+		CButton* pbtn = new CButton;
+		pbtn->SetText(btn);
 
-		main_buttons.AddControl(buttons[pos]);
-		pos++;
+		pbtn->Click += bind([&](string buttontext)
+		{
+			ret = buttontext;
+		}, btn);
+
+		main_buttons.AddControl(*pbtn);
 	}
 
 	CAlignContainer align_buttons(main_buttons, CSize(), CAlignContainer::Axis::Horizotal, CAlignContainer::Align::Center);
@@ -56,6 +56,9 @@ std::string Util::MessageBox(const std::string& Message, const std::string& Titl
 	{
 		Util::Sleep(0.1);
 	}
+
+	for(tuple<CButton*, string> tup : CreatedButtons)
+		delete get<0>(tup);
 
 	WindowSystem::UnregisterWindow(window);
 	return ret;
