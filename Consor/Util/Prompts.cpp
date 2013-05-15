@@ -42,6 +42,7 @@ std::string Util::MessageBox(const std::string& Message, const std::string& Titl
 	CAlignContainer align_buttons(main_buttons, CSize(), CAlignContainer::Axis::Horizotal, CAlignContainer::Align::Center);
 	CLabel msg;
 	msg.SetText(Message);
+	msg.ForceResize(CSize(40, 1));
 
 	CFlowContainer main_flow(CFlowContainer::FlowAxis::Vertical, 0.0);
 	main_flow.AddControl(msg);
@@ -74,6 +75,8 @@ std::string Util::ChoiceList(const std::string& Message, const std::string& Titl
 	CFlowContainer flow_buttons(CFlowContainer::FlowAxis::Horizontal, 1.0);
 	CLabel msg;
 	msg.SetText(Message);
+	msg.ForceResize(CSize(40, 1));
+
 	CButton ok,cancel;
 	ok.SetText("OK");
 	cancel.SetText("Cancel");

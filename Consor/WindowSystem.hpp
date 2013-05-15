@@ -35,6 +35,8 @@ namespace Consor
 
 		extern bool Running();
 		extern void Close();
+		extern std::string RendererName();
+		extern std::string RendererVersionString();
 
 		template <class Skin>
 		static std::shared_ptr<ISkin> SetSkin()
