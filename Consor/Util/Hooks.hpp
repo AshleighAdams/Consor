@@ -118,8 +118,13 @@ namespace Consor
 
 		inline void operator()(Args... args)
 		{
-			std::thread* pThread = new std::thread([&]()
+			bool canresume = false;
+
+			std::thread* pThrd = new std::thread([&]()
 			{
+				//std::thread* pThread = pThrd;
+				canresume = true;
+
 				m_CallMutex.lock();
 
 				// fuck it, lets just leak memory
@@ -138,9 +143,12 @@ namespace Consor
 					m_CallMutex.lock();
 				}
 				m_Itterating = false;
-				m_pLastCallThread = pThread;
+				//m_pLastCallThread = pThread;
 				m_CallMutex.unlock();
 			});
+
+			while(!canresume)
+				;
 		}
 	};
 };

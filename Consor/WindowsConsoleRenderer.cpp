@@ -16,6 +16,10 @@ using namespace std;
 using namespace Consor;
 using namespace Consor::Console;
 
+#define DELTA_DRAW_ONLY
+// the renderer sometimes bugs out, i found with some most windows console fonts it
+//#define DELTA_DRAW_1_BIGGER
+
 CColour AttributeForegroundColour(CWindowsConsoleRenderer& Renderer, CharAttributes att)
 {
 	int col = ((int)att >> 00) & 0x0F;
@@ -222,6 +226,16 @@ string CWindowsConsoleRenderer::VersionString()
 	"; direct draw calls: none"
 	"; abstract draw calls: DrawBox, DrawRect, DrawString"
 #endif
+
+	"; flushmode = "
+#ifdef DELTA_DRAW_ONLY
+	"delta"
+	#ifdef DELTA_DRAW_1_BIGGER
+		" + 1"
+	#endif
+#else
+	"all"
+#endif
 	"; built with: "
 
 
@@ -259,6 +273,7 @@ void CWindowsConsoleRenderer::FlushToScreen()
 	srctWriteRect.Bottom = m_Height;
 	srctWriteRect.Right = m_Width;
 
+#ifdef DELTA_DRAW_ONLY
 	if(m_WroteOnce == true)
 	{
 		// only write the region that changed (could be the hole screen)
@@ -290,14 +305,24 @@ void CWindowsConsoleRenderer::FlushToScreen()
 		if(top_left_delta == CVector(m_Width, m_Height) && bot_right_delta == CVector(0, 0))
 			return;
 
+	#ifdef DELTA_DRAW_1_BIGGER
+		if(top_left_delta.X > 0)
+			top_left_delta.X--;
+		if(top_left_delta.Y > 0)
+			top_left_delta.Y--;
+		if(bot_right_delta.X < m_Width)
+			bot_right_delta.X++;
+		if(bot_right_delta.Y < m_Height)
+			bot_right_delta.Y++;
+	#endif
+
 		srctWriteRect.Top = top_left_delta.Y;
 		srctWriteRect.Left = top_left_delta.X;
 		srctWriteRect.Bottom = bot_right_delta.Y;
 		srctWriteRect.Right = bot_right_delta.X;
-	}
-	
 
-	// end delta
+	}
+#endif// end delta region
 
 	COORD coordBufSize;
 	COORD coordBufCoord;

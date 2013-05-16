@@ -33,7 +33,7 @@ void CProgressBar::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFoc
 	CSize barsz = CSize(size.Width * GetPercent(), size.Height);
 	Renderer.DrawBox(pos, size, bg);
 	
-	char32_t block = 0x2584; //0x2588;
+	char32_t block = 0x2588; //0x2588;
 	if(!Renderer.SupportsUnicode())
 		block = 219;
 

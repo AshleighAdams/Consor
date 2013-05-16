@@ -17,6 +17,7 @@
 #include "Controls/PasswordBox.hpp"
 #include "Controls/CheckBox.hpp"
 #include "Controls/ProgressBar.hpp"
+#include "Controls/VerticalProgressBar.hpp"
 #include "Controls/HorizontalScrollbar.hpp"
 #include "Controls/VerticalScrollbar.hpp"
 
@@ -333,6 +334,15 @@ int main(int count, char** values)
 
 		flow_tests_lables.AddControl(lbl_prog);
 		flow_tests_controls.AddControl(prog);
+
+		// VerticalProgressBar test
+		Consor::CLabel lbl_progv;
+		Consor::CVerticalProgressBar progv;
+		lbl_progv.SetText("VProgressBar:");
+		progv.SetPercent(0.275);
+
+		flow_tests_lables.AddControl(lbl_progv);
+		flow_tests_controls.AddControl(progv);
 
 		// end test
 		main_flow.AddControl(flow_tests);
