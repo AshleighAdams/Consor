@@ -105,6 +105,12 @@
     <ClCompile Include="Controls\RadioBox.cpp">
       <Filter>Source Files\Controls</Filter>
     </ClCompile>
+    <ClCompile Include="Controls\VerticalProgressBar.cpp">
+      <Filter>Source Files\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="Controls\Graph.cpp">
+      <Filter>Source Files\Controls</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Util\FrequencyController.hpp">
@@ -192,6 +198,12 @@
       <Filter>Source Files\Util</Filter>
     </ClInclude>
     <ClInclude Include="Controls\RadioBox.hpp">
+      <Filter>Source Files\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls\VerticalProgressBar.hpp">
+      <Filter>Source Files\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls\Graph.hpp">
       <Filter>Source Files\Controls</Filter>
     </ClInclude>
   </ItemGroup>
