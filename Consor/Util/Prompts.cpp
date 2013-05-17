@@ -6,6 +6,7 @@
 #include "Containers/AlignContainer.hpp"
 
 #include "Controls/Button.hpp"
+#include "Controls/TextBox.hpp"
 #include "Controls/Label.hpp"
 #include "Controls/RadioBox.hpp"
 
@@ -22,7 +23,7 @@ std::string Util::MessageBox(const std::string& Message, const std::string& Titl
 	string ret = "";
 
 
-	CFlowContainer main_buttons(CFlowContainer::FlowAxis::Horizontal, 0.0);
+	CFlowContainer main_buttons(CFlowContainer::FlowAxis::Horizontal, 1);
 
 	list<tuple<CButton*, string>> CreatedButtons;
 
@@ -125,5 +126,40 @@ std::string Util::ChoiceList(const std::string& Message, const std::string& Titl
 
 std::string Util::InputBox(const std::string& Message, const std::string& Title)
 {
-	return "";
+	bool ret = false;
+
+	CFlowContainer main_buttons(CFlowContainer::FlowAxis::Horizontal, 1.0);
+	CButton ok;
+	ok.SetText("OK");
+	main_buttons.AddControl(ok);
+
+	CAlignContainer align_buttons(main_buttons, CSize(), CAlignContainer::Axis::Horizotal, CAlignContainer::Align::Center);
+	CLabel msg;
+	msg.SetText(Message);
+	msg.ForceResize(CSize(40, 1));
+
+	CTextBox tb;
+	
+
+	CFlowContainer main_flow(CFlowContainer::FlowAxis::Vertical, 0.0);
+	main_flow.AddControl(msg);
+	main_flow.AddControl(tb);
+	main_flow.AddControl(align_buttons);
+
+	align_buttons.ForceResize(main_flow.Size());
+	CWindowContainer window(main_flow, Title);
+	WindowSystem::RegisterWindow(window, CVector(-1, -1));
+	
+	ok.Click += [&]()
+	{
+		ret = true;
+	};
+
+	while(!ret)
+	{
+		Util::Sleep(0.1);
+	}
+
+	WindowSystem::UnregisterWindow(window);
+	return tb.GetText();
 }

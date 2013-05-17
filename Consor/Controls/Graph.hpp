@@ -18,7 +18,7 @@ namespace Consor
 	class CGraph : public CControl
 	{
 	protected:
-		CFlowContainer m_Flow, m_FlowVert;
+		CFlowContainer m_FlowHorz, m_FlowVert, m_FlowGraphs;
 		std::list<CControl*> m_ToDelete;
 		double m_Height;
 		CLabel m_XLabel;
