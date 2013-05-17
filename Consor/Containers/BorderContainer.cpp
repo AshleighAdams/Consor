@@ -3,13 +3,13 @@
 using namespace Consor;
 using namespace std;
 
-BorderContainer::BorderContainer(CControl& Client, size_t Size)
+BorderContainer::BorderContainer(Control& Client, size_t Size)
 {
 	_pClient = &Client;
 	_SetBorder(Size, Size, Size, Size);
 }
 
-BorderContainer::BorderContainer(CControl& Client, size_t Left, size_t Right, size_t Top, size_t Bottom)
+BorderContainer::BorderContainer(Control& Client, size_t Left, size_t Right, size_t Top, size_t Bottom)
 {
 	_pClient = &Client;
 	_SetBorder(Left, Right, Top, Bottom);

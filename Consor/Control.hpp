@@ -8,12 +8,12 @@
 
 namespace Consor
 {
-	class CControl
+	class Control
 	{
 	protected:
 		Consor::Size _Size;
 	public:
-		virtual ~CControl(){}
+		virtual ~Control(){}
 		virtual Size GetSize();
 		virtual void OnResize(const Size& Size);
 		virtual void ForceResize(const Size& Size);

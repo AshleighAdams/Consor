@@ -3,7 +3,7 @@
 using namespace Consor;
 using namespace std;
 
-AlignContainer::AlignContainer(CControl& Client, const Size& Size, AlignContainer::Axis Axis, AlignContainer::Align Align)
+AlignContainer::AlignContainer(Control& Client, const Size& Size, AlignContainer::Axis Axis, AlignContainer::Align Align)
 {
 	_pClient = &Client;
 	_Axis = Axis;

@@ -5,7 +5,7 @@ using namespace std;
 using namespace Consor;
 using namespace Consor::Util;
 
-CFrequencyController::CFrequencyController(const string& Name, double Frequency)
+FrequencyController::FrequencyController(const string& Name, double Frequency)
 {
 	_Frequency = Frequency;
 	_FequencyTime = 1.0 / _Frequency;
@@ -14,21 +14,21 @@ CFrequencyController::CFrequencyController(const string& Name, double Frequency)
 	_Name = Name;
 }
 
-void CFrequencyController::SetNextTime(double Time)
+void FrequencyController::SetNextTime(double Time)
 {
 	_Next = Time;
 }
-void CFrequencyController::ThinkIn(double Seconds)
+void FrequencyController::ThinkIn(double Seconds)
 {
 	SetNextTime(Util::GetTime() + Seconds);
 }
 
-double CFrequencyController::NextTime() const
+double FrequencyController::NextTime() const
 {
 	return _Next;
 }
 
-bool CFrequencyController::Check()
+bool FrequencyController::Check()
 {
 	if(Util::GetTime() < _Next)
 		return false;
@@ -46,7 +46,7 @@ bool CFrequencyController::Check()
 	return true;
 }
 
-double CFrequencyController::Delta() const
+double FrequencyController::Delta() const
 {
 	return _Delta;
 }

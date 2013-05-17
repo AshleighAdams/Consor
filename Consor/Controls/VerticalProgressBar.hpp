@@ -9,12 +9,12 @@
 
 namespace Consor
 {
-	class VerticalProgressBar : public CProgressBar
+	class VerticalProgressBar : public ProgressBar
 	{
 		bool _GraphMode;
 		size_t _GraphIndex;
 	public:
-		CHook<double, size_t> Click;
+		Hook<double, size_t> Click;
 
 		VerticalProgressBar();
 		void SetGraphMode(size_t Index); // allows focusing, and input

@@ -3,7 +3,7 @@
 using namespace Consor;
 using namespace std;
 
-ScrollContainer::ScrollContainer(CControl& Client, const Size& Size)
+ScrollContainer::ScrollContainer(Control& Client, const Size& Size)
 {
 	_pClient = &Client;
 	ForceResize(Size);

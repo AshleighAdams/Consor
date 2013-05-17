@@ -9,14 +9,14 @@
 
 namespace Consor
 {
-	class ScrollContainer : public CControl
+	class ScrollContainer : public Control
 	{
 	protected:
-		CControl* _pClient;
+		Control* _pClient;
 		HorizontalScrollbar _HScrollbar;
 		VerticalScrollbar _VScrollbar;
 	public:
-		ScrollContainer(CControl& Client, const Size& Size);
+		ScrollContainer(Control& Client, const Size& Size);
 		ScrollContainer(){} // this should never actually be used
 		virtual Size GetSize();
 		virtual void OnResize(const Size& Size);

@@ -8,7 +8,7 @@
 
 namespace Consor
 {
-	class CheckBox : public CControl
+	class CheckBox : public Control
 	{
 	protected:
 		Label _Label;

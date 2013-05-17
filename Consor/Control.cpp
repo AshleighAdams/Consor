@@ -2,31 +2,31 @@
 
 using namespace Consor;
 
-Size CControl::GetSize()
+Size Control::GetSize()
 {
 	return _Size;
 }
 
-void CControl::OnResize(const Size& Size)
+void Control::OnResize(const Size& Size)
 {
 }
 
-void CControl::ForceResize(const Size& Size)
+void Control::ForceResize(const Size& Size)
 {
 	_Size = Size;
 	OnResize(Size);
 }
 
-void CControl::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
+void Control::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
 }
 
-bool CControl::HandleInput(Input::Key Key, Input::IInputSystem& System)
+bool Control::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
 	return false;
 }
 
-bool CControl::CanFocus()
+bool Control::CanFocus()
 {
 	return false;
 }

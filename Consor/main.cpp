@@ -31,7 +31,7 @@
 
 using namespace std;
 
-class CSaneSkin : public Consor::CDefaultSkin
+class CSaneSkin : public Consor::DefaultSkin
 {
 public:
 	CSaneSkin(Consor::Console::IConsoleRenderer& Renderer)
@@ -77,7 +77,7 @@ int main(int count, char** values)
 	}
 	else if(selected == "Hacker")
 	{
-		Consor::WindowSystem::SetSkin<Consor::CHackerSkin>();
+		Consor::WindowSystem::SetSkin<Consor::HackerSkin>();
 	}
 
 	// the login box (not for real, just a test)
@@ -203,7 +203,7 @@ int main(int count, char** values)
 		addtext("launching..."); Util::Sleep(1);
 		addtext("loading UI..."); Util::Sleep(1);
 
-		CProgressBar progbar;
+		ProgressBar progbar;
 		progbar.ForceResize(Size(flow.GetSize().Width - 2, 1));
 
 		WindowSystem::Lock();
@@ -328,7 +328,7 @@ int main(int count, char** values)
 
 		// ProgressBar test
 		Consor::Label lbl_prog;
-		Consor::CProgressBar prog;
+		Consor::ProgressBar prog;
 		lbl_prog.SetText("ProgressBar:");
 		prog.SetPercent(0.275);
 

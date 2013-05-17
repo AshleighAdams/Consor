@@ -11,7 +11,7 @@ namespace Consor
 {
 	struct windowinfo_t
 	{
-		CControl* pControl;
+		Control* pControl;
 		Vector position;
 	};
 
@@ -30,8 +30,8 @@ namespace Consor
 		extern void Lock();
 		extern void Unlock();
 		extern void HandleInput(Input::Key key, Input::IInputSystem& is);
-		extern void RegisterWindow(CControl& control, Vector pos);
-		extern void UnregisterWindow(CControl& control);
+		extern void RegisterWindow(Control& control, Vector pos);
+		extern void UnregisterWindow(Control& control);
 
 		extern bool Running();
 		extern void Close();

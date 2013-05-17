@@ -6,14 +6,14 @@
 
 namespace Consor
 {
-	class WindowContainer : public CControl
+	class WindowContainer : public Control
 	{
 	protected:
-		CControl* _pClient;
+		Control* _pClient;
 		std::string _Title;
 		WindowContainer();
 	public:
-		WindowContainer(CControl& Client, const std::string& Title);
+		WindowContainer(Control& Client, const std::string& Title);
 		virtual Size GetSize();
 		virtual void OnResize(const Size& Size);
 		virtual void ForceResize(const Size& Size);

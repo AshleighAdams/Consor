@@ -6,18 +6,18 @@
 
 namespace Consor
 {
-	class BorderContainer : public CControl
+	class BorderContainer : public Control
 	{
 	protected:
-		CControl* _pClient;
+		Control* _pClient;
 		size_t _BorderLeft;
 		size_t _BorderRight;
 		size_t _BorderTop;
 		size_t _BorderBottom;
 		void _SetBorder(size_t Left, size_t Right, size_t Top, size_t Bottom);
 	public:
-		BorderContainer(CControl& Client, size_t Border);
-		BorderContainer(CControl& Client, size_t Left, size_t Right, size_t Top, size_t Bottom);
+		BorderContainer(Control& Client, size_t Border);
+		BorderContainer(Control& Client, size_t Left, size_t Right, size_t Top, size_t Bottom);
 		virtual Size GetSize();
 		virtual void OnResize(const Size& Size);
 		virtual void ForceResize(const Size& Size);

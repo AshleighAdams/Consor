@@ -6,7 +6,7 @@
 
 namespace Consor
 {
-	class AlignContainer : public CControl
+	class AlignContainer : public Control
 	{
 	public:
 		enum Align
@@ -23,13 +23,13 @@ namespace Consor
 			Vertical
 		};
 	protected:
-		CControl* _pClient;
+		Control* _pClient;
 		Vector _ClientPos();
 		Size _Size;
 		Axis _Axis;
 		Align _Align;
 	public:
-		AlignContainer(CControl& Client, const Size& Size, Axis Axis, Align align);
+		AlignContainer(Control& Client, const Size& Size, Axis Axis, Align align);
 		AlignContainer(){} // this will crash, but exists only so classes can have it
 		virtual Size GetSize();
 		virtual void OnResize(const Size& Size);

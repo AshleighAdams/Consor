@@ -3,7 +3,7 @@
 using namespace Consor;
 using namespace std;
 
-WindowContainer::WindowContainer(CControl& Client, const string& Title)
+WindowContainer::WindowContainer(Control& Client, const string& Title)
 {
 	_pClient = &Client;
 	_Title = Title;

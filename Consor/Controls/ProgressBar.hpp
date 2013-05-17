@@ -6,12 +6,12 @@
 
 namespace Consor
 {
-	class CProgressBar : public CControl
+	class ProgressBar : public Control
 	{
 	protected:
 		double _Percent;
 	public:
-		CProgressBar();
+		ProgressBar();
 		void SetPercent(double Progress);
 		double GetPercent();
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);

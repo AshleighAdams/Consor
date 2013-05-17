@@ -7,7 +7,7 @@
 
 using namespace Consor;
 
-VerticalProgressBar::VerticalProgressBar() : CProgressBar()
+VerticalProgressBar::VerticalProgressBar() : ProgressBar()
 {
 	_Size = Size(1, 10);
 	_GraphMode = false;

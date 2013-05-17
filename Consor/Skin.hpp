@@ -96,7 +96,7 @@ namespace Consor
 		virtual Colour ProgressBarPercent(double Percent) const = 0;
 	};
 
-	class CDefaultSkin : public ISkin
+	class DefaultSkin : public ISkin
 	{
 	protected:
 		Colour CanvasColour;
@@ -112,13 +112,13 @@ namespace Consor
 		char32_t WindowLeft;
 		char32_t WindowRight;
 
-		CDefaultSkin()
+		DefaultSkin()
 		{
 			WindowLeft = 196;
 			WindowRight = 196;
 		}
 	public:
-		CDefaultSkin(Console::IConsoleRenderer& Renderer)
+		DefaultSkin(Console::IConsoleRenderer& Renderer)
 		{
 			if(!Renderer.SupportsUnicode())
 			{
@@ -233,10 +233,10 @@ namespace Consor
 		}
 	};
 
-	class CHackerSkin : public CDefaultSkin
+	class HackerSkin : public DefaultSkin
 	{
 	public:
-		CHackerSkin(Console::IConsoleRenderer& Renderer)
+		HackerSkin(Console::IConsoleRenderer& Renderer)
 		{
 			if(!Renderer.SupportsUnicode())
 			{

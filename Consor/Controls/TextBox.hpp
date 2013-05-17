@@ -6,7 +6,7 @@
 
 namespace Consor
 {
-	class TextBox : public CControl
+	class TextBox : public Control
 	{
 	protected:
 		std::string _Text;

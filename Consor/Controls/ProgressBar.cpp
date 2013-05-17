@@ -7,23 +7,23 @@
 
 using namespace Consor;
 
-CProgressBar::CProgressBar()
+ProgressBar::ProgressBar()
 {
 	_Percent = 0;
 	ForceResize(Size(20, 1));
 }
 
-void CProgressBar::SetPercent(double Value)
+void ProgressBar::SetPercent(double Value)
 {
 	_Percent = Value;
 }
 
-double CProgressBar::GetPercent()
+double ProgressBar::GetPercent()
 {
 	return _Percent;
 }
 
-void CProgressBar::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
+void ProgressBar::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
 	Size size = this->GetSize();
 	Colour bg = Skin.ProgressBarBackground(GetPercent());
