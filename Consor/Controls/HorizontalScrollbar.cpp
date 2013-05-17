@@ -3,60 +3,60 @@
 
 using namespace Consor;
 
-CHorizontalScrollbar::CHorizontalScrollbar(const CSize& Size)
+HorizontalScrollbar::HorizontalScrollbar(const Size& Size)
 {
-	m_Value = 0;
-	m_Size = Size;
-	m_ChangeSize = -1;
+	_Value = 0;
+	_Size = Size;
+	_ChangeSize = -1;
 }
 
-CHorizontalScrollbar::CHorizontalScrollbar()
+HorizontalScrollbar::HorizontalScrollbar()
 {
-	m_Value = 0;
-	m_ChangeSize = -1;
-	m_Size = CSize();
+	_Value = 0;
+	_ChangeSize = -1;
+	_Size = GetSize();
 }
 
-void CHorizontalScrollbar::SetPercent(double Percent)
+void HorizontalScrollbar::SetPercent(double Percent)
 {
-	m_Value = Percent;
+	_Value = Percent;
 }
 
-double CHorizontalScrollbar::GetPercent()
+double HorizontalScrollbar::GetPercent()
 {
-	return m_Value;
+	return _Value;
 }
 
-void CHorizontalScrollbar::SetChangeSize(double ChangeSize)
+void HorizontalScrollbar::SetChangeSize(double ChangeSize)
 {
-	m_ChangeSize = ChangeSize;
+	_ChangeSize = ChangeSize;
 }
 
-double CHorizontalScrollbar::GetBarSize()
+double HorizontalScrollbar::GetBarSize()
 {
-	if(m_ChangeSize <= 0)
+	if(_ChangeSize <= 0)
 		return 1;
-	return m_ChangeSize * Size().Width;
+	return _ChangeSize * GetSize().Width;
 }
 
-void CHorizontalScrollbar::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
+void HorizontalScrollbar::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
-	CColour fgcol = Skin.ScrollForeground();
-	CColour bgcol = Skin.ScrollBackground();
+	Colour fgcol = Skin.ScrollForeground();
+	Colour bgcol = Skin.ScrollBackground();
 
 	if(HasFocus)
 		fgcol = Skin.ScrollForegroundFocused();
 
-	CSize selfsize = this->Size();
+	Size selfsize = this->GetSize();
 
-	Renderer.DrawBox(CVector(), selfsize, bgcol);
+	Renderer.DrawBox(Vector(), selfsize, bgcol);
 	
 	double barsize =  Util::Round(GetBarSize(), 0.5);
 	if(barsize < 0.5)
 		barsize = 0.5;
 
-	CVector pos = CVector((selfsize.Width - barsize) * GetPercent(), 0);
-	CSize size = CSize(barsize, selfsize.Height);
+	Vector pos = Vector((selfsize.Width - barsize) * GetPercent(), 0);
+	Size size = Size(barsize, selfsize.Height);
 
 	//pos.Y = (int)pos.Y;
 
@@ -73,7 +73,7 @@ void CHorizontalScrollbar::Draw(Consor::Console::IConsoleRenderer& Renderer, boo
 
 	for(double x = pos.X; x < pos.X + size.Width; x += 0.5)
 	{
-		std::unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(CVector(x, 0));
+		std::unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(Vector(x, 0));
 		char32_t cur = info->GetUnicodeChar();
 
 		
@@ -109,7 +109,7 @@ void CHorizontalScrollbar::Draw(Consor::Console::IConsoleRenderer& Renderer, boo
 		pos.X = (int)pos.X;
 
 		std::unique_ptr<Console::ICharInformation> infoleft = Renderer.GetCharInformation(pos);
-		std::unique_ptr<Console::ICharInformation> inforight = Renderer.GetCharInformation(pos + CVector(1, 0));
+		std::unique_ptr<Console::ICharInformation> inforight = Renderer.GetCharInformation(pos + Vector(1, 0));
 
 		infoleft->SetChar((char)221);
 		inforight->SetChar((char)222);

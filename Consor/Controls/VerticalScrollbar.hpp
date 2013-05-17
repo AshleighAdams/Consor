@@ -6,14 +6,14 @@
 
 namespace Consor
 {
-	class CVerticalScrollbar : public CControl
+	class VerticalScrollbar : public CControl
 	{
 	protected:
-		double m_Value;
-		double m_ChangeSize;
+		double _Value;
+		double _ChangeSize;
 	public:
-		CVerticalScrollbar(const CSize& Size);
-		CVerticalScrollbar();
+		VerticalScrollbar(const Size& Size);
+		VerticalScrollbar();
 		void SetPercent(double Percent);
 		double GetPercent();
 		void SetChangeSize(double ChangeSize);

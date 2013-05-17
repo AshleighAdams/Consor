@@ -10,17 +10,17 @@ namespace Consor
 	class ISkin
 	{
 	protected:
-		size_t m_ColourPos;
+		size_t _ColourPos;
 	public:
 		// returns the closest colour it can get
-		virtual CColour RequestColour(Console::IConsoleRenderer& Renderer, const CColour& target)
+		virtual Colour RequestColour(Console::IConsoleRenderer& Renderer, const Colour& target)
 		{
 			size_t maxcols = Renderer.MaxColours();
-			CColour* pColours = new CColour[maxcols];
+			Colour* pColours = new Colour[maxcols];
 			Renderer.GetColours(maxcols, pColours);
 			
 
-			if(m_ColourPos >= maxcols) // search for an existing colour
+			if(_ColourPos >= maxcols) // search for an existing colour
 			{
 				for(size_t i = 0; i < maxcols; i++) // look for an exact match
 				{
@@ -31,12 +31,12 @@ namespace Consor
 					}
 				}
 
-				CColour closest = pColours[0];
-				double closest_distance = CColour::Distance(target, closest);
+				Colour closest = pColours[0];
+				double closest_distance = Colour::Distance(target, closest);
 
 				for(size_t i = 1; i < maxcols; i++)
 				{
-					double distance = CColour::Distance(target, pColours[i]);
+					double distance = Colour::Distance(target, pColours[i]);
 
 					if(distance < closest_distance)
 					{
@@ -51,7 +51,7 @@ namespace Consor
 				return closest;
 			}
 
-			for(size_t i = 0; i < m_ColourPos; i++)
+			for(size_t i = 0; i < _ColourPos; i++)
 			{
 				if(pColours[i] == target)
 				{
@@ -61,54 +61,54 @@ namespace Consor
 			}
 
 			// we didn't find the colour, create a new one...
-			Util::Log("creating console colour #% %", m_ColourPos, target);
+			Util::Log("creating console colour #% %", _ColourPos, target);
 			
-			pColours[m_ColourPos] = target;
-			m_ColourPos++;
-			Renderer.SetColours(m_ColourPos, pColours);
+			pColours[_ColourPos] = target;
+			_ColourPos++;
+			Renderer.SetColours(_ColourPos, pColours);
 
 			delete [] pColours;
 			return target;
 		}
 
-		virtual CColour Canvas() const = 0;
+		virtual Colour Canvas() const = 0;
 
-		virtual CColour LabelForeground() const = 0;
-		virtual CColour LabelForegroundFocused() const = 0;
+		virtual Colour LabelForeground() const = 0;
+		virtual Colour LabelForegroundFocused() const = 0;
 
-		virtual CColour WindowBorder() const = 0;
-		virtual CColour WindowBackground() const = 0;
-		virtual CColour WindowForeground() const = 0;
-		virtual CColour WindowForegroundShine() const = 0;
+		virtual Colour WindowBorder() const = 0;
+		virtual Colour WindowBackground() const = 0;
+		virtual Colour WindowForeground() const = 0;
+		virtual Colour WindowForegroundShine() const = 0;
 		virtual char32_t WindowTitleLeftChar() const = 0;
 		virtual char32_t WindowTitleRightChar() const = 0;
 
-		virtual CColour ScrollForeground() const = 0;
-		virtual CColour ScrollForegroundFocused() const = 0;
-		virtual CColour ScrollBackground() const = 0;
+		virtual Colour ScrollForeground() const = 0;
+		virtual Colour ScrollForegroundFocused() const = 0;
+		virtual Colour ScrollBackground() const = 0;
 
-		virtual CColour TextBoxForeground() const = 0;
-		virtual CColour TextBoxForegroundFocused() const = 0;
-		virtual CColour TextBoxBackground() const = 0;
+		virtual Colour TextBoxForeground() const = 0;
+		virtual Colour TextBoxForegroundFocused() const = 0;
+		virtual Colour TextBoxBackground() const = 0;
 
-		virtual CColour ProgressBarForeground(double Percent) const = 0;
-		virtual CColour ProgressBarBackground(double Percent) const = 0;
-		virtual CColour ProgressBarPercent(double Percent) const = 0;
+		virtual Colour ProgressBarForeground(double Percent) const = 0;
+		virtual Colour ProgressBarBackground(double Percent) const = 0;
+		virtual Colour ProgressBarPercent(double Percent) const = 0;
 	};
 
 	class CDefaultSkin : public ISkin
 	{
 	protected:
-		CColour CanvasColour;
-		CColour Foreground;
-		CColour White;
-		CColour Black;
-		CColour Background;
-		CColour AlternateBackground;
-		CColour FocusColour;
-		CColour ForegroundShine;
-		CColour ProgressPercent;
-		CColour ProgressForeground;
+		Colour CanvasColour;
+		Colour Foreground;
+		Colour White;
+		Colour Black;
+		Colour Background;
+		Colour AlternateBackground;
+		Colour FocusColour;
+		Colour ForegroundShine;
+		Colour ProgressPercent;
+		Colour ProgressForeground;
 		char32_t WindowLeft;
 		char32_t WindowRight;
 
@@ -131,48 +131,48 @@ namespace Consor
 				WindowRight = 0x2500;
 			}
 
-			m_ColourPos = 0;
-			CanvasColour = RequestColour(Renderer, CColour());
-			Foreground = RequestColour(Renderer, CColour(1, 1, 1));
-			ForegroundShine = RequestColour(Renderer, CColour(1, 1, 1));
-			Background = RequestColour(Renderer, CColour(0, 0, 1));
-			AlternateBackground = RequestColour(Renderer, CColour(0, 0, 0.5));
-			FocusColour = RequestColour(Renderer, CColour(1, 0, 0));
-			ProgressPercent = RequestColour(Renderer, CColour(1, 1, 1));
-			ProgressForeground = RequestColour(Renderer, CColour(0, 1, 1));
+			_ColourPos = 0;
+			CanvasColour = RequestColour(Renderer, Colour());
+			Foreground = RequestColour(Renderer, Colour(1, 1, 1));
+			ForegroundShine = RequestColour(Renderer, Colour(1, 1, 1));
+			Background = RequestColour(Renderer, Colour(0, 0, 1));
+			AlternateBackground = RequestColour(Renderer, Colour(0, 0, 0.5));
+			FocusColour = RequestColour(Renderer, Colour(1, 0, 0));
+			ProgressPercent = RequestColour(Renderer, Colour(1, 1, 1));
+			ProgressForeground = RequestColour(Renderer, Colour(0, 1, 1));
 		}
 
-		virtual CColour Canvas() const
+		virtual Colour Canvas() const
 		{
 			return CanvasColour;
 		}
 
-		virtual CColour LabelForeground() const
+		virtual Colour LabelForeground() const
 		{
 			return Foreground;
 		}
 
-		virtual CColour LabelForegroundFocused() const
+		virtual Colour LabelForegroundFocused() const
 		{
 			return FocusColour;
 		}
 
-		virtual CColour WindowBorder() const
+		virtual Colour WindowBorder() const
 		{
 			return Foreground;
 		}
 
-		virtual CColour WindowBackground() const
+		virtual Colour WindowBackground() const
 		{
 			return Background;
 		}
 
-		virtual CColour WindowForeground() const
+		virtual Colour WindowForeground() const
 		{
 			return Foreground;
 		}
 
-		virtual CColour WindowForegroundShine() const
+		virtual Colour WindowForegroundShine() const
 		{
 			return ForegroundShine;
 		}
@@ -187,47 +187,47 @@ namespace Consor
 			return WindowRight;
 		}
 
-		virtual CColour ScrollForeground() const
+		virtual Colour ScrollForeground() const
 		{
 			return Foreground;
 		}
 
-		virtual CColour ScrollForegroundFocused() const
+		virtual Colour ScrollForegroundFocused() const
 		{
 			return FocusColour;
 		}	
 
-		virtual CColour ScrollBackground() const
+		virtual Colour ScrollBackground() const
 		{
 			return AlternateBackground;
 		}
 
-		virtual CColour TextBoxForeground() const
+		virtual Colour TextBoxForeground() const
 		{
 			return Foreground;
 		}
 
-		virtual CColour TextBoxForegroundFocused() const
+		virtual Colour TextBoxForegroundFocused() const
 		{
 			return FocusColour;
 		}
 
-		virtual CColour TextBoxBackground() const
+		virtual Colour TextBoxBackground() const
 		{
-			return CColour::None();
+			return Colour::None();
 		}
 
-		virtual CColour ProgressBarPercent(double Percent) const
+		virtual Colour ProgressBarPercent(double Percent) const
 		{
 			return ProgressPercent;
 		}
 
-		virtual CColour ProgressBarForeground(double Percent) const
+		virtual Colour ProgressBarForeground(double Percent) const
 		{
 			return ProgressForeground;
 		}
 
-		virtual CColour ProgressBarBackground(double Percent) const
+		virtual Colour ProgressBarBackground(double Percent) const
 		{
 			return AlternateBackground;
 		}
@@ -251,15 +251,15 @@ namespace Consor
 			}
 
 			
-			m_ColourPos = 0;
-			CanvasColour = RequestColour(Renderer, CColour());
-			Foreground = RequestColour(Renderer, CColour(1, 0.5, 0));
-			ForegroundShine = RequestColour(Renderer, CColour(1, 0.5, 0.25));
-			Background = RequestColour(Renderer, CColour(0, 0, 0));
-			AlternateBackground = RequestColour(Renderer, CColour(0.5, 0.25, 0));
-			FocusColour = RequestColour(Renderer, CColour(1, 1, 1));
-			ProgressPercent = RequestColour(Renderer, CColour(1, 1, 1));
-			ProgressForeground = RequestColour(Renderer, CColour(1, 0.5, 0));
+			_ColourPos = 0;
+			CanvasColour = RequestColour(Renderer, Colour());
+			Foreground = RequestColour(Renderer, Colour(1, 0.5, 0));
+			ForegroundShine = RequestColour(Renderer, Colour(1, 0.5, 0.25));
+			Background = RequestColour(Renderer, Colour(0, 0, 0));
+			AlternateBackground = RequestColour(Renderer, Colour(0.5, 0.25, 0));
+			FocusColour = RequestColour(Renderer, Colour(1, 1, 1));
+			ProgressPercent = RequestColour(Renderer, Colour(1, 1, 1));
+			ProgressForeground = RequestColour(Renderer, Colour(1, 0.5, 0));
 		};
 	};
 }

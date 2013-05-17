@@ -7,38 +7,38 @@
 
 using namespace Consor;
 
-CVerticalProgressBar::CVerticalProgressBar() : CProgressBar()
+VerticalProgressBar::VerticalProgressBar() : CProgressBar()
 {
-	m_Size = CSize(1, 10);
-	m_GraphMode = false;
+	_Size = Size(1, 10);
+	_GraphMode = false;
 }
 
-void CVerticalProgressBar::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
+void VerticalProgressBar::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
-	CSize size = this->Size();
-	CColour bg = Skin.ProgressBarBackground(GetPercent());
-	CColour fg = Skin.ProgressBarForeground(GetPercent());
+	Size size = this->GetSize();
+	Colour bg = Skin.ProgressBarBackground(GetPercent());
+	Colour fg = Skin.ProgressBarForeground(GetPercent());
 
 	if(HasFocus)
 		fg = Skin.LabelForegroundFocused();
 
-	CVector pos;
+	Vector pos;
 
-	CSize barsz = CSize(size.Width, size.Height * GetPercent());
+	Size barsz = Size(size.Width, size.Height * GetPercent());
 	Renderer.DrawBox(pos, size, bg);
 	
 	char32_t block = 0x2588; //0x2588;
 	if(!Renderer.SupportsUnicode())
 		block = 219;
 
-	std::unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(CVector());
+	std::unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(Vector());
 
 	int y;
 	for(int x = 0; x < Util::Round(barsz.Width, 1.0); x++)
 	{
 		for(y = 0; y < Util::Round(barsz.Height, 1.0); y++)
 		{
-			info->SetPosition(CVector(x, size.Height - y - 1));
+			info->SetPosition(Vector(x, size.Height - y - 1));
 			info->SetUnicodeChar(block);
 			info->SetForegroundColour(fg);
 		}
@@ -50,7 +50,7 @@ void CVerticalProgressBar::Draw(Consor::Console::IConsoleRenderer& Renderer, boo
 	{
 		for(int x = 0; x < barsz.Width; x++)
 		{
-			info->SetPosition(CVector(x, size.Height - y - 1));
+			info->SetPosition(Vector(x, size.Height - y - 1));
 			char32_t bottomhalf = 0x2584;
 			info->SetUnicodeChar(bottomhalf);
 			info->SetForegroundColour(fg);
@@ -59,29 +59,29 @@ void CVerticalProgressBar::Draw(Consor::Console::IConsoleRenderer& Renderer, boo
 	
 }
 
-bool CVerticalProgressBar::HandleInput(Input::Key Key, Input::IInputSystem& System)
+bool VerticalProgressBar::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
-	if(!m_GraphMode)
+	if(!_GraphMode)
 		return false;
 
 	switch(Key)
 	{
 	case Input::Key::Enter:
 	case Input::Key::Space:
-		Click(GetPercent(), m_GraphIndex);
+		Click(GetPercent(), _GraphIndex);
 		return true;
 	default:
 		return false;
 	}
 }
 
-bool CVerticalProgressBar::CanFocus()
+bool VerticalProgressBar::CanFocus()
 {
-	return m_GraphMode;
+	return _GraphMode;
 }
 
-void CVerticalProgressBar::SetGraphMode(size_t Index)
+void VerticalProgressBar::SetGraphMode(size_t Index)
 {
-	m_GraphMode = true;
-	m_GraphIndex = Index;
+	_GraphMode = true;
+	_GraphIndex = Index;
 }

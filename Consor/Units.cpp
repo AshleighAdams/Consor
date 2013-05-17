@@ -3,192 +3,192 @@
 
 using namespace Consor;
 
-// CSize
+// Size
 
-CSize::CSize(double W, double H)
+Size::Size(double W, double H)
 {
 	Width = W;
 	Height = H;
 }
 
-CSize::CSize()
+Size::Size()
 {
 	Width = 0;
 	Height = 0;
 }
 
-CSize CSize::operator+(const CSize& A) const
+Size Size::operator+(const Size& A) const
 {
-	return CSize(this->Width + A.Width, this->Height + A.Height);
+	return Size(this->Width + A.Width, this->Height + A.Height);
 }
 
-CSize CSize::operator-(const CSize& A) const
+Size Size::operator-(const Size& A) const
 {
-	return CSize(this->Width - A.Width, this->Height - A.Height);
+	return Size(this->Width - A.Width, this->Height - A.Height);
 }
 
-CSize CSize::operator/(const CSize& A) const
+Size Size::operator/(const Size& A) const
 {
-	return CSize(this->Width / A.Width, this->Height / A.Height);
+	return Size(this->Width / A.Width, this->Height / A.Height);
 }
 
-CSize CSize::operator*(const CSize& A) const
+Size Size::operator*(const Size& A) const
 {
-	return CSize(this->Width * A.Width, this->Height * A.Height);
+	return Size(this->Width * A.Width, this->Height * A.Height);
 }
 
-CSize CSize::operator/(double A) const
+Size Size::operator/(double A) const
 {
-	return CSize(this->Width / A, this->Height / A);
+	return Size(this->Width / A, this->Height / A);
 }
 
-CSize CSize::operator*(double A) const
+Size Size::operator*(double A) const
 {
-	return CSize(this->Width * A, this->Height * A);
+	return Size(this->Width * A, this->Height * A);
 }
 
-CSize& CSize::operator+=(const CSize& A)
+Size& Size::operator+=(const Size& A)
 {
 	this->Width += A.Width;
 	this->Height += A.Height;
 	return *this;
 }
 
-CSize& CSize::operator-=(const CSize& A)
+Size& Size::operator-=(const Size& A)
 {
 	this->Width -= A.Width;
 	this->Height -= A.Height;
 	return *this;
 }
 
-CSize& CSize::operator*=(const CSize& A)
+Size& Size::operator*=(const Size& A)
 {
 	this->Width *= A.Width;
 	this->Height *= A.Height;
 	return *this;
 }
 
-CSize& CSize::operator/=(const CSize& A)
+Size& Size::operator/=(const Size& A)
 {
 	this->Width /= A.Width;
 	this->Height /= A.Height;
 	return *this;
 }
 
-CSize& CSize::operator*=(double A)
+Size& Size::operator*=(double A)
 {
 	this->Width *= A;
 	this->Height *= A;
 	return *this;
 }
 
-CSize& CSize::operator/=(double A)
+Size& Size::operator/=(double A)
 {
 	this->Width /= A;
 	this->Height /= A;
 	return *this;
 }
 
-// CVector
+// Vector
 
 
-CVector::CVector(double X, double Y)
+Vector::Vector(double X, double Y)
 {
 	this->X = X;
 	this->Y = Y;
 }
 
-CVector::CVector()
+Vector::Vector()
 {
 	X = 0;
 	Y = 0;
 }
 
-CVector CVector::operator+(const CVector& A) const
+Vector Vector::operator+(const Vector& A) const
 {
-	return CVector(this->X + A.X, this->Y + A.Y);
+	return Vector(this->X + A.X, this->Y + A.Y);
 }
 
-CVector CVector::operator-(const CVector& A) const
+Vector Vector::operator-(const Vector& A) const
 {
-	return CVector(this->X - A.X, this->Y - A.Y);
+	return Vector(this->X - A.X, this->Y - A.Y);
 }
 
-CVector CVector::operator/(const CVector& A) const
+Vector Vector::operator/(const Vector& A) const
 {
-	return CVector(this->X / A.X, this->Y / A.Y);
+	return Vector(this->X / A.X, this->Y / A.Y);
 }
 
-CVector CVector::operator*(const CVector& A) const
+Vector Vector::operator*(const Vector& A) const
 {
-	return CVector(this->X * A.X, this->Y * A.Y);
+	return Vector(this->X * A.X, this->Y * A.Y);
 }
 
-CVector CVector::operator/(double A) const
+Vector Vector::operator/(double A) const
 {
-	return CVector(this->X / A, this->Y / A);
+	return Vector(this->X / A, this->Y / A);
 }
 
-CVector CVector::operator*(double A) const
+Vector Vector::operator*(double A) const
 {
-	return CVector(this->X * A, this->Y * A);
+	return Vector(this->X * A, this->Y * A);
 }
 
-CVector& CVector::operator+=(const CVector& A)
+Vector& Vector::operator+=(const Vector& A)
 {
 	this->X += A.X;
 	this->Y += A.Y;
 	return *this;
 }
 
-CVector& CVector::operator-=(const CVector& A)
+Vector& Vector::operator-=(const Vector& A)
 {
 	this->X -= A.X;
 	this->Y -= A.Y;
 	return *this;
 }
 
-CVector& CVector::operator*=(const CVector& A)
+Vector& Vector::operator*=(const Vector& A)
 {
 	this->X *= A.X;
 	this->Y *= A.Y;
 	return *this;
 }
 
-CVector& CVector::operator/=(const CVector& A)
+Vector& Vector::operator/=(const Vector& A)
 {
 	this->X /= A.X;
 	this->Y /= A.Y;
 	return *this;
 }
 
-CVector& CVector::operator*=(double A)
+Vector& Vector::operator*=(double A)
 {
 	this->X *= A;
 	this->Y *= A;
 	return *this;
 }
 
-CVector& CVector::operator/=(double A)
+Vector& Vector::operator/=(double A)
 {
 	this->X /= A;
 	this->Y /= A;
 	return *this;
 }
 
-bool CVector::operator==(const CVector& A) const
+bool Vector::operator==(const Vector& A) const
 {
 	return this->X == A.X && this->Y == A.Y;
 }
 
-bool CVector::operator!=(const CVector& A) const
+bool Vector::operator!=(const Vector& A) const
 {
 	return !(*this == A);
 }
 
-// CColour
+// Colour
 
-CColour::CColour()
+Colour::Colour()
 {
 	R = 0;
 	G = 0;
@@ -196,7 +196,7 @@ CColour::CColour()
 	A = 1;
 }
 
-CColour::CColour(double r, double g, double b)
+Colour::Colour(double r, double g, double b)
 {
 	R = r;
 	G = g;
@@ -204,7 +204,7 @@ CColour::CColour(double r, double g, double b)
 	A = 1;
 }
 
-CColour::CColour(double r, double g, double b, double a)
+Colour::Colour(double r, double g, double b, double a)
 {
 	R = r;
 	G = g;
@@ -231,7 +231,7 @@ T clamp(T Value, T Min, T Max)
 	return min<T>(max<T>(Min, Value), Max);
 }
 
-CColour& CColour::Normalize()
+Colour& Colour::Normalize()
 {
 	R = clamp(R, 0.0, 1.0);
 	G = clamp(G, 0.0, 1.0);
@@ -241,26 +241,26 @@ CColour& CColour::Normalize()
 	return *this;
 }
 
-CColour CColour::Blend(const CColour& A, const CColour& B)
+Colour Colour::Blend(const Colour& A, const Colour& B)
 {
 	if(A.A >= 1.0)
 	{
-		CColour ret = A;
+		Colour ret = A;
 		return ret.Normalize();
 	}
 	else if(A.A <= 0.0)
 	{
-		CColour ret = B;
+		Colour ret = B;
 		return ret.Normalize();
 	}
 
-	CColour src = A;
-	CColour dst = B;
+	Colour src = A;
+	Colour dst = B;
 
 	src.Normalize();
 	dst.Normalize();
 
-	CColour out;
+	Colour out;
 
 	out.A = src.A + dst.A * (1 - src.A);
 
@@ -271,7 +271,7 @@ CColour CColour::Blend(const CColour& A, const CColour& B)
 	return out.Normalize();
 }
 
-double CColour::Distance(const CColour& A, const CColour& B)
+double Colour::Distance(const Colour& A, const Colour& B)
 {
 	double dist_r = abs(A.R - B.R);
 	double dist_g = abs(A.G - B.G);
@@ -281,24 +281,24 @@ double CColour::Distance(const CColour& A, const CColour& B)
 	return dist_r + dist_g + dist_b + dist_a;
 }
 
-const CColour& CColour::None()
+const Colour& Colour::None()
 {
-	static CColour none = CColour(0, 0, 0, 0);
+	static Colour none = Colour(0, 0, 0, 0);
 
 	return none;
 }
 
-CColour CColour::operator+(const CColour& A) const
+Colour Colour::operator+(const Colour& A) const
 {
-	return CColour(this->R + A.R, this->G + A.G, this->B + A.B, this->A + A.A).Normalize();
+	return Colour(this->R + A.R, this->G + A.G, this->B + A.B, this->A + A.A).Normalize();
 }
 
-CColour CColour::operator-(const CColour& A) const
+Colour Colour::operator-(const Colour& A) const
 {
-	return CColour(this->R - A.R, this->G - A.G, this->B - A.B, this->A - A.A).Normalize();
+	return Colour(this->R - A.R, this->G - A.G, this->B - A.B, this->A - A.A).Normalize();
 }
 
-CColour& CColour::operator+=(const CColour& A)
+Colour& Colour::operator+=(const Colour& A)
 {
 	this->R += A.R;
 	this->G += A.G;
@@ -308,7 +308,7 @@ CColour& CColour::operator+=(const CColour& A)
 	return this->Normalize();
 }
 
-CColour& CColour::operator-=(const CColour& A)
+Colour& Colour::operator-=(const Colour& A)
 {
 	this->R -= A.R;
 	this->G -= A.G;
@@ -318,7 +318,7 @@ CColour& CColour::operator-=(const CColour& A)
 	return this->Normalize();
 }
 
-bool CColour::operator==(const CColour& A) const
+bool Colour::operator==(const Colour& A) const
 {
 	return this->R == A.R &&
 		this->G == A.G &&
@@ -326,7 +326,7 @@ bool CColour::operator==(const CColour& A) const
 		this->A == A.A;
 }
 
-bool CColour::operator!=(const CColour& A) const
+bool Colour::operator!=(const Colour& A) const
 {
 	return !(*this == A);
 }
@@ -334,19 +334,19 @@ bool CColour::operator!=(const CColour& A) const
 
 // tostring
 
-std::ostream& operator<<(std::ostream& stream, const CSize& value)
+std::ostream& operator<<(std::ostream& stream, const Size& value)
 {
 	stream << value.Width << ", " << value.Height;
 	return stream;
 }
 
-std::ostream& operator<<(std::ostream& stream, const CVector& value)
+std::ostream& operator<<(std::ostream& stream, const Vector& value)
 {
 	stream << value.X << ", " << value.Y;
 	return stream;
 }
 
-std::ostream& operator<<(std::ostream& stream, const CColour& value)
+std::ostream& operator<<(std::ostream& stream, const Colour& value)
 {
 	if(value.A == 1.0)
 		stream << "rgb(" << value.R << ", " << value.G << ", " << value.B << ")";

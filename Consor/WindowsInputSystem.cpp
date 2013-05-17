@@ -5,26 +5,26 @@
 
 using namespace Consor::Input;
 
-CWindowsInputSystem::CWindowsInputSystem()
+WindowsInputSystem::WindowsInputSystem()
 {
 }
 
-bool CWindowsInputSystem::KeyWaiting()
+bool WindowsInputSystem::KeyWaiting()
 {
 	return _kbhit() != 0;
 }
 
-bool CWindowsInputSystem::ControlDown()
+bool WindowsInputSystem::ControlDown()
 {
 	return (bool)(GetKeyState(VK_CONTROL) & 0x8000);
 }
 
-bool CWindowsInputSystem::ShiftDown()
+bool WindowsInputSystem::ShiftDown()
 {
 	return (bool)(GetKeyState(VK_SHIFT) & 0x8000);
 }
 
-Key CWindowsInputSystem::GetKeyPress()
+Key WindowsInputSystem::GetKeyPress()
 {
 #ifndef WIN32
 	int cnt = _kbhit(); // for ANSI escapes processing

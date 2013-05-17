@@ -3,58 +3,58 @@
 
 using namespace Consor;
 
-CButton::CButton()
+Button::Button()
 {
-	m_Label.SetText("Default Button");
-	m_HAlign = CAlignContainer(m_Label, m_Label.Size(), 
-		CAlignContainer::Axis::Horizotal, CAlignContainer::Align::Center);
-	m_VAlign = CAlignContainer(m_HAlign, m_Label.Size(), 
-		CAlignContainer::Axis::Vertical, CAlignContainer::Align::Center);
+	_Label.SetText("Default Button");
+	_HAlign = AlignContainer(_Label, _Label.GetSize(), 
+		AlignContainer::Axis::Horizotal, AlignContainer::Align::Center);
+	_VAlign = AlignContainer(_HAlign, _Label.GetSize(), 
+		AlignContainer::Axis::Vertical, AlignContainer::Align::Center);
 }
 
-void CButton::SetText(std::string Text)
+void Button::SetText(std::string Text)
 {
-	m_Label.SetText(Text);
-	ForceResize(m_Label.Size() + CSize(2, 0));
-	//OnResize(m_Size);
+	_Label.SetText(Text);
+	ForceResize(_Label.GetSize() + Size(2, 0));
+	//OnResize(_Size);
 }
 
-void CButton::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
+void Button::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
-	CColour col = Skin.LabelForeground();
+	Colour col = Skin.LabelForeground();
 
 	if(HasFocus)
 		col = Skin.LabelForegroundFocused();
 
-	Renderer.PushRenderBounds(CVector(1, 0), m_VAlign.Size());
-	m_VAlign.Draw(Renderer, HasFocus, Skin);
+	Renderer.PushRenderBounds(Vector(1, 0), _VAlign.GetSize());
+	_VAlign.Draw(Renderer, HasFocus, Skin);
 	Renderer.PopRenderBounds();
 
-	if(Size().Height == 1)
+	if(GetSize().Height == 1)
 	{
-		Renderer.DrawString("<", CVector(0, m_Size.Height / 2.0), col, CColour::None());
-		Renderer.DrawString(">", CVector(m_Size.Width - 1, m_Size.Height / 2.0), col, CColour::None());
+		Renderer.DrawString("<", Vector(0, _Size.Height / 2.0), col, Colour::None());
+		Renderer.DrawString(">", Vector(_Size.Width - 1, _Size.Height / 2.0), col, Colour::None());
 	}
 	else
 	{
-		Renderer.DrawRect(CVector(), Size(), col, CColour::None());
+		Renderer.DrawRect(Vector(), GetSize(), col, Colour::None());
 	}
 }
 
-void CButton::OnResize(const CSize& Size)
+void Button::OnResize(const Size& size)
 {
-	m_Label.ForceResize(Size - CSize(2, 0));
-	m_HAlign.ForceResize(Size - CSize(2, 0));
-	m_VAlign.ForceResize(Size - CSize(2, 0));
+	_Label.ForceResize(size - Size(2, 0));
+	_HAlign.ForceResize(size - Size(2, 0));
+	_VAlign.ForceResize(size - Size(2, 0));
 }
 
-void CButton::ForceResize(const CSize& Size)
+void Button::ForceResize(const Size& Size)
 {
-	m_Size = Size;
-	OnResize(m_Size);
+	_Size = Size;
+	OnResize(_Size);
 }
 
-bool CButton::HandleInput(Input::Key Key, Input::IInputSystem& System)
+bool Button::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
 	if(Key == Input::Key::Enter || Key == Input::Key::Space)
 	{
@@ -65,7 +65,7 @@ bool CButton::HandleInput(Input::Key Key, Input::IInputSystem& System)
 	return false;
 }
 
-bool CButton::CanFocus()
+bool Button::CanFocus()
 {
 	return true;
 }

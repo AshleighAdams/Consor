@@ -9,7 +9,7 @@ namespace Consor
 {
 	
 
-	class CFlowContainer : public CControl
+	class FlowContainer : public CControl
 	{
 	public:
 		enum FlowAxis
@@ -18,17 +18,17 @@ namespace Consor
 			Vertical
 		};
 	protected:
-		std::list<CControl*> m_Controls;
-		size_t m_Focused;
-		double m_Seperation;
-		FlowAxis m_Axis;
-		size_t m_Focusable();
-		CControl* m_GetFocused();
+		std::list<CControl*> _Controls;
+		size_t _Focused;
+		double _Seperation;
+		FlowAxis _Axis;
+		size_t _Focusable();
+		CControl* _GetFocused();
 	public:
-		CFlowContainer(FlowAxis axis, double Sepperation);
-		virtual CSize Size();
-		virtual void OnResize(const CSize& Size);
-		virtual void ForceResize(const CSize& Size);
+		FlowContainer(FlowAxis axis, double Sepperation);
+		virtual Size GetSize();
+		virtual void OnResize(const Size& Size);
+		virtual void ForceResize(const Size& Size);
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);
 		virtual bool HandleInput(Input::Key Key, Input::IInputSystem& System);
 		virtual bool CanFocus();

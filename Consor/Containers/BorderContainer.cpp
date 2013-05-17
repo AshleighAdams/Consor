@@ -3,57 +3,57 @@
 using namespace Consor;
 using namespace std;
 
-CBorderContainer::CBorderContainer(CControl& Client, size_t Size)
+BorderContainer::BorderContainer(CControl& Client, size_t Size)
 {
-	m_pClient = &Client;
-	m_SetBorder(Size, Size, Size, Size);
+	_pClient = &Client;
+	_SetBorder(Size, Size, Size, Size);
 }
 
-CBorderContainer::CBorderContainer(CControl& Client, size_t Left, size_t Right, size_t Top, size_t Bottom)
+BorderContainer::BorderContainer(CControl& Client, size_t Left, size_t Right, size_t Top, size_t Bottom)
 {
-	m_pClient = &Client;
-	m_SetBorder(Left, Right, Top, Bottom);
+	_pClient = &Client;
+	_SetBorder(Left, Right, Top, Bottom);
 }
 
-void CBorderContainer::m_SetBorder(size_t Left, size_t Right, size_t Top, size_t Bottom)
+void BorderContainer::_SetBorder(size_t Left, size_t Right, size_t Top, size_t Bottom)
 {
-	m_BorderLeft = Left;
-	m_BorderRight = Right;
-	m_BorderTop = Top;
-	m_BorderBottom = Bottom;
+	_BorderLeft = Left;
+	_BorderRight = Right;
+	_BorderTop = Top;
+	_BorderBottom = Bottom;
 }
 
-CSize CBorderContainer::Size()
+Size BorderContainer::GetSize()
 {
-	CSize bordersize = CSize(m_BorderLeft + m_BorderRight, m_BorderTop + m_BorderBottom);
-	return m_pClient->Size() + bordersize;
+	Size bordersize = Size(_BorderLeft + _BorderRight, _BorderTop + _BorderBottom);
+	return _pClient->GetSize() + bordersize;
 }
 
-void CBorderContainer::OnResize(const CSize& Size)
+void BorderContainer::OnResize(const Size& Size)
 {
 }
 
-void CBorderContainer::ForceResize(const CSize& Size)
+void BorderContainer::ForceResize(const Size& size)
 {
-	CSize bordersize = CSize(m_BorderLeft + m_BorderRight, m_BorderTop + m_BorderBottom);
-	m_pClient->ForceResize(Size - bordersize); // subtract the border
+	Size bordersize = Size(_BorderLeft + _BorderRight, _BorderTop + _BorderBottom);
+	_pClient->ForceResize(size - bordersize); // subtract the border
 }
 
-void CBorderContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
+void BorderContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
-	Renderer.PushRenderBounds(CVector(m_BorderLeft, m_BorderTop), m_pClient->Size());
+	Renderer.PushRenderBounds(Vector(_BorderLeft, _BorderTop), _pClient->GetSize());
 	{
-		m_pClient->Draw(Renderer, HasFocus, Skin);
+		_pClient->Draw(Renderer, HasFocus, Skin);
 	}
 	Renderer.PopRenderBounds();
 }
 
-bool CBorderContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
+bool BorderContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
-	return m_pClient->HandleInput(Key, System);
+	return _pClient->HandleInput(Key, System);
 }
 
-bool CBorderContainer::CanFocus()
+bool BorderContainer::CanFocus()
 {
-	return m_pClient->CanFocus();
+	return _pClient->CanFocus();
 }

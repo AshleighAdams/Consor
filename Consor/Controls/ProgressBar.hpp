@@ -9,7 +9,7 @@ namespace Consor
 	class CProgressBar : public CControl
 	{
 	protected:
-		double m_Percent;
+		double _Percent;
 	public:
 		CProgressBar();
 		void SetPercent(double Progress);

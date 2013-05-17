@@ -3,56 +3,56 @@
 #include "Util/Time.hpp"
 using namespace Consor;
 
-CTextBox::CTextBox()
+TextBox::TextBox()
 {
-	m_Size = CSize(20, 1);
+	_Size = Size(20, 1);
 	this->SetText("");
-	m_InsertMode = false;
-	m_LastTyped = Util::GetTime();
+	_InsertMode = false;
+	_LastTyped = Util::GetTime();
 }
 
-void CTextBox::SetText(const std::string& Text)
+void TextBox::SetText(const std::string& Text)
 {
-	m_Text = Text;
-	m_CursorPosition = m_Text.length();
+	_Text = Text;
+	_CursorPosition = _Text.length();
 }
 
-std::string CTextBox::GetText()
+std::string TextBox::GetText()
 {
-	return m_Text;
+	return _Text;
 }
 
-void CTextBox::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
+void TextBox::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
-	CSize size = this->Size();
+	Size size = this->GetSize();
 
-	Renderer.DrawBox(CVector(), size, Skin.TextBoxBackground());
+	Renderer.DrawBox(Vector(), size, Skin.TextBoxBackground());
 
-	CColour fg =  Skin.TextBoxForeground();
+	Colour fg =  Skin.TextBoxForeground();
 
 	if(HasFocus)
 		fg =  Skin.TextBoxForegroundFocused();
 
 	if(size.Height == 1)
 	{
-		Renderer.DrawString("[", CVector(), fg, CColour::None());
-		Renderer.DrawString("]", CVector(size.Width - 1, 0), fg, CColour::None());
+		Renderer.DrawString("[", Vector(), fg, Colour::None());
+		Renderer.DrawString("]", Vector(size.Width - 1, 0), fg, Colour::None());
 	}
 	else
-		Renderer.DrawRect(CVector(), size, fg, Skin.TextBoxBackground());
+		Renderer.DrawRect(Vector(), size, fg, Skin.TextBoxBackground());
 
-	CVector pos = CVector(1, (int)(size.Height / 2));
-	CSize textarea = CSize(size.Width - 2, 1);
+	Vector pos = Vector(1, (int)(size.Height / 2));
+	Size textarea = Size(size.Width - 2, 1);
 
 	Renderer.PushRenderBounds(pos, textarea);
-		pos = CVector();
+		pos = Vector();
 		std::string text = GetText();
-		int cursor_pos = (int)m_CursorPosition;
+		int cursor_pos = (int)_CursorPosition;
 
 		bool dotdotdot_ = false;
 		bool _dotdotdot = false;
 
-		if(m_Text.length() > textarea.Width)
+		if(_Text.length() > textarea.Width)
 			_dotdotdot = true;
 
 		if(cursor_pos >= textarea.Width - 3 && HasFocus)
@@ -62,7 +62,7 @@ void CTextBox::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, 
 			dotdotdot_ = true;
 			_dotdotdot = false;
 
-			if(m_CursorPosition < m_Text.length() - 1)
+			if(_CursorPosition < _Text.length() - 1)
 			{
 				_dotdotdot = true;
 				pos.X -= 3;
@@ -72,26 +72,26 @@ void CTextBox::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, 
 		}
 
 		Renderer.PushRenderBounds(pos, textarea);
-			Renderer.DrawString(text, CVector(), Skin.TextBoxForeground(), CColour::None()); // this doesn't use focus col
-			if(HasFocus && fmod(Util::GetTime() - m_LastTyped, 1.0) < 0.5)
+			Renderer.DrawString(text, Vector(), Skin.TextBoxForeground(), Colour::None()); // this doesn't use focus col
+			if(HasFocus && fmod(Util::GetTime() - _LastTyped, 1.0) < 0.5)
 			{
-				std::unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(pos + CVector(cursor_pos, 0));
-				info->SetChar(m_InsertMode ? (char)219 : '_');
+				std::unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(pos + Vector(cursor_pos, 0));
+				info->SetChar(_InsertMode ? (char)219 : '_');
 				info->SetForegroundColour(fg);
 			}
 		Renderer.PopRenderBounds();
 
 		if(dotdotdot_)
-			Renderer.DrawString("...", CVector(0, 0), Skin.TextBoxForeground(), CColour::None());
+			Renderer.DrawString("...", Vector(0, 0), Skin.TextBoxForeground(), Colour::None());
 		
 
 		if(_dotdotdot)
-			Renderer.DrawString("...", CVector(textarea.Width - 3, 0), Skin.TextBoxForeground(), CColour::None());
+			Renderer.DrawString("...", Vector(textarea.Width - 3, 0), Skin.TextBoxForeground(), Colour::None());
 
 	Renderer.PopRenderBounds();
 }
 
-bool CTextBox::m_IsTypedChar(Input::Key Key, char& letter)
+bool TextBox::_IsTypedChar(Input::Key Key, char& letter)
 {
 	if(Key >= 32 && Key <= 126)
 	{
@@ -102,58 +102,58 @@ bool CTextBox::m_IsTypedChar(Input::Key Key, char& letter)
 	return false;
 }
 
-bool CTextBox::HandleInput(Input::Key Key, Input::IInputSystem& System)
+bool TextBox::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
 	if(Key == Input::Key::Left)
 	{
-		if(m_CursorPosition == 0)
+		if(_CursorPosition == 0)
 			return false;
 
-		m_CursorPosition--;
-		m_LastTyped = Util::GetTime();
+		_CursorPosition--;
+		_LastTyped = Util::GetTime();
 		return true;
 	}
 	else if(Key == Input::Key::Right)
 	{
-		if(m_CursorPosition == m_Text.length())
+		if(_CursorPosition == _Text.length())
 			return false;
 
-		m_CursorPosition++;
-		m_LastTyped = Util::GetTime();
+		_CursorPosition++;
+		_LastTyped = Util::GetTime();
 		return true;
 	}
 	else if(Key == Input::Key::Delete)
 	{
-		if(m_CursorPosition == m_Text.length())
+		if(_CursorPosition == _Text.length())
 			return true;
-		m_Text.erase(m_CursorPosition, 1);
-		m_LastTyped = Util::GetTime();
+		_Text.erase(_CursorPosition, 1);
+		_LastTyped = Util::GetTime();
 		return true;
 	}
 	else if(Key == Input::Key::Backspace)
 	{
-		if(m_CursorPosition == 0)
+		if(_CursorPosition == 0)
 			return true;
-		m_Text.erase(m_CursorPosition - 1, 1);
-		m_CursorPosition--;
-		m_LastTyped = Util::GetTime();
+		_Text.erase(_CursorPosition - 1, 1);
+		_CursorPosition--;
+		_LastTyped = Util::GetTime();
 		return true;
 	}
 	else if(Key == Input::Key::Insert)
 	{
-		m_InsertMode = !m_InsertMode;
-		m_LastTyped = Util::GetTime();
+		_InsertMode = !_InsertMode;
+		_LastTyped = Util::GetTime();
 		return true;
 	}
 
 	char letter;
-	if(m_IsTypedChar(Key, letter))
+	if(_IsTypedChar(Key, letter))
 	{
-		if(m_InsertMode)
-			m_Text.erase(m_CursorPosition, 1);
-		m_Text.insert(m_CursorPosition, 1, letter);
-		m_CursorPosition++;
-		m_LastTyped = Util::GetTime();
+		if(_InsertMode)
+			_Text.erase(_CursorPosition, 1);
+		_Text.insert(_CursorPosition, 1, letter);
+		_CursorPosition++;
+		_LastTyped = Util::GetTime();
 		return true;
 	}
 
@@ -161,7 +161,7 @@ bool CTextBox::HandleInput(Input::Key Key, Input::IInputSystem& System)
 }
 
 
-bool CTextBox::CanFocus()
+bool TextBox::CanFocus()
 {
 	return true;
 }

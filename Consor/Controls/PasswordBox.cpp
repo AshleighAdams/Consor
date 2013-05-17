@@ -3,14 +3,14 @@
 #include "Util/Time.hpp"
 using namespace Consor;
 
-CPasswordBox::CPasswordBox()
+PasswordBox::PasswordBox()
 {
-	m_Size = CSize(20, 1);
+	_Size = Size(20, 1);
 	this->SetText("");
 	SetPasswordChar('*');
 }
 
-std::string CPasswordBox::GetText()
+std::string PasswordBox::GetText()
 {
 	std::string ret = this->GetPassword();
 
@@ -20,12 +20,12 @@ std::string CPasswordBox::GetText()
 	return ret;
 }
 
-std::string CPasswordBox::GetPassword()
+std::string PasswordBox::GetPassword()
 {
-	return m_Text;
+	return _Text;
 }
 
-void CPasswordBox::SetPasswordChar(char Letter)
+void PasswordBox::SetPasswordChar(char Letter)
 {
-	m_PasswordChar = Letter;
+	_PasswordChar = Letter;
 }

@@ -3,35 +3,35 @@
 
 using namespace Consor;
 
-CLabel::CLabel()
+Label::Label()
 {
-	m_Text = "";
+	_Text = "";
 }
 
-void CLabel::SetText(const std::string& Text)
+void Label::SetText(const std::string& Text)
 {
-	m_Text = Text;
-	m_SetText = Text;
-	m_Size = CSize(Text.length(), 1);
-	OnResize(m_Size);
+	_Text = Text;
+	_SetText = Text;
+	_Size = Size(Text.length(), 1);
+	OnResize(_Size);
 }
 
-void CLabel::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
+void Label::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
-	CColour col = Skin.LabelForeground();
+	Colour col = Skin.LabelForeground();
 
 	if(HasFocus)
 		col = Skin.LabelForegroundFocused();
 
-	Renderer.DrawString(m_Text, CVector(), col, CColour::None());
+	Renderer.DrawString(_Text, Vector(), col, Colour::None());
 }
 
-void CLabel::ForceResize(const CSize& Size)
+void Label::ForceResize(const Size& size)
 {
 	size_t width,height;
 
-	m_Text = Util::WrapText(m_SetText, Size.Width, &width, &height);
-	m_Size = CSize(width, height); //(height > Size.Height ? height : Size.Height));
+	_Text = Util::WrapText(_SetText, size.Width, &width, &height);
+	_Size = Size(width, height); //(height > Size.Height ? height : Size.Height));
 
-	OnResize(m_Size);
+	OnResize(_Size);
 }

@@ -7,10 +7,10 @@ namespace Consor
 {
 	namespace Input
 	{
-		class CWindowsInputSystem : public IInputSystem
+		class WindowsInputSystem : public IInputSystem
 		{
 		public:
-			CWindowsInputSystem();
+			WindowsInputSystem();
 			virtual bool KeyWaiting();
 			virtual Key GetKeyPress();
 			virtual bool ControlDown();

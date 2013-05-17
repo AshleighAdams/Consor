@@ -12,7 +12,7 @@ namespace Consor
 	struct windowinfo_t
 	{
 		CControl* pControl;
-		CVector position;
+		Vector position;
 	};
 
 	
@@ -20,7 +20,7 @@ namespace Consor
 	{
 		namespace _priv_WindowSystem
 		{
-			extern void m_SetSkin(std::shared_ptr<ISkin> skin);
+			extern void _SetSkin(std::shared_ptr<ISkin> skin);
 		};
 
 		extern bool Setup(Console::IConsoleRenderer* Renderer, Input::IInputSystem* input);
@@ -30,7 +30,7 @@ namespace Consor
 		extern void Lock();
 		extern void Unlock();
 		extern void HandleInput(Input::Key key, Input::IInputSystem& is);
-		extern void RegisterWindow(CControl& control, CVector pos);
+		extern void RegisterWindow(CControl& control, Vector pos);
 		extern void UnregisterWindow(CControl& control);
 
 		extern bool Running();
@@ -44,7 +44,7 @@ namespace Consor
 			using namespace _priv_WindowSystem;
 			Lock();
 			std::shared_ptr<ISkin> skin = std::shared_ptr<ISkin>(new Skin(Renderer()));
-			m_SetSkin(skin);
+			_SetSkin(skin);
 			Unlock();
 			return skin;
 		}

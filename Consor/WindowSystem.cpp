@@ -6,15 +6,15 @@ using namespace Consor;
 using namespace std;
 using namespace WindowSystem::_priv_WindowSystem;
 
-static std::mutex m_Mutex;
-static Console::IConsoleRenderer* m_pRenderer;
-static Input::IInputSystem* m_pInput;
-static std::shared_ptr<ISkin> m_pSkin;
-static std::thread m_InputThread;
-static std::thread m_DrawThread;
-static std::list<windowinfo_t> m_Registered;
-static bool m_Running;
-static bool m_Close;
+static std::mutex _Mutex;
+static Console::IConsoleRenderer* _pRenderer;
+static Input::IInputSystem* _pInput;
+static std::shared_ptr<ISkin> _pSkin;
+static std::thread _InputThread;
+static std::thread _DrawThread;
+static std::list<windowinfo_t> _Registered;
+static bool _Running;
+static bool _Close;
 
 bool WindowSystem::Setup(Console::IConsoleRenderer* Renderer, Input::IInputSystem* input)
 {
@@ -23,52 +23,52 @@ bool WindowSystem::Setup(Console::IConsoleRenderer* Renderer, Input::IInputSyste
 	if(ran) 
 		return false;
 	
-	m_pRenderer = Renderer;
-	m_pInput = input;
-	m_pSkin = std::shared_ptr<ISkin>(new CDefaultSkin(*Renderer));
-	m_Running = true;
-	m_Close = false;
+	_pRenderer = Renderer;
+	_pInput = input;
+	_pSkin = std::shared_ptr<ISkin>(new CDefaultSkin(*Renderer));
+	_Running = true;
+	_Close = false;
 
 	// create the threads
-	m_DrawThread = thread([&]()
+	_DrawThread = thread([&]()
 	{
-		while(!m_Close)
+		while(!_Close)
 		{
 			WindowSystem::Draw();
 			Util::Sleep(0.5);
 		}
 	});
 
-	m_InputThread = thread([&]()
+	_InputThread = thread([&]()
 	{
-		while(!m_Close)
+		while(!_Close)
 		{
-			Input::Key k = m_pInput->GetKeyPress();
-			HandleInput(k, *m_pInput);
+			Input::Key k = _pInput->GetKeyPress();
+			HandleInput(k, *_pInput);
 		}
 	});
 
 	return true;
 }
 
-void WindowSystem::_priv_WindowSystem::m_SetSkin(std::shared_ptr<ISkin> skin)
+void WindowSystem::_priv_WindowSystem::_SetSkin(std::shared_ptr<ISkin> skin)
 {
-	m_pSkin = skin;
+	_pSkin = skin;
 }
 
 void WindowSystem::Draw()
 {
-	m_Mutex.lock();
+	_Mutex.lock();
 
 	Console::IConsoleRenderer& renderer = Renderer();
 
-	renderer.Clear(m_pSkin->Canvas());
+	renderer.Clear(_pSkin->Canvas());
 	
-	for(windowinfo_t& info : m_Registered)
+	for(windowinfo_t& info : _Registered)
 	{
-		Consor::CSize size = info.pControl->Size();
-		Consor::CSize rsize = renderer.RenderSize();
-		Consor::CVector pos = info.position;
+		Consor::Size size = info.pControl->GetSize();
+		Consor::Size rsize = renderer.RenderSize();
+		Consor::Vector pos = info.position;
 
 		if(info.position.X < 0)
 			pos.X = rsize.Width / 2.0 - size.Width / 2;
@@ -77,82 +77,82 @@ void WindowSystem::Draw()
 			pos.Y = rsize.Height / 2.0 - size.Height / 2;
 
 		renderer.PushRenderBounds(pos, size);
-		info.pControl->Draw(renderer, &info == &m_Registered.back(), *m_pSkin);
+		info.pControl->Draw(renderer, &info == &_Registered.back(), *_pSkin);
 		renderer.PopRenderBounds();
 	}
 
 	renderer.FlushToScreen();
 
-	m_Mutex.unlock();
+	_Mutex.unlock();
 }
 
 void WindowSystem::HandleInput(Input::Key key, Input::IInputSystem& is)
 {
-	m_Mutex.lock();
+	_Mutex.lock();
 
-	if(m_Registered.begin() == m_Registered.end())
+	if(_Registered.begin() == _Registered.end())
 	{
-		m_Mutex.unlock();
+		_Mutex.unlock();
 		return;
 	}
-	m_Registered.back().pControl->HandleInput(key, is);
+	_Registered.back().pControl->HandleInput(key, is);
 
-	m_Mutex.unlock();
+	_Mutex.unlock();
 	Draw();
 }
 
- void WindowSystem::RegisterWindow(CControl& control, CVector pos)
+ void WindowSystem::RegisterWindow(CControl& control, Vector pos)
  {
 	windowinfo_t info;
 	info.position = pos;
 	info.pControl = &control;
 
-	m_Mutex.lock();
-	m_Registered.push_back(info);
-	m_Mutex.unlock();
+	_Mutex.lock();
+	_Registered.push_back(info);
+	_Mutex.unlock();
 	Draw();
  }
 
 void WindowSystem::UnregisterWindow(CControl& control)
 {
-	m_Mutex.lock();
-	m_Registered.remove_if([&](const windowinfo_t& info)
+	_Mutex.lock();
+	_Registered.remove_if([&](const windowinfo_t& info)
 	{
 		return info.pControl == &control;
 	});
-	m_Mutex.unlock();
+	_Mutex.unlock();
 	Draw();
 }
 
 Console::IConsoleRenderer& WindowSystem::Renderer()
 {
-	return *m_pRenderer;
+	return *_pRenderer;
 }
 
 void WindowSystem::Lock()
 {
-	m_Mutex.lock();
+	_Mutex.lock();
 }
 
 void WindowSystem::Unlock()
 {
-	m_Mutex.unlock();
+	_Mutex.unlock();
 }
 
 void WindowSystem::Close()
 {
-	if(m_Close)
+	if(_Close)
 		return;
 
-	m_Close = true;
-	m_DrawThread.join();
-	m_InputThread.join();
-	m_Running = false;
+	_Close = true;
+	_DrawThread.join();
+	_InputThread.join();
+	_Running = false;
 }
 
 bool WindowSystem::Running()
 {
-	return m_Running;
+	return _Running;
 }
 
 std::string WindowSystem::RendererName()

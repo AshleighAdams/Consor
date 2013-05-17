@@ -11,12 +11,12 @@ namespace Consor
 	class CControl
 	{
 	protected:
-		Consor::CSize m_Size;
+		Consor::Size _Size;
 	public:
 		virtual ~CControl(){}
-		virtual CSize Size();
-		virtual void OnResize(const CSize& Size);
-		virtual void ForceResize(const CSize& Size);
+		virtual Size GetSize();
+		virtual void OnResize(const Size& Size);
+		virtual void ForceResize(const Size& Size);
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);
 		virtual bool HandleInput(Input::Key Key, Input::IInputSystem& System);
 		virtual bool CanFocus();

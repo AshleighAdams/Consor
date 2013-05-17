@@ -10,20 +10,20 @@
 
 namespace Consor
 {
-	class CButton : public CControl
+	class Button : public CControl
 	{
 	protected:
-		CAlignContainer m_VAlign;
-		CAlignContainer m_HAlign;
-		CLabel m_Label;
+		AlignContainer _VAlign;
+		AlignContainer _HAlign;
+		Label _Label;
 	public:
 		CHook<> Click;
 
-		CButton();
+		Button();
 		void SetText(std::string Text);
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);
-		virtual void ForceResize(const CSize& Size);
-		virtual void OnResize(const CSize& Size);
+		virtual void ForceResize(const Size& Size);
+		virtual void OnResize(const Size& Size);
 		virtual bool HandleInput(Input::Key Key, Input::IInputSystem& System);
 		virtual bool CanFocus();
 	};

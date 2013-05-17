@@ -6,14 +6,14 @@
 
 namespace Consor
 {
-	class CHorizontalScrollbar : public CControl
+	class HorizontalScrollbar : public CControl
 	{
 	protected:
-		double m_Value;
-		double m_ChangeSize;
+		double _Value;
+		double _ChangeSize;
 	public:
-		CHorizontalScrollbar(const CSize& Size);
-		CHorizontalScrollbar();
+		HorizontalScrollbar(const Size& Size);
+		HorizontalScrollbar();
 		void SetPercent(double Percent);
 		double GetPercent();
 		void SetChangeSize(double ChangeSize);

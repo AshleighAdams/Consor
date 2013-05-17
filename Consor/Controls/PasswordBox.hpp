@@ -7,12 +7,12 @@
 
 namespace Consor
 {
-	class CPasswordBox : public CTextBox
+	class PasswordBox : public TextBox
 	{
 	protected:
-		char m_PasswordChar;
+		char _PasswordChar;
 	public:
-		CPasswordBox();
+		PasswordBox();
 		virtual std::string GetText();
 		virtual std::string GetPassword();
 		virtual void SetPasswordChar(char Letter);

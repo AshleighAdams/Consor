@@ -14,12 +14,12 @@ namespace Consor
 		{
 		public:
 			virtual ~ICharInformation() {}
-			virtual void SetPosition(const CVector& pos) = 0;
-			virtual void SetForegroundColour(const CColour& col) = 0;
-			virtual CColour GetForegroundColour() = 0;
+			virtual void SetPosition(const Vector& pos) = 0;
+			virtual void SetForegroundColour(const Colour& col) = 0;
+			virtual Colour GetForegroundColour() = 0;
 
-			virtual void SetBackgroundColour(const CColour& col) = 0;
-			virtual CColour GetBackgroundColour() = 0;
+			virtual void SetBackgroundColour(const Colour& col) = 0;
+			virtual Colour GetBackgroundColour() = 0;
 
 			virtual void SetChar(char val) = 0;
 			virtual char GetChar() = 0;
@@ -32,17 +32,17 @@ namespace Consor
 
 		struct renderbound_t
 		{
-			CVector Pos;
-			CSize Size;
+			Vector Pos;
+			Size Size;
 		};
 
 		class IConsoleRenderer
 		{
 		protected:
-			std::list<renderbound_t> m_Bounds;
-			std::list<CVector> m_Offsets;
-			CVector m_CurrentOffset;
-			renderbound_t m_CurrentRenderBound;
+			std::list<renderbound_t> _Bounds;
+			std::list<Vector> _Offsets;
+			Vector _CurrentOffset;
+			renderbound_t _CurrentRenderBound;
 		public:
 			virtual ~IConsoleRenderer(){}
 
@@ -51,30 +51,30 @@ namespace Consor
 			virtual std::string VersionString() = 0;
 
 			virtual void FlushToScreen() = 0;
-			virtual std::unique_ptr<ICharInformation> GetCharInformation(const CVector& pos) = 0;
-			virtual CSize Size() = 0;
+			virtual std::unique_ptr<ICharInformation> GetCharInformation(const Vector& pos) = 0;
+			virtual Size GetSize() = 0;
 
 			virtual bool SupportsUnicode() = 0;
 			// this will probably replace existing colours
 			virtual size_t MaxColours() = 0;
-			virtual void GetColours(size_t Count, CColour* pColours) = 0;
-			virtual void SetColours(size_t Count, CColour* pColours) = 0;
+			virtual void GetColours(size_t Count, Colour* pColours) = 0;
+			virtual void SetColours(size_t Count, Colour* pColours) = 0;
 			virtual void ResetColours() = 0;
 
 			virtual void SetTitle(const std::string& Title) = 0;
 
 			// other stuff
-			virtual void Clear(const CColour& col);
+			virtual void Clear(const Colour& col);
 
-			virtual void DrawBox(const CVector& pos, const CSize& size, const CColour& col);
-			virtual void DrawRect(const CVector& pos, const CSize& size, const CColour& fg_col, const CColour& bg_col);
-			virtual void DrawString(const std::string& str, const CVector& pos, const CColour& fgcol, const CColour& bgcol);
+			virtual void DrawBox(const Vector& pos, const Size& size, const Colour& col);
+			virtual void DrawRect(const Vector& pos, const Size& size, const Colour& fg_col, const Colour& bg_col);
+			virtual void DrawString(const std::string& str, const Vector& pos, const Colour& fgcol, const Colour& bgcol);
 			
-			virtual void PushRenderBounds(const CVector& from, const CSize& size);
+			virtual void PushRenderBounds(const Vector& from, const Consor::Size& size);
 			virtual void PopRenderBounds();
-			virtual CSize RenderSize();
-			virtual bool InRenderBounds(const CVector& pos, CVector* dir);
-			virtual bool InRenderBounds(const CVector& pos, const CSize& size);
+			virtual Size RenderSize();
+			virtual bool InRenderBounds(const Vector& pos, Vector* dir);
+			virtual bool InRenderBounds(const Vector& pos, const Consor::Size& size);
 		};
 	}
 }

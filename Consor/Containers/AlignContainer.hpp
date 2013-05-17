@@ -6,7 +6,7 @@
 
 namespace Consor
 {
-	class CAlignContainer : public CControl
+	class AlignContainer : public CControl
 	{
 	public:
 		enum Align
@@ -23,17 +23,17 @@ namespace Consor
 			Vertical
 		};
 	protected:
-		CControl* m_pClient;
-		CVector m_ClientPos();
-		CSize m_Size;
-		Axis m_Axis;
-		Align m_Align;
+		CControl* _pClient;
+		Vector _ClientPos();
+		Size _Size;
+		Axis _Axis;
+		Align _Align;
 	public:
-		CAlignContainer(CControl& Client, const CSize& Size, Axis Axis, Align align);
-		CAlignContainer(){} // this will crash, but exists only so classes can have it
-		virtual CSize Size();
-		virtual void OnResize(const CSize& Size);
-		virtual void ForceResize(const CSize& Size);
+		AlignContainer(CControl& Client, const Size& Size, Axis Axis, Align align);
+		AlignContainer(){} // this will crash, but exists only so classes can have it
+		virtual Size GetSize();
+		virtual void OnResize(const Size& Size);
+		virtual void ForceResize(const Size& Size);
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);
 		virtual bool HandleInput(Input::Key Key, Input::IInputSystem& System);
 		virtual bool CanFocus();

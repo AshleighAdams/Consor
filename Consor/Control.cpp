@@ -2,18 +2,18 @@
 
 using namespace Consor;
 
-CSize CControl::Size()
+Size CControl::GetSize()
 {
-	return m_Size;
+	return _Size;
 }
 
-void CControl::OnResize(const CSize& Size)
+void CControl::OnResize(const Size& Size)
 {
 }
 
-void CControl::ForceResize(const CSize& Size)
+void CControl::ForceResize(const Size& Size)
 {
-	m_Size = Size;
+	_Size = Size;
 	OnResize(Size);
 }
 

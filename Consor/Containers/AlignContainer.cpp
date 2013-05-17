@@ -3,27 +3,27 @@
 using namespace Consor;
 using namespace std;
 
-CAlignContainer::CAlignContainer(CControl& Client, const CSize& Size, CAlignContainer::Axis Axis, CAlignContainer::Align Align)
+AlignContainer::AlignContainer(CControl& Client, const Size& Size, AlignContainer::Axis Axis, AlignContainer::Align Align)
 {
-	m_pClient = &Client;
-	m_Axis = Axis;
-	m_Align = Align;
-	m_Size = Size;
+	_pClient = &Client;
+	_Axis = Axis;
+	_Align = Align;
+	_Size = Size;
 }
 
-CSize CAlignContainer::Size()
+Size AlignContainer::GetSize()
 {
-	CSize ret;
-	CSize clientsize = m_pClient->Size();
+	Size ret;
+	Size clientsize = _pClient->GetSize();
 
-	if(m_Axis == CAlignContainer::Axis::Horizotal)
+	if(_Axis == AlignContainer::Axis::Horizotal)
 	{
 		ret.Height = clientsize.Height;
-		ret.Width = m_Size.Width;
+		ret.Width = _Size.Width;
 	}
 	else
 	{
-		ret.Height = m_Size.Height;
+		ret.Height = _Size.Height;
 		ret.Width = clientsize.Width;
 	}
 	
@@ -35,21 +35,21 @@ CSize CAlignContainer::Size()
 	return ret;
 }
 
-CVector CAlignContainer::m_ClientPos()
+Vector AlignContainer::_ClientPos()
 {
-	CSize size = this->Size();
-	CSize clientsize = m_pClient->Size();
+	Size size = this->GetSize();
+	Size clientsize = _pClient->GetSize();
 
-	CVector ret;
+	Vector ret;
 
-	if(m_Axis == CAlignContainer::Axis::Horizotal)
+	if(_Axis == AlignContainer::Axis::Horizotal)
 	{
-		switch (m_Align)
+		switch (_Align)
 		{
-		case Consor::CAlignContainer::Right:
+		case Consor::AlignContainer::Right:
 			ret.X = size.Width - clientsize.Width;
 			break;
-		case Consor::CAlignContainer::Center:
+		case Consor::AlignContainer::Center:
 			ret.X = size.Width / 2.0 - clientsize.Width / 2.0;
 			break;
 		default:
@@ -58,12 +58,12 @@ CVector CAlignContainer::m_ClientPos()
 	}
 	else
 	{
-		switch (m_Align)
+		switch (_Align)
 		{
-		case Consor::CAlignContainer::Bottom:
+		case Consor::AlignContainer::Bottom:
 			ret.Y = size.Height - clientsize.Height;
 			break;
-		case Consor::CAlignContainer::Center:
+		case Consor::AlignContainer::Center:
 			ret.Y = size.Height / 2.0 - clientsize.Height / 2.0;
 			break;
 		default:
@@ -74,28 +74,28 @@ CVector CAlignContainer::m_ClientPos()
 	return ret;
 }
 
-void CAlignContainer::OnResize(const CSize& Size)
+void AlignContainer::OnResize(const Size& Size)
 {
 }
 
-void CAlignContainer::ForceResize(const CSize& Size)
+void AlignContainer::ForceResize(const Size& Size)
 {
-	m_Size = Size;
+	_Size = Size;
 }
 
-void CAlignContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
+void AlignContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
-	Renderer.PushRenderBounds(m_ClientPos(), m_pClient->Size());
-	m_pClient->Draw(Renderer, HasFocus, Skin);
+	Renderer.PushRenderBounds(_ClientPos(), _pClient->GetSize());
+	_pClient->Draw(Renderer, HasFocus, Skin);
 	Renderer.PopRenderBounds();
 }
 
-bool CAlignContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
+bool AlignContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
-	return m_pClient->HandleInput(Key, System);
+	return _pClient->HandleInput(Key, System);
 }
 
-bool CAlignContainer::CanFocus()
+bool AlignContainer::CanFocus()
 {
-	return m_pClient->CanFocus();
+	return _pClient->CanFocus();
 }
