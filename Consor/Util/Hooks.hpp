@@ -1,6 +1,6 @@
 /*
 	A small hook/event class, fully functional:
-	CHook<arg1, arg2, arg3...> hook;
+	Hook<arg1, arg2, arg3...> hook;
 
 	auto pHandle = hook += function;
 
@@ -23,25 +23,25 @@
 namespace Consor
 {
 	template<class... Args>
-	class CHook; // fwd decleration
+	class Hook; // fwd decleration
 
 	template<class... Args>
-	struct CHookHandle
+	struct HookHandle
 	{
 		typedef std::function<void(Args...)>	function_t;
-		typedef CHook<Args...>					hook_t;
+		typedef Hook<Args...>					hook_t;
 
 		hook_t*		_pHook;
 		function_t	_Func;
 
 	public:
-		CHookHandle(hook_t* pHook, const function_t& Func)
+		HookHandle(hook_t* pHook, const function_t& Func)
 		{
 			_pHook = pHook;
 			_Func = Func;
 		}
 
-		~CHookHandle()
+		~HookHandle()
 		{
 			Unregister();
 		}
@@ -61,10 +61,10 @@ namespace Consor
 	};
 
 	template<class... Args>
-	class CHook
+	class Hook
 	{
 	public:
-		typedef CHookHandle<Args...>			handle_t;
+		typedef HookHandle<Args...>			handle_t;
 		typedef std::function<void(Args...)>	function_t;
 		typedef	std::shared_ptr<handle_t>		handle_p;
 	private:
@@ -75,12 +75,12 @@ namespace Consor
 
 		bool _Itterating;
 	public:
-		CHook()
+		Hook()
 		{
 			_pLastCallThread = nullptr;
 		}
 
-		~CHook()
+		~Hook()
 		{
 			// leak memory yay
 			//delete _pLastCallThread;

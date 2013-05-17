@@ -25,7 +25,7 @@ bool WindowSystem::Setup(Console::IConsoleRenderer* Renderer, Input::IInputSyste
 	
 	_pRenderer = Renderer;
 	_pInput = input;
-	_pSkin = std::shared_ptr<ISkin>(new CDefaultSkin(*Renderer));
+	_pSkin = std::shared_ptr<ISkin>(new DefaultSkin(*Renderer));
 	_Running = true;
 	_Close = false;
 
@@ -101,7 +101,7 @@ void WindowSystem::HandleInput(Input::Key key, Input::IInputSystem& is)
 	Draw();
 }
 
- void WindowSystem::RegisterWindow(CControl& control, Vector pos)
+ void WindowSystem::RegisterWindow(Control& control, Vector pos)
  {
 	windowinfo_t info;
 	info.position = pos;
@@ -113,7 +113,7 @@ void WindowSystem::HandleInput(Input::Key key, Input::IInputSystem& is)
 	Draw();
  }
 
-void WindowSystem::UnregisterWindow(CControl& control)
+void WindowSystem::UnregisterWindow(Control& control)
 {
 	_Mutex.lock();
 	_Registered.remove_if([&](const windowinfo_t& info)

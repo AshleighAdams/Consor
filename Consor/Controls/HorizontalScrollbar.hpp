@@ -6,7 +6,7 @@
 
 namespace Consor
 {
-	class HorizontalScrollbar : public CControl
+	class HorizontalScrollbar : public Control
 	{
 	protected:
 		double _Value;

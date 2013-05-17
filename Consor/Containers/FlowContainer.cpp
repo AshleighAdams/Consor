@@ -14,21 +14,21 @@ size_t FlowContainer::_Focusable()
 {
 	size_t ret = 0;
 
-	for(CControl* c : _Controls)
+	for(Control* c : _Controls)
 		if(c->CanFocus())
 			ret++;
 
 	return ret;
 }
 
-CControl* FlowContainer::_GetFocused()
+Control* FlowContainer::_GetFocused()
 {
 	if(_Focusable() == 0)
 		return nullptr;
 
 	size_t cur = 0;
 
-	for(CControl* c : _Controls)
+	for(Control* c : _Controls)
 		if(c->CanFocus())
 		{
 			if(_Focused == cur)
@@ -45,7 +45,7 @@ Size FlowContainer::GetSize()
 
 	double span = 0.0;
 
-	for(CControl* ctrl : _Controls)
+	for(Control* ctrl : _Controls)
 	{
 		Size size = ctrl->GetSize();
 
@@ -87,9 +87,9 @@ void FlowContainer::ForceResize(const Size& Size)
 void FlowContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
 	Vector pos = Vector(0, 0);
-	CControl* pFocused = _GetFocused();
+	Control* pFocused = _GetFocused();
 
-	for(CControl* ctrl : _Controls)
+	for(Control* ctrl : _Controls)
 	{
 		Size ctrl_size = ctrl->GetSize();
 
@@ -111,7 +111,7 @@ void FlowContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFo
 
 bool FlowContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
-	CControl* pFocused = _GetFocused();
+	Control* pFocused = _GetFocused();
 
 	if(pFocused && pFocused->HandleInput(Key, System))
 		return true;
@@ -147,13 +147,13 @@ bool FlowContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
 
 bool FlowContainer::CanFocus()
 {
-	for(CControl* Control : _Controls) // return true if one of hour controls can obtain focus
+	for(Control* Control : _Controls) // return true if one of hour controls can obtain focus
 		if(Control->CanFocus())
 			return true;
 	return false;
 }
 
-void FlowContainer::AddControl(CControl& Control, double SizeTo)
+void FlowContainer::AddControl(Control& Control, double SizeTo)
 {
 	Size size = Control.GetSize();
 	

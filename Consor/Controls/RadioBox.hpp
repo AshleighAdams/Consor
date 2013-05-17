@@ -10,7 +10,7 @@
 
 namespace Consor
 {
-	class RadioBox : public CControl
+	class RadioBox : public Control
 	{
 	protected:
 		std::list<std::tuple<CheckBox*, std::string>> _Checkboxes;

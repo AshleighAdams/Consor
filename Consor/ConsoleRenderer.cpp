@@ -135,7 +135,7 @@ Size IConsoleRenderer::RenderSize()
 
 
 
-class CRectangleChar
+class RectangleChar
 {
 	int _State;
 	bool _Unicode;
@@ -145,7 +145,7 @@ public:
 	const static int UP		= (1 << 2);
 	const static int DOWN	= (1 << 3);
 	
-	CRectangleChar(bool unicode, const bool left, const bool right, const bool up, const bool down)
+	RectangleChar(bool unicode, const bool left, const bool right, const bool up, const bool down)
 	{
 		_State = 0;
 		_Unicode = unicode;
@@ -160,7 +160,7 @@ public:
 			_State |= DOWN;
 	}
 		
-	CRectangleChar(bool unicode, char32_t type)
+	RectangleChar(bool unicode, char32_t type)
 	{
 		_Unicode = unicode;
 
@@ -284,17 +284,17 @@ public:
 		#undef CHAR_STATE
 	}
 
-	CRectangleChar operator+(const CRectangleChar& other)
+	RectangleChar operator+(const RectangleChar& other)
 	{
-		CRectangleChar ret(_Unicode, 0);
+		RectangleChar ret(_Unicode, 0);
 		ret._State = this->_State | other._State;
 
 		return ret;
 	}
 
-	CRectangleChar operator-(const CRectangleChar& other)
+	RectangleChar operator-(const RectangleChar& other)
 	{
-		CRectangleChar ret(_Unicode, 0);
+		RectangleChar ret(_Unicode, 0);
 		ret._State = this->_State & ~other._State;
 
 		return ret;
@@ -304,14 +304,14 @@ public:
 void IConsoleRenderer::DrawRect(const Vector& pos, const Size& size, const Colour& fgcol, const Colour& bgcol)
 {
 	bool unicode = SupportsUnicode();
-	CRectangleChar Horizontal(unicode, true, true, false, false);
-	CRectangleChar Vertical(unicode, false, false, true, true);
+	RectangleChar Horizontal(unicode, true, true, false, false);
+	RectangleChar Vertical(unicode, false, false, true, true);
 
-	CRectangleChar Left(unicode, true, false, false, false);
-	CRectangleChar Right(unicode, false, true, false, false);
+	RectangleChar Left(unicode, true, false, false, false);
+	RectangleChar Right(unicode, false, true, false, false);
 
-	CRectangleChar Top(unicode, false, false, true, false);
-	CRectangleChar Bottom(unicode, false, false, false, true);
+	RectangleChar Top(unicode, false, false, true, false);
+	RectangleChar Bottom(unicode, false, false, false, true);
 	
 	unique_ptr<ICharInformation> info_top = GetCharInformation(Vector());
 	unique_ptr<ICharInformation> info_bot = GetCharInformation(Vector());
@@ -325,7 +325,7 @@ void IConsoleRenderer::DrawRect(const Vector& pos, const Size& size, const Colou
 		{
 			info_top->SetPosition(Vector(x, pos.Y));
 			
-			info_top->SetUnicodeChar((CRectangleChar(unicode, info_top->GetUnicodeChar()) + Horizontal).GetChar());
+			info_top->SetUnicodeChar((RectangleChar(unicode, info_top->GetUnicodeChar()) + Horizontal).GetChar());
 			info_top->SetForegroundColour(Colour::Blend(fgcol, info_top->GetForegroundColour()));
 			info_top->SetBackgroundColour(Colour::Blend(bgcol, info_top->GetBackgroundColour()));
 		}
@@ -335,18 +335,18 @@ void IConsoleRenderer::DrawRect(const Vector& pos, const Size& size, const Colou
 		info_top->SetPosition(Vector(x, pos.Y));
 		info_bot->SetPosition(Vector(x, pos.Y + size.Height - 1));
 
-		CRectangleChar cur = Horizontal;
+		RectangleChar cur = Horizontal;
 
 		if(x == pos.X)
 			cur = cur - Left;
 		else if(x == pos.X + size.Width - 1)
 			cur = cur - Right;
 
-		info_top->SetUnicodeChar((CRectangleChar(unicode, info_top->GetUnicodeChar()) + cur).GetChar());
+		info_top->SetUnicodeChar((RectangleChar(unicode, info_top->GetUnicodeChar()) + cur).GetChar());
 		info_top->SetForegroundColour(fgcol);
 		info_top->SetBackgroundColour(bgcol);
 
-		info_bot->SetUnicodeChar((CRectangleChar(unicode, info_bot->GetUnicodeChar()) + cur).GetChar());
+		info_bot->SetUnicodeChar((RectangleChar(unicode, info_bot->GetUnicodeChar()) + cur).GetChar());
 		info_bot->SetForegroundColour(fgcol);
 		info_bot->SetBackgroundColour(bgcol);
 	}
@@ -358,7 +358,7 @@ void IConsoleRenderer::DrawRect(const Vector& pos, const Size& size, const Colou
 		{
 			info_l->SetPosition(Vector(pos.X, y));
 
-			info_l->SetUnicodeChar( (CRectangleChar(unicode, info_l->GetUnicodeChar()) + Vertical).GetChar() );
+			info_l->SetUnicodeChar( (RectangleChar(unicode, info_l->GetUnicodeChar()) + Vertical).GetChar() );
 			info_l->SetForegroundColour(fgcol);
 			info_l->SetBackgroundColour(bgcol);
 		}
@@ -368,18 +368,18 @@ void IConsoleRenderer::DrawRect(const Vector& pos, const Size& size, const Colou
 		info_l->SetPosition(Vector(pos.X, y));
 		info_r->SetPosition(Vector(pos.X + size.Width - 1, y));
 
-		CRectangleChar cur = Vertical;
+		RectangleChar cur = Vertical;
 
 		if(y == pos.Y)
 			cur = cur - Top;
 		else if(y == pos.Y + size.Height - 1)
 			cur = cur - Bottom;
 
-		info_l->SetUnicodeChar( (CRectangleChar(unicode, info_l->GetUnicodeChar()) + cur).GetChar() );
+		info_l->SetUnicodeChar( (RectangleChar(unicode, info_l->GetUnicodeChar()) + cur).GetChar() );
 		info_l->SetForegroundColour(fgcol);
 		info_l->SetBackgroundColour(bgcol);
 
-		info_r->SetUnicodeChar( (CRectangleChar(unicode, info_r->GetUnicodeChar()) + cur).GetChar() );
+		info_r->SetUnicodeChar( (RectangleChar(unicode, info_r->GetUnicodeChar()) + cur).GetChar() );
 		info_r->SetForegroundColour(fgcol);
 		info_r->SetBackgroundColour(bgcol);
 	}

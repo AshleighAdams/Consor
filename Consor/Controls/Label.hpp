@@ -6,7 +6,7 @@
 
 namespace Consor
 {
-	class Label : public CControl
+	class Label : public Control
 	{
 	protected:
 		std::string _Text;

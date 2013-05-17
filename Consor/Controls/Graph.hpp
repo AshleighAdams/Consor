@@ -15,18 +15,18 @@
 
 namespace Consor
 {
-	class Graph : public CControl
+	class Graph : public Control
 	{
 	protected:
 		FlowContainer _FlowHorz, _FlowVert, _FlowGraphs;
-		std::list<CControl*> _ToDelete;
+		std::list<Control*> _ToDelete;
 		double _Height;
 		Label _XLabel;
 		Label _YLabel;
 		AlignContainer _XLableAlign, _YLableAlign;
 		std::function<void(double, size_t)> _Click;
 	public:
-		Consor::CHook<double, size_t> Click;
+		Consor::Hook<double, size_t> Click;
 		Graph(double Height);
 		~Graph();
 		virtual Size GetSize();

@@ -556,7 +556,7 @@ void WindowsConsoleRenderer::DrawBox(const Vector& pos, const Size& size, const 
 
 /*
 
-class CRectangleChar
+class RectangleChar
 {
 	int _State;
 public:
@@ -565,7 +565,7 @@ public:
 	const static int UP		= (1 << 2);
 	const static int DOWN	= (1 << 3);
 	
-	CRectangleChar(const bool left, const bool right, const bool up, const bool down)
+	RectangleChar(const bool left, const bool right, const bool up, const bool down)
 	{
 		_State = 0;
 
@@ -579,7 +579,7 @@ public:
 			_State |= DOWN;
 	}
 		
-	CRectangleChar(unsigned char type)
+	RectangleChar(unsigned char type)
 	{
 		#define CHAR_STATE(ltr, val) \
 		case ltr: \
@@ -645,17 +645,17 @@ public:
 		#undef CHAR_STATE
 	}
 
-	CRectangleChar operator+(const CRectangleChar& other)
+	RectangleChar operator+(const RectangleChar& other)
 	{
-		CRectangleChar ret(0);
+		RectangleChar ret(0);
 		ret._State = this->_State | other._State;
 
 		return ret;
 	}
 
-	CRectangleChar operator-(const CRectangleChar& other)
+	RectangleChar operator-(const RectangleChar& other)
 	{
-		CRectangleChar ret(0);
+		RectangleChar ret(0);
 		ret._State = this->_State & ~other._State;
 
 		return ret;
@@ -664,14 +664,14 @@ public:
 
 void WindowsConsoleRenderer::DrawRect(const Vector& pos, const Size& size, const Colour& fgcol, const Colour& bgcol)
 {
-	CRectangleChar Horizontal(true, true, false, false);
-	CRectangleChar Vertical(false, false, true, true);
+	RectangleChar Horizontal(true, true, false, false);
+	RectangleChar Vertical(false, false, true, true);
 
-	CRectangleChar Left(true, false, false, false);
-	CRectangleChar Right(false, true, false, false);
+	RectangleChar Left(true, false, false, false);
+	RectangleChar Right(false, true, false, false);
 
-	CRectangleChar Top(false, false, true, false);
-	CRectangleChar Bottom(false, false, false, true);
+	RectangleChar Top(false, false, true, false);
+	RectangleChar Bottom(false, false, false, true);
 	
 	if(size.Width == 1)
 		;
@@ -679,7 +679,7 @@ void WindowsConsoleRenderer::DrawRect(const Vector& pos, const Size& size, const
 		for(int x = pos.X; x < pos.X + size.Width; x++)
 		{
 			CHAR_INFO& info_top = _CharInfoAt(x, pos.Y);
-			info_top.Char.AsciiChar = (CRectangleChar(info_top.Char.AsciiChar) + Horizontal).GetChar();
+			info_top.Char.AsciiChar = (RectangleChar(info_top.Char.AsciiChar) + Horizontal).GetChar();
 			
 			Colour merged_fg = Colour::Blend(fgcol, AttributeForegroundColour(*this, (CharAttributes)info_top.Attributes));
 			Colour merged_bg = Colour::Blend(bgcol, AttributeBackgroundColour(*this, (CharAttributes)info_top.Attributes));
@@ -691,15 +691,15 @@ void WindowsConsoleRenderer::DrawRect(const Vector& pos, const Size& size, const
 		CHAR_INFO& info_top = _CharInfoAt(x, pos.Y);
 		CHAR_INFO& info_bot = _CharInfoAt(x, pos.Y + size.Height - 1);
 
-		CRectangleChar cur = Horizontal;
+		RectangleChar cur = Horizontal;
 
 		if(x == pos.X)
 			cur = cur - Left;
 		else if(x == pos.X + size.Width - 1)
 			cur = cur - Right;
 
-		info_top.Char.AsciiChar = (CRectangleChar(info_top.Char.AsciiChar) + cur).GetChar();
-		info_bot.Char.AsciiChar = (CRectangleChar(info_bot.Char.AsciiChar) + cur).GetChar();
+		info_top.Char.AsciiChar = (RectangleChar(info_top.Char.AsciiChar) + cur).GetChar();
+		info_bot.Char.AsciiChar = (RectangleChar(info_bot.Char.AsciiChar) + cur).GetChar();
 		
 		
 		Colour merged_fg = Colour::Blend(fgcol, AttributeForegroundColour(*this, (CharAttributes)info_top.Attributes));
@@ -717,7 +717,7 @@ void WindowsConsoleRenderer::DrawRect(const Vector& pos, const Size& size, const
 		for(int y = pos.Y; y < pos.Y + size.Height; y++)
 		{
 			CHAR_INFO& info_l = _CharInfoAt(pos.X, y);
-			info_l.Char.AsciiChar = (CRectangleChar(info_l.Char.AsciiChar) + Vertical).GetChar();
+			info_l.Char.AsciiChar = (RectangleChar(info_l.Char.AsciiChar) + Vertical).GetChar();
 		
 			Colour merged_fg = Colour::Blend(fgcol, AttributeForegroundColour(*this, (CharAttributes)info_l.Attributes));
 			Colour merged_bg = Colour::Blend(bgcol, AttributeBackgroundColour(*this, (CharAttributes)info_l.Attributes));
@@ -729,15 +729,15 @@ void WindowsConsoleRenderer::DrawRect(const Vector& pos, const Size& size, const
 		CHAR_INFO& info_l = _CharInfoAt(pos.X, y);
 		CHAR_INFO& info_r = _CharInfoAt(pos.X + size.Width - 1, y);
 
-		CRectangleChar cur = Vertical;
+		RectangleChar cur = Vertical;
 
 		if(y == pos.Y)
 			cur = cur - Top;
 		else if(y == pos.Y + size.Height - 1)
 			cur = cur - Bottom;
 
-		info_l.Char.AsciiChar = (CRectangleChar(info_l.Char.AsciiChar) + cur).GetChar();
-		info_r.Char.AsciiChar = (CRectangleChar(info_r.Char.AsciiChar) + cur).GetChar();
+		info_l.Char.AsciiChar = (RectangleChar(info_l.Char.AsciiChar) + cur).GetChar();
+		info_r.Char.AsciiChar = (RectangleChar(info_r.Char.AsciiChar) + cur).GetChar();
 
 		Colour merged_fg = Colour::Blend(fgcol, AttributeForegroundColour(*this, (CharAttributes)info_l.Attributes));
 		Colour merged_bg = Colour::Blend(bgcol, AttributeBackgroundColour(*this, (CharAttributes)info_l.Attributes));

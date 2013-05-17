@@ -10,14 +10,14 @@
 
 namespace Consor
 {
-	class Button : public CControl
+	class Button : public Control
 	{
 	protected:
 		AlignContainer _VAlign;
 		AlignContainer _HAlign;
 		Label _Label;
 	public:
-		CHook<> Click;
+		Hook<> Click;
 
 		Button();
 		void SetText(std::string Text);

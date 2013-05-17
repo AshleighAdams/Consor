@@ -7,7 +7,7 @@ namespace Consor
 {
 	namespace Util
 	{
-		class CFrequencyController
+		class FrequencyController
 		{
 			double _Next;
 			double _Frequency;
@@ -16,7 +16,7 @@ namespace Consor
 			double _LastThink;
 			std::string _Name;
 		public:
-			CFrequencyController(const std::string& Name, double Frequency);
+			FrequencyController(const std::string& Name, double Frequency);
 
 			void SetNextTime(double Time);
 			void ThinkIn(double Seconds);

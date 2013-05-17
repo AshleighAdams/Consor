@@ -24,7 +24,7 @@ Graph::Graph(double Height) :
 
 Graph::~Graph()
 {
-	for(CControl* c : _ToDelete)
+	for(Control* c : _ToDelete)
 		delete c;
 }
 
