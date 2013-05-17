@@ -4,6 +4,9 @@ std::string Consor::Util::FormatTimeSpan(double Time)
 {
 	using namespace std;
 
+	if(Time != Time)
+		return "\u221E";
+
 	string names[] = {
 		"second",
 		"minute",
@@ -31,7 +34,7 @@ std::string Consor::Util::FormatTimeSpan(double Time)
 
 	string ret;
 	double units = Time;
-
+	
 	for(int i = 0; i < sizeof(ajustment) / sizeof(ajustment[0]) - 1; i++)
 	{
 		long long unit = (long long)fmod(units, ajustment[i+1]);
