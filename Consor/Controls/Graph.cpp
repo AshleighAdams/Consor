@@ -3,18 +3,18 @@
 
 using namespace Consor;
 
-CGraph::CGraph(double Height) : 
-	m_FlowHorz(Consor::CFlowContainer::FlowAxis::Horizontal, 0),
-	m_FlowGraphs(Consor::CFlowContainer::FlowAxis::Horizontal, 0),
-	m_FlowVert(Consor::CFlowContainer::FlowAxis::Vertical, 0),
-	m_Height(Height),
-	m_YLableAlign(m_YLabel, CSize(0, Height), CAlignContainer::Axis::Vertical, CAlignContainer::Align::Center),
-	m_XLableAlign(m_XLabel, CSize(0, 1), CAlignContainer::Axis::Horizotal, CAlignContainer::Align::Center)
+Graph::Graph(double Height) : 
+	_FlowHorz(Consor::FlowContainer::FlowAxis::Horizontal, 0),
+	_FlowGraphs(Consor::FlowContainer::FlowAxis::Horizontal, 0),
+	_FlowVert(Consor::FlowContainer::FlowAxis::Vertical, 0),
+	_Height(Height),
+	_YLableAlign(_YLabel, Size(0, Height), AlignContainer::Axis::Vertical, AlignContainer::Align::Center),
+	_XLableAlign(_XLabel, Size(0, 1), AlignContainer::Axis::Horizotal, AlignContainer::Align::Center)
 {
-	m_FlowHorz.AddControl(m_YLableAlign);
-	m_FlowHorz.AddControl(m_FlowVert);
-	m_FlowVert.AddControl(m_FlowGraphs);
-	m_FlowVert.AddControl(m_XLableAlign);
+	_FlowHorz.AddControl(_YLableAlign);
+	_FlowHorz.AddControl(_FlowVert);
+	_FlowVert.AddControl(_FlowGraphs);
+	_FlowVert.AddControl(_XLableAlign);
 
 	_Click = [&](double a, size_t b)
 	{
@@ -22,58 +22,58 @@ CGraph::CGraph(double Height) :
 	};
 }
 
-CGraph::~CGraph()
+Graph::~Graph()
 {
-	for(CControl* c : m_ToDelete)
+	for(CControl* c : _ToDelete)
 		delete c;
 }
 
-CSize CGraph::Size()
+Size Graph::GetSize()
 {
-	return m_FlowHorz.Size();
+	return _FlowHorz.GetSize();
 }
 
-void CGraph::Draw(Console::IConsoleRenderer& Renderer, bool HasFocus, const ISkin& Skin)
+void Graph::Draw(Console::IConsoleRenderer& Renderer, bool HasFocus, const ISkin& Skin)
 {
-	m_FlowHorz.Draw(Renderer, HasFocus, Skin);
+	_FlowHorz.Draw(Renderer, HasFocus, Skin);
 }
 
-bool CGraph::CanFocus()
+bool Graph::CanFocus()
 {
 	return true;
 }
 
 
-void CGraph::AddBar(double Value)
+void Graph::AddBar(double Value)
 {
-	CVerticalProgressBar* pb = new CVerticalProgressBar();
-	pb->ForceResize(CSize(1, m_Height));
+	VerticalProgressBar* pb = new VerticalProgressBar();
+	pb->ForceResize(Size(1, _Height));
 	pb->SetPercent(Value);
-	pb->SetGraphMode(m_ToDelete.size());
+	pb->SetGraphMode(_ToDelete.size());
 
 	pb->Click += _Click;
 
-	m_ToDelete.push_back(pb);
-	m_FlowGraphs.AddControl(*pb);
-	m_XLableAlign.ForceResize(m_FlowGraphs.Size());
+	_ToDelete.push_back(pb);
+	_FlowGraphs.AddControl(*pb);
+	_XLableAlign.ForceResize(_FlowGraphs.GetSize());
 }
 
-void CGraph::SetXLable(const std::string& Text)
+void Graph::SetXLable(const std::string& Text)
 {
-	m_XLabel.SetText(Text);
+	_XLabel.SetText(Text);
 }
 
-void CGraph::SetYLable(const std::string& Text)
+void Graph::SetYLable(const std::string& Text)
 {
-	m_YLabel.SetText(Text);
+	_YLabel.SetText(Text);
 }
 
-void CGraph::AddXAxisNotch(const std::string& Text, double Height)
+void Graph::AddXAxisNotch(const std::string& Text, double Height)
 {
 
 }
 
-bool CGraph::HandleInput(Input::Key Key, Input::IInputSystem& System)
+bool Graph::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
-	return m_FlowHorz.HandleInput(Key, System);
+	return _FlowHorz.HandleInput(Key, System);
 }

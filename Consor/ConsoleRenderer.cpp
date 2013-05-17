@@ -13,21 +13,21 @@ string IConsoleRenderer::RendererName()
 	return "AbstractConsoleRenderer";
 }
 
-void IConsoleRenderer::Clear(const CColour& col)
+void IConsoleRenderer::Clear(const Colour& col)
 {
-	DrawBox(CVector(), Size(), col);
+	DrawBox(Vector(), GetSize(), col);
 }
 
-void IConsoleRenderer::DrawBox(const CVector& pos, const CSize& size, const CColour& col)
+void IConsoleRenderer::DrawBox(const Vector& pos, const Size& size, const Colour& col)
 {
 	char box = ' ';
 
-	unique_ptr<ICharInformation> info = GetCharInformation(CVector());
+	unique_ptr<ICharInformation> info = GetCharInformation(Vector());
 
 	for(int x = pos.X; x < pos.X + size.Width; x++)
 		for(int y = pos.Y; y < pos.Y + size.Height; y++)
 		{
-			info->SetPosition(CVector(x, y));
+			info->SetPosition(Vector(x, y));
 			info->SetChar(box);
 			info->SetBackgroundColour(col);
 		}
@@ -39,9 +39,9 @@ bool IConsoleRenderer::SupportsUnicode()
 }
 */
 
-void IConsoleRenderer::DrawString(const std::string& str, const CVector& Pos, const CColour& fgcol, const CColour& bgcol)
+void IConsoleRenderer::DrawString(const std::string& str, const Vector& Pos, const Colour& fgcol, const Colour& bgcol)
 {
-	CVector pos = Pos;
+	Vector pos = Pos;
 	u32string unistr = wstring_convert<codecvt_utf8_utf16<char32_t>, char32_t>().from_bytes(str);
 
 	bool unicode = SupportsUnicode();
@@ -64,64 +64,64 @@ void IConsoleRenderer::DrawString(const std::string& str, const CVector& Pos, co
 		else
 			info->SetChar(letter);
 
-		info->SetBackgroundColour( CColour::Blend(bgcol, info->GetBackgroundColour()) );
-		info->SetForegroundColour( CColour::Blend(fgcol, info->GetForegroundColour()) );
+		info->SetBackgroundColour( Colour::Blend(bgcol, info->GetBackgroundColour()) );
+		info->SetForegroundColour( Colour::Blend(fgcol, info->GetForegroundColour()) );
 		
 		pos.X++;
 	}
 }
 
-void IConsoleRenderer::PushRenderBounds(const CVector& from_a, const CSize& size_a)
+void IConsoleRenderer::PushRenderBounds(const Vector& from_a, const Size& size_a)
 {
 	renderbound_t rb;
 
-	CVector from = CVector((int)from_a.X, (int)from_a.Y);
-	CSize size = CSize((int)size_a.Width, (int)size_a.Height);
+	Vector from = Vector((int)from_a.X, (int)from_a.Y);
+	Size size = Size((int)size_a.Width, (int)size_a.Height);
 	
-	//rb.Pos = from + m_CurrentRenderBound.Pos; // this is added as the new renderbounds will apear to be the full console size
-	rb.Pos = from + m_CurrentOffset; // this should be correc,t but not fully tested...
+	//rb.Pos = from + _CurrentRenderBound.Pos; // this is added as the new renderbounds will apear to be the full console size
+	rb.Pos = from + _CurrentOffset; // this should be correc,t but not fully tested...
 	rb.Size = size;
 
-	CVector offset = rb.Pos;
+	Vector offset = rb.Pos;
 	
-	if(m_Bounds.size() != 0)
+	if(_Bounds.size() != 0)
 	{
-		if(rb.Pos.X < m_CurrentRenderBound.Pos.X)
-			rb.Pos.X = m_CurrentRenderBound.Pos.X;
-		if(rb.Pos.X > m_CurrentRenderBound.Pos.X + m_CurrentRenderBound.Size.Width)
+		if(rb.Pos.X < _CurrentRenderBound.Pos.X)
+			rb.Pos.X = _CurrentRenderBound.Pos.X;
+		if(rb.Pos.X > _CurrentRenderBound.Pos.X + _CurrentRenderBound.Size.Width)
 			rb.Size.Width = 0; // too far over to the right...
-		if(rb.Pos.X + rb.Size.Width > m_CurrentRenderBound.Pos.X + m_CurrentRenderBound.Size.Width)
-			rb.Size.Width = (m_CurrentRenderBound.Pos.X + m_CurrentRenderBound.Size.Width) - rb.Pos.X;
+		if(rb.Pos.X + rb.Size.Width > _CurrentRenderBound.Pos.X + _CurrentRenderBound.Size.Width)
+			rb.Size.Width = (_CurrentRenderBound.Pos.X + _CurrentRenderBound.Size.Width) - rb.Pos.X;
 
-		if(rb.Pos.Y < m_CurrentRenderBound.Pos.Y)
-			rb.Pos.Y = m_CurrentRenderBound.Pos.Y;
-		if(rb.Pos.Y > m_CurrentRenderBound.Pos.Y + m_CurrentRenderBound.Size.Height)
+		if(rb.Pos.Y < _CurrentRenderBound.Pos.Y)
+			rb.Pos.Y = _CurrentRenderBound.Pos.Y;
+		if(rb.Pos.Y > _CurrentRenderBound.Pos.Y + _CurrentRenderBound.Size.Height)
 			rb.Size.Height = 0; // too far over to the right...
-		if(rb.Pos.Y + rb.Size.Height > m_CurrentRenderBound.Pos.Y + m_CurrentRenderBound.Size.Height)
-			rb.Size.Height = (m_CurrentRenderBound.Pos.Y + m_CurrentRenderBound.Size.Height) - rb.Pos.Y;
+		if(rb.Pos.Y + rb.Size.Height > _CurrentRenderBound.Pos.Y + _CurrentRenderBound.Size.Height)
+			rb.Size.Height = (_CurrentRenderBound.Pos.Y + _CurrentRenderBound.Size.Height) - rb.Pos.Y;
 	}
 
-	m_Bounds.push_back(rb);
-	m_Offsets.push_back(offset);
+	_Bounds.push_back(rb);
+	_Offsets.push_back(offset);
 
-	m_CurrentRenderBound = rb;
-	m_CurrentOffset = offset;
+	_CurrentRenderBound = rb;
+	_CurrentOffset = offset;
 }
 
 void IConsoleRenderer::PopRenderBounds()
 {
-	m_Bounds.pop_back();
-	m_Offsets.pop_back();
+	_Bounds.pop_back();
+	_Offsets.pop_back();
 
-	assert(m_Bounds.size() > 0);
+	assert(_Bounds.size() > 0);
 
-	m_CurrentRenderBound = m_Bounds.back(); // last element
-	m_CurrentOffset = m_Offsets.back();
+	_CurrentRenderBound = _Bounds.back(); // last element
+	_CurrentOffset = _Offsets.back();
 }
 
-CSize IConsoleRenderer::RenderSize()
+Size IConsoleRenderer::RenderSize()
 {
-	return CSize(m_CurrentRenderBound.Size.Width, m_CurrentRenderBound.Size.Height);
+	return Size(_CurrentRenderBound.Size.Width, _CurrentRenderBound.Size.Height);
 }
 
 
@@ -137,8 +137,8 @@ CSize IConsoleRenderer::RenderSize()
 
 class CRectangleChar
 {
-	int m_State;
-	bool m_Unicode;
+	int _State;
+	bool _Unicode;
 public:
 	const static int LEFT	= (1 << 0);
 	const static int RIGHT	= (1 << 1);
@@ -147,28 +147,28 @@ public:
 	
 	CRectangleChar(bool unicode, const bool left, const bool right, const bool up, const bool down)
 	{
-		m_State = 0;
-		m_Unicode = unicode;
+		_State = 0;
+		_Unicode = unicode;
 
 		if(left)
-			m_State |= LEFT;
+			_State |= LEFT;
 		if(right)
-			m_State |= RIGHT;
+			_State |= RIGHT;
 		if(up)
-			m_State |= UP;
+			_State |= UP;
 		if(down)
-			m_State |= DOWN;
+			_State |= DOWN;
 	}
 		
 	CRectangleChar(bool unicode, char32_t type)
 	{
-		m_Unicode = unicode;
+		_Unicode = unicode;
 
 		#define CHAR_STATE(ltr, val) \
 		case ltr: \
-			m_State = (val); \
+			_State = (val); \
 			break
-		if(!m_Unicode)
+		if(!_Unicode)
 		{
 			switch(type)
 			{
@@ -190,7 +190,7 @@ public:
 				CHAR_STATE(218, RIGHT | DOWN);
 
 			default:
-				m_State = 0;
+				_State = 0;
 			}
 		}
 		else
@@ -215,7 +215,7 @@ public:
 				CHAR_STATE(0x250C, RIGHT | DOWN);
 
 			default:
-				m_State = 0;
+				_State = 0;
 			}
 		}
 
@@ -229,9 +229,9 @@ public:
 		case (val): \
 			return (char32_t)ltr;
 
-		if(!m_Unicode)
+		if(!_Unicode)
 		{
-			switch(m_State)
+			switch(_State)
 			{
 				CHAR_STATE(1, LEFT);
 				CHAR_STATE(2, RIGHT);
@@ -256,7 +256,7 @@ public:
 		}
 		else
 		{
-			switch(m_State)
+			switch(_State)
 			{
 				CHAR_STATE(0x2574, LEFT);
 				CHAR_STATE(0x2576, RIGHT);
@@ -276,7 +276,7 @@ public:
 				CHAR_STATE(0x250C, RIGHT | DOWN);
 
 			default:
-				m_State = 0;
+				_State = 0;
 			}
 		}
 
@@ -286,22 +286,22 @@ public:
 
 	CRectangleChar operator+(const CRectangleChar& other)
 	{
-		CRectangleChar ret(m_Unicode, 0);
-		ret.m_State = this->m_State | other.m_State;
+		CRectangleChar ret(_Unicode, 0);
+		ret._State = this->_State | other._State;
 
 		return ret;
 	}
 
 	CRectangleChar operator-(const CRectangleChar& other)
 	{
-		CRectangleChar ret(m_Unicode, 0);
-		ret.m_State = this->m_State & ~other.m_State;
+		CRectangleChar ret(_Unicode, 0);
+		ret._State = this->_State & ~other._State;
 
 		return ret;
 	}
 };
 
-void IConsoleRenderer::DrawRect(const CVector& pos, const CSize& size, const CColour& fgcol, const CColour& bgcol)
+void IConsoleRenderer::DrawRect(const Vector& pos, const Size& size, const Colour& fgcol, const Colour& bgcol)
 {
 	bool unicode = SupportsUnicode();
 	CRectangleChar Horizontal(unicode, true, true, false, false);
@@ -313,27 +313,27 @@ void IConsoleRenderer::DrawRect(const CVector& pos, const CSize& size, const CCo
 	CRectangleChar Top(unicode, false, false, true, false);
 	CRectangleChar Bottom(unicode, false, false, false, true);
 	
-	unique_ptr<ICharInformation> info_top = GetCharInformation(CVector());
-	unique_ptr<ICharInformation> info_bot = GetCharInformation(CVector());
-	unique_ptr<ICharInformation> info_l = GetCharInformation(CVector());
-	unique_ptr<ICharInformation> info_r = GetCharInformation(CVector());
+	unique_ptr<ICharInformation> info_top = GetCharInformation(Vector());
+	unique_ptr<ICharInformation> info_bot = GetCharInformation(Vector());
+	unique_ptr<ICharInformation> info_l = GetCharInformation(Vector());
+	unique_ptr<ICharInformation> info_r = GetCharInformation(Vector());
 
 	if(size.Width == 1)
 		;
 	else if(size.Height == 1)
 		for(int x = pos.X; x < pos.X + size.Width; x++)
 		{
-			info_top->SetPosition(CVector(x, pos.Y));
+			info_top->SetPosition(Vector(x, pos.Y));
 			
 			info_top->SetUnicodeChar((CRectangleChar(unicode, info_top->GetUnicodeChar()) + Horizontal).GetChar());
-			info_top->SetForegroundColour(CColour::Blend(fgcol, info_top->GetForegroundColour()));
-			info_top->SetBackgroundColour(CColour::Blend(bgcol, info_top->GetBackgroundColour()));
+			info_top->SetForegroundColour(Colour::Blend(fgcol, info_top->GetForegroundColour()));
+			info_top->SetBackgroundColour(Colour::Blend(bgcol, info_top->GetBackgroundColour()));
 		}
 	else
 	for(int x = pos.X; x < pos.X + size.Width; x++)
 	{
-		info_top->SetPosition(CVector(x, pos.Y));
-		info_bot->SetPosition(CVector(x, pos.Y + size.Height - 1));
+		info_top->SetPosition(Vector(x, pos.Y));
+		info_bot->SetPosition(Vector(x, pos.Y + size.Height - 1));
 
 		CRectangleChar cur = Horizontal;
 
@@ -356,7 +356,7 @@ void IConsoleRenderer::DrawRect(const CVector& pos, const CSize& size, const CCo
 	else if(size.Width == 1)
 		for(int y = pos.Y; y < pos.Y + size.Height; y++)
 		{
-			info_l->SetPosition(CVector(pos.X, y));
+			info_l->SetPosition(Vector(pos.X, y));
 
 			info_l->SetUnicodeChar( (CRectangleChar(unicode, info_l->GetUnicodeChar()) + Vertical).GetChar() );
 			info_l->SetForegroundColour(fgcol);
@@ -365,8 +365,8 @@ void IConsoleRenderer::DrawRect(const CVector& pos, const CSize& size, const CCo
 	else
 	for(int y = pos.Y; y < pos.Y + size.Height; y++)
 	{
-		info_l->SetPosition(CVector(pos.X, y));
-		info_r->SetPosition(CVector(pos.X + size.Width - 1, y));
+		info_l->SetPosition(Vector(pos.X, y));
+		info_r->SetPosition(Vector(pos.X + size.Width - 1, y));
 
 		CRectangleChar cur = Vertical;
 
@@ -385,26 +385,26 @@ void IConsoleRenderer::DrawRect(const CVector& pos, const CSize& size, const CCo
 	}
 }
 
-bool IConsoleRenderer::InRenderBounds(const CVector& pos, CVector* dir)
+bool IConsoleRenderer::InRenderBounds(const Vector& pos, Vector* dir)
 {
-	CSize size = this->Size();
+	Size size = this->GetSize();
 	bool ret = true;
 
 	if(dir)
-		*dir = CVector();
+		*dir = Vector();
 
 	int x = (int)pos.X, y = (int)pos.Y;
-	x += (int)m_CurrentOffset.X;
-	y += (int)m_CurrentOffset.Y;
+	x += (int)_CurrentOffset.X;
+	y += (int)_CurrentOffset.Y;
 
-	if(x < (int)(m_CurrentRenderBound.Pos.X))
+	if(x < (int)(_CurrentRenderBound.Pos.X))
 	{
 		if(!dir)
 			return false;
 		dir->X = -1;
 		ret = false;
 	}
-	if(y < (int)(m_CurrentRenderBound.Pos.Y))
+	if(y < (int)(_CurrentRenderBound.Pos.Y))
 	{
 		if(!dir)
 			return false;
@@ -416,7 +416,7 @@ bool IConsoleRenderer::InRenderBounds(const CVector& pos, CVector* dir)
 		ret = false;
 	}
 
-	if(x > (int)(m_CurrentRenderBound.Pos.X + m_CurrentRenderBound.Size.Width - 1))
+	if(x > (int)(_CurrentRenderBound.Pos.X + _CurrentRenderBound.Size.Width - 1))
 	{
 		if(!dir)
 			return false;
@@ -425,7 +425,7 @@ bool IConsoleRenderer::InRenderBounds(const CVector& pos, CVector* dir)
 			return false;
 		ret = false;
 	}
-	if(y > (int)(m_CurrentRenderBound.Pos.Y + m_CurrentRenderBound.Size.Height - 1))
+	if(y > (int)(_CurrentRenderBound.Pos.Y + _CurrentRenderBound.Size.Height - 1))
 	{
 		if(!dir)
 			return false;
@@ -455,13 +455,13 @@ bool IConsoleRenderer::InRenderBounds(const CVector& pos, CVector* dir)
 	return ret;
 }
 
-bool IConsoleRenderer::InRenderBounds(const CVector& pos, const CSize& size)
+bool IConsoleRenderer::InRenderBounds(const Vector& pos, const Size& size)
 {
-	CVector dir1, dir2;
+	Vector dir1, dir2;
 
-	CVector test1, test2;
+	Vector test1, test2;
 	test1 = pos;
-	test2 = pos + CVector(size.Width, size.Height);
+	test2 = pos + Vector(size.Width, size.Height);
 
 	bool inside1 = this->InRenderBounds(test1, &dir1);
 	bool inside2 = this->InRenderBounds(test2, &dir2);

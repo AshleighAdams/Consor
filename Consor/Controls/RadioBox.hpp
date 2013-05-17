@@ -10,23 +10,23 @@
 
 namespace Consor
 {
-	class CRadioBox : public CControl
+	class RadioBox : public CControl
 	{
 	protected:
-		std::list<std::tuple<CCheckBox*, std::string>> m_Checkboxes;
-		CFlowContainer m_FlowContainer;
+		std::list<std::tuple<CheckBox*, std::string>> _Checkboxes;
+		FlowContainer _FlowContainer;
 	public:
-		CRadioBox();
-		~CRadioBox();
+		RadioBox();
+		~RadioBox();
 		
 		// Will select
 		void AddChoice(const std::string& Choice);
 		std::string GetChoice();
 
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);
-		virtual CSize Size();
-		virtual void ForceResize(const CSize& Size);
-		virtual void OnResize(const CSize& Size);
+		virtual Size GetSize();
+		virtual void ForceResize(const Size& Size);
+		virtual void OnResize(const Size& Size);
 		virtual bool HandleInput(Input::Key Key, Input::IInputSystem& System);
 		virtual bool CanFocus();
 	};

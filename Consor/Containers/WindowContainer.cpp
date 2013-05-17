@@ -3,60 +3,60 @@
 using namespace Consor;
 using namespace std;
 
-CWindowContainer::CWindowContainer(CControl& Client, const string& Title)
+WindowContainer::WindowContainer(CControl& Client, const string& Title)
 {
-	m_pClient = &Client;
-	m_Title = Title;
+	_pClient = &Client;
+	_Title = Title;
 }
 
-CWindowContainer::CWindowContainer()
+WindowContainer::WindowContainer()
 {
-	m_pClient = nullptr;
-	m_Title = "None";
+	_pClient = nullptr;
+	_Title = "None";
 }
 
-CSize CWindowContainer::Size()
+Size WindowContainer::GetSize()
 {
-	return m_pClient->Size() + CSize(2, 2); // an aditional 2 for the border
+	return _pClient->GetSize() + Size(2, 2); // an aditional 2 for the border
 }
 
-void CWindowContainer::OnResize(const CSize& Size)
+void WindowContainer::OnResize(const Size& size)
 {
 }
 
-void CWindowContainer::ForceResize(const CSize& Size)
+void WindowContainer::ForceResize(const Size& size)
 {
-	m_pClient->ForceResize(Size - CSize(2, 2)); // subtract the border
+	_pClient->ForceResize(size - Size(2, 2)); // subtract the border
 }
 
-void CWindowContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
+void WindowContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
-	CVector pos;
-	CSize size = this->Size();
+	Vector pos;
+	Size size = this->GetSize();
 	Renderer.DrawBox(pos, size, Skin.WindowBackground());
-	Renderer.DrawRect(pos, size, Skin.WindowBorder(), CColour::None());
+	Renderer.DrawRect(pos, size, Skin.WindowBorder(), Colour::None());
 
-	CColour shine = Skin.WindowForegroundShine();
+	Colour shine = Skin.WindowForegroundShine();
 	if(shine != Skin.WindowBorder())
 	{
 		for(int x = 1; x < size.Width; x++)
 		{
-			unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(pos + CVector(x, size.Height - 1));
+			unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(pos + Vector(x, size.Height - 1));
 			info->SetForegroundColour(shine);
 		}
 		for(int y = 0; y < size.Height; y++)
 		{
-			unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(pos + CVector(size.Width - 1, y));
+			unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(pos + Vector(size.Width - 1, y));
 			info->SetForegroundColour(shine);
 		}
 	}
 
-	CVector titlepos = CVector(size.Width / 2 - m_Title.length() / 2, 0);
-	Renderer.DrawString(m_Title, titlepos, Skin.WindowForeground(), CColour::None());
+	Vector titlepos = Vector(size.Width / 2 - _Title.length() / 2, 0);
+	Renderer.DrawString(_Title, titlepos, Skin.WindowForeground(), Colour::None());
 
 	{
-		unique_ptr<Console::ICharInformation> infol = Renderer.GetCharInformation(titlepos - CVector(1, 0));
-		unique_ptr<Console::ICharInformation> infor = Renderer.GetCharInformation(titlepos + CVector(m_Title.length(), 0));
+		unique_ptr<Console::ICharInformation> infol = Renderer.GetCharInformation(titlepos - Vector(1, 0));
+		unique_ptr<Console::ICharInformation> infor = Renderer.GetCharInformation(titlepos + Vector(_Title.length(), 0));
 
 		infol->SetUnicodeChar(Skin.WindowTitleLeftChar()); // 180
 		infor->SetUnicodeChar(Skin.WindowTitleRightChar()); // 195
@@ -64,19 +64,19 @@ void CWindowContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool Ha
 
 	// draw the child
 
-	Renderer.PushRenderBounds(CVector(1, 1), m_pClient->Size());
+	Renderer.PushRenderBounds(Vector(1, 1), _pClient->GetSize());
 	{
-		m_pClient->Draw(Renderer, HasFocus, Skin);
+		_pClient->Draw(Renderer, HasFocus, Skin);
 	}
 	Renderer.PopRenderBounds();
 }
 
-bool CWindowContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
+bool WindowContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
-	return m_pClient->HandleInput(Key, System);
+	return _pClient->HandleInput(Key, System);
 }
 
-bool CWindowContainer::CanFocus()
+bool WindowContainer::CanFocus()
 {
 	return true;
 }

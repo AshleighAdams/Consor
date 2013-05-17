@@ -15,21 +15,21 @@
 
 namespace Consor
 {
-	class CGraph : public CControl
+	class Graph : public CControl
 	{
 	protected:
-		CFlowContainer m_FlowHorz, m_FlowVert, m_FlowGraphs;
-		std::list<CControl*> m_ToDelete;
-		double m_Height;
-		CLabel m_XLabel;
-		CLabel m_YLabel;
-		CAlignContainer m_XLableAlign, m_YLableAlign;
+		FlowContainer _FlowHorz, _FlowVert, _FlowGraphs;
+		std::list<CControl*> _ToDelete;
+		double _Height;
+		Label _XLabel;
+		Label _YLabel;
+		AlignContainer _XLableAlign, _YLableAlign;
 		std::function<void(double, size_t)> _Click;
 	public:
 		Consor::CHook<double, size_t> Click;
-		CGraph(double Height);
-		~CGraph();
-		virtual CSize Size();
+		Graph(double Height);
+		~Graph();
+		virtual Size GetSize();
 		virtual void Draw(Console::IConsoleRenderer& Renderer, bool HasFocus, const ISkin& Skin);
 		virtual bool HandleInput(Input::Key Key, Input::IInputSystem& System);
 		virtual bool CanFocus();

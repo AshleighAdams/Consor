@@ -31,14 +31,14 @@ namespace Consor
 		typedef std::function<void(Args...)>	function_t;
 		typedef CHook<Args...>					hook_t;
 
-		hook_t*		m_pHook;
-		function_t	m_Func;
+		hook_t*		_pHook;
+		function_t	_Func;
 
 	public:
 		CHookHandle(hook_t* pHook, const function_t& Func)
 		{
-			m_pHook = pHook;
-			m_Func = Func;
+			_pHook = pHook;
+			_Func = Func;
 		}
 
 		~CHookHandle()
@@ -48,15 +48,15 @@ namespace Consor
 
 		inline void Unregister()
 		{
-			if(!m_pHook)
+			if(!_pHook)
 				return;
 
-			(*m_pHook) -= this;
-			m_pHook = 0;
+			(*_pHook) -= this;
+			_pHook = 0;
 		}
 		inline void operator()(Args... args)
 		{
-			m_Func(args...);
+			_Func(args...);
 		}
 	};
 
@@ -68,22 +68,22 @@ namespace Consor
 		typedef std::function<void(Args...)>	function_t;
 		typedef	std::shared_ptr<handle_t>		handle_p;
 	private:
-		std::list<handle_p> m_Subscribed;
-		std::list<handle_p> m_ToRemove;
-		std::mutex m_CallMutex;
-		std::thread* m_pLastCallThread;
+		std::list<handle_p> _Subscribed;
+		std::list<handle_p> _ToRemove;
+		std::mutex _CallMutex;
+		std::thread* _pLastCallThread;
 
-		bool m_Itterating;
+		bool _Itterating;
 	public:
 		CHook()
 		{
-			m_pLastCallThread = nullptr;
+			_pLastCallThread = nullptr;
 		}
 
 		~CHook()
 		{
 			// leak memory yay
-			//delete m_pLastCallThread;
+			//delete _pLastCallThread;
 		}
 
 		inline handle_p operator+=(const function_t& Function)
@@ -92,13 +92,13 @@ namespace Consor
 
 			handle_p sp(handle);
 
-			m_Subscribed.push_back(sp);
+			_Subscribed.push_back(sp);
 			return sp;
 		}
 
 		inline void operator-=(handle_t* pHandle)
 		{
-			m_Subscribed.remove_if([&](handle_p other)
+			_Subscribed.remove_if([&](handle_p other)
 			{
 				handle_t* pOther = &*other;
 				return pHandle == pOther;
@@ -107,12 +107,12 @@ namespace Consor
 
 		inline void operator-=(handle_p Handle)
 		{
-			if(m_Itterating)
+			if(_Itterating)
 			{
-				m_ToRemove.push_back(Handle);
+				_ToRemove.push_back(Handle);
 			}
 
-			m_Subscribed.remove(*Handle);
+			_Subscribed.remove(*Handle);
 			Handle->Remove();
 		}
 
@@ -125,26 +125,26 @@ namespace Consor
 				//std::thread* pThread = pThrd;
 				canresume = true;
 
-				m_CallMutex.lock();
+				_CallMutex.lock();
 
 				// fuck it, lets just leak memory
-				//delete m_pLastCallThread;
-				//m_pLastCallThread = nullptr;
+				//delete _pLastCallThread;
+				//_pLastCallThread = nullptr;
 
-				for(handle_p hand : m_ToRemove)
+				for(handle_p hand : _ToRemove)
 					hand->Unregister();
-				m_ToRemove.clear();
+				_ToRemove.clear();
 
-				m_Itterating = true;
-				for(handle_p hand : m_Subscribed)
+				_Itterating = true;
+				for(handle_p hand : _Subscribed)
 				{
-					m_CallMutex.unlock();
+					_CallMutex.unlock();
 					(*hand)(args...);
-					m_CallMutex.lock();
+					_CallMutex.lock();
 				}
-				m_Itterating = false;
-				//m_pLastCallThread = pThread;
-				m_CallMutex.unlock();
+				_Itterating = false;
+				//_pLastCallThread = pThread;
+				_CallMutex.unlock();
 			});
 
 			while(!canresume)

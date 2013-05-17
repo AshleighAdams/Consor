@@ -2,69 +2,69 @@
 
 using namespace Consor;
 
-CRadioBox::CRadioBox() : m_FlowContainer(CFlowContainer::FlowAxis::Vertical, 0)
+RadioBox::RadioBox() : _FlowContainer(FlowContainer::FlowAxis::Vertical, 0)
 {
 
 }
 
-CRadioBox::~CRadioBox()
+RadioBox::~RadioBox()
 {
-	for(std::tuple<CCheckBox*, std::string> cb : m_Checkboxes)
+	for(std::tuple<CheckBox*, std::string> cb : _Checkboxes)
 		delete std::get<0>(cb);
 }
 
 
-void CRadioBox::AddChoice(const std::string& Choice)
+void RadioBox::AddChoice(const std::string& Choice)
 {
-	CCheckBox* cb = new CCheckBox();
+	CheckBox* cb = new CheckBox();
 	cb->SetText(Choice);
 	
-	m_FlowContainer.AddControl(*cb);
-	m_Checkboxes.push_back(std::make_tuple(cb, Choice));
+	_FlowContainer.AddControl(*cb);
+	_Checkboxes.push_back(std::make_tuple(cb, Choice));
 }
 
-std::string CRadioBox::GetChoice()
+std::string RadioBox::GetChoice()
 {
-	for(std::tuple<CCheckBox*, std::string> cb : m_Checkboxes)
+	for(std::tuple<CheckBox*, std::string> cb : _Checkboxes)
 		if(std::get<0>(cb)->Checked())
 			return std::get<1>(cb);
 
 	return "";
 }
 
-void CRadioBox::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
+void RadioBox::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
-	m_FlowContainer.Draw(Renderer, HasFocus, Skin);
+	_FlowContainer.Draw(Renderer, HasFocus, Skin);
 }
 
-CSize CRadioBox::Size()
+Size RadioBox::GetSize()
 {
-	return m_FlowContainer.Size();
+	return _FlowContainer.GetSize();
 }
 
-void CRadioBox::OnResize(const CSize& Size)
-{
-}
-
-void CRadioBox::ForceResize(const CSize& Size)
+void RadioBox::OnResize(const Size& Size)
 {
 }
 
-bool CRadioBox::HandleInput(Input::Key Key, Input::IInputSystem& System)
+void RadioBox::ForceResize(const Size& Size)
+{
+}
+
+bool RadioBox::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
 	// if enter or space, don't send input just yet, set all checkboxes to unchecked.
 	// this also prevents a checked checkbox from being unchecked
 	if(Key == Input::Key::Enter || Key == Input::Key::Space)
 	{
-		for(std::tuple<CCheckBox*, std::string> cb : m_Checkboxes)
+		for(std::tuple<CheckBox*, std::string> cb : _Checkboxes)
 			std::get<0>(cb)->SetChecked(false);
 	}
 
 	// ok, now send it
-	return m_FlowContainer.HandleInput(Key, System);
+	return _FlowContainer.HandleInput(Key, System);
 }
 
-bool CRadioBox::CanFocus()
+bool RadioBox::CanFocus()
 {
-	return m_FlowContainer.CanFocus();
+	return _FlowContainer.CanFocus();
 }

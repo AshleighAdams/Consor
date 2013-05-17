@@ -3,99 +3,99 @@
 using namespace Consor;
 using namespace std;
 
-CScrollContainer::CScrollContainer(CControl& Client, const CSize& Size)
+ScrollContainer::ScrollContainer(CControl& Client, const Size& Size)
 {
-	m_pClient = &Client;
+	_pClient = &Client;
 	ForceResize(Size);
 }
 
-CSize CScrollContainer::Size()
+Size ScrollContainer::GetSize()
 {
-	CSize clientsize = m_pClient->Size();
-	CSize ret = m_Size;
+	Size clientsize = _pClient->GetSize();
+	Size ret = _Size;
 
-	if(m_Size.Width < 0)
-		ret.Width = clientsize.Width + m_VScrollbar.Size().Width;
-	if(m_Size.Height < 0)
-		ret.Height = clientsize.Height + m_HScrollbar.Size().Height;
+	if(_Size.Width < 0)
+		ret.Width = clientsize.Width + _VScrollbar.GetSize().Width;
+	if(_Size.Height < 0)
+		ret.Height = clientsize.Height + _HScrollbar.GetSize().Height;
 
 	return ret;
 }
 
-void CScrollContainer::OnResize(const CSize& Size)
+void ScrollContainer::OnResize(const Size& size)
 {
-	CSize hsize, vsize;
-	if(m_Size.Width > 0)
-		hsize = CSize(Size.Width - 1, 1); // The -1 because VScrollbar has priority
+	Size hsize, vsize;
+	if(_Size.Width > 0)
+		hsize = Size(size.Width - 1, 1); // The -1 because VScrollbar has priority
 	else // set its size to nothing
-		hsize = CSize(0, 0);
+		hsize = Size(0, 0);
 	
-	if(m_Size.Height > 0)
-		vsize = CSize(1, Size.Height - hsize.Height);
+	if(_Size.Height > 0)
+		vsize = Size(1, size.Height - hsize.Height);
 	else
-		vsize = CSize(0, 0);
+		vsize = Size(0, 0);
 
-	m_HScrollbar.ForceResize(hsize);
-	m_VScrollbar.ForceResize(vsize);
+	_HScrollbar.ForceResize(hsize);
+	_VScrollbar.ForceResize(vsize);
 }
 
-void CScrollContainer::ForceResize(const CSize& Size)
+void ScrollContainer::ForceResize(const Size& size)
 {
-	m_Size = Size;
-	OnResize(this->Size());
+	_Size = size;
+	OnResize(this->GetSize());
 }
 
-void CScrollContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
+void ScrollContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
-	CSize selfsize = Size();
-	CSize childsize = m_pClient->Size();
+	Size selfsize = GetSize();
+	Size childsize = _pClient->GetSize();
 
-	CVector offset;
+	Vector offset;
 
-	CSize vscrollsize = m_VScrollbar.Size();
-	CSize hscrollsize = m_HScrollbar.Size();
-	CSize clientsize = m_pClient->Size();
+	Size vscrollsize = _VScrollbar.GetSize();
+	Size hscrollsize = _HScrollbar.GetSize();
+	Size clientsize = _pClient->GetSize();
 
-	if(m_Size.Width > 0 && childsize.Width > m_Size.Width) // if the width isn't automatic
+	if(_Size.Width > 0 && childsize.Width > _Size.Width) // if the width isn't automatic
 	{
-		offset.X = (int)-(m_HScrollbar.GetPercent() * (childsize.Width - (selfsize.Width - vscrollsize.Width)));
+		offset.X = (int)-(_HScrollbar.GetPercent() * (childsize.Width - (selfsize.Width - vscrollsize.Width)));
 
 		double incremant = 1.0 / (clientsize.Width - selfsize.Width);
-		m_HScrollbar.SetChangeSize(incremant);
+		_HScrollbar.SetChangeSize(incremant);
 
-		Renderer.PushRenderBounds(CVector(0, selfsize.Height - hscrollsize.Height), hscrollsize);
-			m_HScrollbar.Draw(Renderer, HasFocus, Skin);
+		Renderer.PushRenderBounds(Vector(0, selfsize.Height - hscrollsize.Height), hscrollsize);
+			_HScrollbar.Draw(Renderer, HasFocus, Skin);
 		Renderer.PopRenderBounds();
 	}
 	else hscrollsize.Height = 0;
 
-	if(m_Size.Height > 0 && childsize.Height > m_Size.Height) // if the hieht isn't automatic
+	if(_Size.Height > 0 && childsize.Height > _Size.Height) // if the hieht isn't automatic
 	{
-		offset.Y = (int)-(m_VScrollbar.GetPercent() * (childsize.Height - (selfsize.Height - hscrollsize.Height)));
+		offset.Y = (int)-(_VScrollbar.GetPercent() * (childsize.Height - (selfsize.Height - hscrollsize.Height)));
 
 		double incremant = 1.0 / (clientsize.Height - selfsize.Height);
-		m_VScrollbar.SetChangeSize(incremant);
+		_VScrollbar.SetChangeSize(incremant);
 
-		Renderer.PushRenderBounds(CVector(selfsize.Width - vscrollsize.Width, 0), vscrollsize);
-			m_VScrollbar.Draw(Renderer, HasFocus, Skin);
+		Renderer.PushRenderBounds(Vector(selfsize.Width - vscrollsize.Width, 0), vscrollsize);
+			_VScrollbar.Draw(Renderer, HasFocus, Skin);
 		Renderer.PopRenderBounds();
 	}
 	else vscrollsize.Width = 0;
 
-	Renderer.PushRenderBounds(offset, selfsize - CSize(vscrollsize.Width, hscrollsize.Height));
-		m_pClient->Draw(Renderer, HasFocus && m_pClient->CanFocus(), Skin);
+	Renderer.PushRenderBounds(offset, selfsize - Size(vscrollsize.Width, hscrollsize.Height));
+		_pClient->Draw(Renderer, HasFocus && _pClient->CanFocus(), Skin);
 	Renderer.PopRenderBounds();
 }
 
-bool CScrollContainer::ScrollDown(size_t count)
+bool ScrollContainer::ScrollDown(size_t count)
 {
-	CSize clientsize = m_pClient->Size();
-	CSize selfsize = this->Size();
+	Size clientsize = _pClient->GetSize();
+	Size selfsize = this->GetSize();
 
 	if(clientsize.Height < selfsize.Height)
 		return false;
 
-	double perc = m_VScrollbar.GetPercent();
+	double perc = _VScrollbar.GetPercent();
 	double incremant = 1.0 / (clientsize.Height - selfsize.Height);
 
 	perc += incremant * (double)count;
@@ -103,22 +103,22 @@ bool CScrollContainer::ScrollDown(size_t count)
 	if(perc > 1.0)
 		perc = 1.0;
 
-	if(perc == m_VScrollbar.GetPercent()) // allow shallower scrollcontainers to also scroll
+	if(perc == _VScrollbar.GetPercent()) // allow shallower scrollcontainers to also scroll
 		return false;
 
-	m_VScrollbar.SetPercent(perc);
+	_VScrollbar.SetPercent(perc);
 	return true;
 }
 
-bool CScrollContainer::ScrollUp(size_t count)
+bool ScrollContainer::ScrollUp(size_t count)
 {
-	CSize clientsize = m_pClient->Size();
-	CSize selfsize = this->Size();
+	Size clientsize = _pClient->GetSize();
+	Size selfsize = this->GetSize();
 
 	if(clientsize.Height < selfsize.Height)
 		return false;
 
-	double perc = m_VScrollbar.GetPercent();
+	double perc = _VScrollbar.GetPercent();
 	double incremant = 1.0 / (clientsize.Height - selfsize.Height);
 
 	perc -= incremant * (double)count;
@@ -126,22 +126,22 @@ bool CScrollContainer::ScrollUp(size_t count)
 	if(perc < 0)
 		perc = 0;
 
-	if(perc == m_VScrollbar.GetPercent()) // allow shallower scrollcontainers to also scroll
+	if(perc == _VScrollbar.GetPercent()) // allow shallower scrollcontainers to also scroll
 		return false;
 
-	m_VScrollbar.SetPercent(perc);
+	_VScrollbar.SetPercent(perc);
 	return true;
 }
 
-bool CScrollContainer::ScrollLeft(size_t count)
+bool ScrollContainer::ScrollLeft(size_t count)
 {
-	CSize clientsize = m_pClient->Size();
-	CSize selfsize = this->Size();
+	Size clientsize = _pClient->GetSize();
+	Size selfsize = this->GetSize();
 
 	if(clientsize.Width < selfsize.Width)
 		return false;
 
-	double perc = m_HScrollbar.GetPercent();
+	double perc = _HScrollbar.GetPercent();
 	double incremant = 1.0 / (clientsize.Width - selfsize.Width);
 
 	perc -= incremant * (double)count;
@@ -149,21 +149,21 @@ bool CScrollContainer::ScrollLeft(size_t count)
 	if(perc < 0)
 		perc = 0;
 
-	if(perc == m_HScrollbar.GetPercent()) // allow shallower scrollcontainers to also scroll
+	if(perc == _HScrollbar.GetPercent()) // allow shallower scrollcontainers to also scroll
 		return false;
 
-	m_HScrollbar.SetPercent(perc);
+	_HScrollbar.SetPercent(perc);
 	return true;
 }
 
-bool CScrollContainer::ScrollRight(size_t count)
+bool ScrollContainer::ScrollRight(size_t count)
 {
-	CSize clientsize = m_pClient->Size();
-	CSize selfsize = this->Size();
+	Size clientsize = _pClient->GetSize();
+	Size selfsize = this->GetSize();
 
 	if(clientsize.Width < selfsize.Width)
 		return false;
-	double perc = m_HScrollbar.GetPercent();
+	double perc = _HScrollbar.GetPercent();
 	double incremant = 1.0 / (clientsize.Width - selfsize.Width);
 
 	perc += incremant * (double)count;
@@ -171,14 +171,14 @@ bool CScrollContainer::ScrollRight(size_t count)
 	if(perc > 1.0)
 		perc = 1.0;
 
-	if(perc == m_HScrollbar.GetPercent()) // allow shallower scrollcontainers to also scroll
+	if(perc == _HScrollbar.GetPercent()) // allow shallower scrollcontainers to also scroll
 		return false;
 
-	m_HScrollbar.SetPercent(perc);
+	_HScrollbar.SetPercent(perc);
 	return true;
 }
 
-bool CScrollContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
+bool ScrollContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
 	if(System.ControlDown())
 	{
@@ -205,23 +205,23 @@ bool CScrollContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
 			return true;
 	}
 
-	if(m_pClient->HandleInput(Key, System))
+	if(_pClient->HandleInput(Key, System))
 		return true;
 
-	if(m_Size.Height > 0)
+	if(_Size.Height > 0)
 	{
 		const double context = 1.0 - 0.1; //10% context
 
 		if(Key == Input::Key::PageDown || Key == Input::Key::Numpad3)
-			return ScrollDown(m_Size.Height * context);
+			return ScrollDown(_Size.Height * context);
 		else if(Key == Input::Key::PageUp || Key == Input::Key::Numpad9)
-			return ScrollUp(m_Size.Height * context);
+			return ScrollUp(_Size.Height * context);
 	}
 
 	return false;
 }
 
-bool CScrollContainer::CanFocus()
+bool ScrollContainer::CanFocus()
 {
 	return true;
 }

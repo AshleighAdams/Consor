@@ -6,17 +6,17 @@
 
 namespace Consor
 {
-	class CWindowContainer : public CControl
+	class WindowContainer : public CControl
 	{
 	protected:
-		CControl* m_pClient;
-		std::string m_Title;
-		CWindowContainer();
+		CControl* _pClient;
+		std::string _Title;
+		WindowContainer();
 	public:
-		CWindowContainer(CControl& Client, const std::string& Title);
-		virtual CSize Size();
-		virtual void OnResize(const CSize& Size);
-		virtual void ForceResize(const CSize& Size);
+		WindowContainer(CControl& Client, const std::string& Title);
+		virtual Size GetSize();
+		virtual void OnResize(const Size& Size);
+		virtual void ForceResize(const Size& Size);
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);
 		virtual bool HandleInput(Input::Key Key, Input::IInputSystem& System);
 		virtual bool CanFocus();

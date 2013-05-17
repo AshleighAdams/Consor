@@ -3,38 +3,38 @@
 
 using namespace Consor;
 
-CCheckBox::CCheckBox()
+CheckBox::CheckBox()
 {
-	m_Label.SetText("Default Checkbox");
-	m_Checked = false;
+	_Label.SetText("Default Checkbox");
+	_Checked = false;
 }
 
-void CCheckBox::SetText(std::string Text)
+void CheckBox::SetText(std::string Text)
 {
-	m_Label.SetText(Text);
+	_Label.SetText(Text);
 }
 
 
-void CCheckBox::SetChecked(bool Value)
+void CheckBox::SetChecked(bool Value)
 {
-	m_Checked = Value;
+	_Checked = Value;
 }
 
-bool CCheckBox::Checked()
+bool CheckBox::Checked()
 {
-	return m_Checked;
+	return _Checked;
 }
 
-void CCheckBox::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
+void CheckBox::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
-	CColour col = Skin.LabelForeground();
+	Colour col = Skin.LabelForeground();
 
 	if(HasFocus)
 		col = Skin.LabelForegroundFocused();
 
-	Renderer.DrawString("[ ]", CVector(), col, CColour::None());
+	Renderer.DrawString("[ ]", Vector(), col, Colour::None());
 
-	std::unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(CVector(1, 0));
+	std::unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(Vector(1, 0));
 	
 	if(Checked())
 	{
@@ -47,27 +47,27 @@ void CCheckBox::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus,
 			info->SetChar('x');
 	}
 
-	Renderer.PushRenderBounds(CVector(4, 0), m_Label.Size());
-	m_Label.Draw(Renderer, false, Skin);
+	Renderer.PushRenderBounds(Vector(4, 0), _Label.GetSize());
+	_Label.Draw(Renderer, false, Skin);
 	Renderer.PopRenderBounds();
 }
 
-CSize CCheckBox::Size()
+Size CheckBox::GetSize()
 {
-	return m_Label.Size() + CSize(4, 0);
+	return _Label.GetSize() + Size(4, 0);
 }
 
-void CCheckBox::OnResize(const CSize& Size)
+void CheckBox::OnResize(const Size& size)
 {
-	m_Label.ForceResize(Size - CSize(4, 0));
+	_Label.ForceResize(size - Size(4, 0));
 }
 
-void CCheckBox::ForceResize(const CSize& Size)
+void CheckBox::ForceResize(const Size& Size)
 {
 	OnResize(Size);
 }
 
-bool CCheckBox::HandleInput(Input::Key Key, Input::IInputSystem& System)
+bool CheckBox::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
 	if(Key == Input::Key::Enter || Key == Input::Key::Space)
 	{
@@ -78,7 +78,7 @@ bool CCheckBox::HandleInput(Input::Key Key, Input::IInputSystem& System)
 	return false;
 }
 
-bool CCheckBox::CanFocus()
+bool CheckBox::CanFocus()
 {
 	return true;
 }

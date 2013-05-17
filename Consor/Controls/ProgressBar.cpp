@@ -9,41 +9,41 @@ using namespace Consor;
 
 CProgressBar::CProgressBar()
 {
-	m_Percent = 0;
-	ForceResize(CSize(20, 1));
+	_Percent = 0;
+	ForceResize(Size(20, 1));
 }
 
 void CProgressBar::SetPercent(double Value)
 {
-	m_Percent = Value;
+	_Percent = Value;
 }
 
 double CProgressBar::GetPercent()
 {
-	return m_Percent;
+	return _Percent;
 }
 
 void CProgressBar::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
-	CSize size = this->Size();
-	CColour bg = Skin.ProgressBarBackground(GetPercent());
-	CColour fg = Skin.ProgressBarForeground(GetPercent());
-	CVector pos;
+	Size size = this->GetSize();
+	Colour bg = Skin.ProgressBarBackground(GetPercent());
+	Colour fg = Skin.ProgressBarForeground(GetPercent());
+	Vector pos;
 
-	CSize barsz = CSize(size.Width * GetPercent(), size.Height);
+	Size barsz = Size(size.Width * GetPercent(), size.Height);
 	Renderer.DrawBox(pos, size, bg);
 	
 	char32_t block = 0x2588; //0x2588;
 	if(!Renderer.SupportsUnicode())
 		block = 219;
 
-	std::unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(CVector());
+	std::unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(Vector());
 
 	for(int x = 0; x < barsz.Width; x++)
 	{
 		for(int y = 0; y < barsz.Height; y++)
 		{
-			info->SetPosition(CVector(x, y));
+			info->SetPosition(Vector(x, y));
 			info->SetUnicodeChar(block);
 			info->SetForegroundColour(fg);
 			info->SetBackgroundColour(fg);
@@ -54,7 +54,7 @@ void CProgressBar::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFoc
 	{
 		for(int y = 0; y < barsz.Height; y++)
 		{
-			info->SetPosition(CVector(barsz.Width, y));
+			info->SetPosition(Vector(barsz.Width, y));
 			char32_t lefthalf = 0x258c;
 			info->SetUnicodeChar(lefthalf);
 			info->SetForegroundColour(fg);
@@ -64,9 +64,9 @@ void CProgressBar::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFoc
 	double percent = Util::Round(GetPercent() * 100.0, 0.01);
 
 	std::string percform = Util::FormatString("%", percent) + "%";
-	CVector center = CVector(size.Width / 2, size.Height / 2);
-	CColour tc = Skin.ProgressBarPercent(GetPercent());
+	Vector center = Vector(size.Width / 2, size.Height / 2);
+	Colour tc = Skin.ProgressBarPercent(GetPercent());
 
-	if(tc != CColour(0, 0, 0, 0))
-		Renderer.DrawString(percform, center - CVector(percform.length() / 2, 0), tc, CColour::None());
+	if(tc != Colour(0, 0, 0, 0))
+		Renderer.DrawString(percform, center - Vector(percform.length() / 2, 0), tc, Colour::None());
 }

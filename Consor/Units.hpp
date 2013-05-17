@@ -7,93 +7,93 @@
 
 namespace Consor
 {
-	class CSize
+	class Size
 	{
 	public:
 		double Width;
 		double Height;
 
-		CSize(double Width, double Height);
-		CSize();
+		Size(double Width, double Height);
+		Size();
 
-		CSize operator+(const CSize& A) const;
-		CSize operator-(const CSize& A) const;
-		CSize operator/(const CSize& A) const;
-		CSize operator*(const CSize& A) const;
-		CSize operator/(double A) const;
-		CSize operator*(double A) const;
-		CSize& operator+=(const CSize& A);
-		CSize& operator-=(const CSize& A);
-		CSize& operator*=(const CSize& A);
-		CSize& operator/=(const CSize& A);
-		CSize& operator*=(double A);
-		CSize& operator/=(double A);
+		Size operator+(const Size& A) const;
+		Size operator-(const Size& A) const;
+		Size operator/(const Size& A) const;
+		Size operator*(const Size& A) const;
+		Size operator/(double A) const;
+		Size operator*(double A) const;
+		Size& operator+=(const Size& A);
+		Size& operator-=(const Size& A);
+		Size& operator*=(const Size& A);
+		Size& operator/=(const Size& A);
+		Size& operator*=(double A);
+		Size& operator/=(double A);
 	};
 
-	class CVector
+	class Vector
 	{
 	public:
 		double X;
 		double Y;
 
-		CVector(double X, double Y);
-		CVector();
+		Vector(double X, double Y);
+		Vector();
 
-		CVector operator+(const CVector& A) const;
-		CVector operator-(const CVector& A) const;
-		CVector operator/(const CVector& A) const;
-		CVector operator*(const CVector& A) const;
-		CVector operator/(double A) const;
-		CVector operator*(double A) const;
-		CVector& operator+=(const CVector& A);
-		CVector& operator-=(const CVector& A);
-		CVector& operator*=(const CVector& A);
-		CVector& operator/=(const CVector& A);
-		CVector& operator*=(double A);
-		CVector& operator/=(double A);
-		bool operator==(const CVector& A) const;
-		bool operator!=(const CVector& A) const;
+		Vector operator+(const Vector& A) const;
+		Vector operator-(const Vector& A) const;
+		Vector operator/(const Vector& A) const;
+		Vector operator*(const Vector& A) const;
+		Vector operator/(double A) const;
+		Vector operator*(double A) const;
+		Vector& operator+=(const Vector& A);
+		Vector& operator-=(const Vector& A);
+		Vector& operator*=(const Vector& A);
+		Vector& operator/=(const Vector& A);
+		Vector& operator*=(double A);
+		Vector& operator/=(double A);
+		bool operator==(const Vector& A) const;
+		bool operator!=(const Vector& A) const;
 	};
 
-	class CColour
+	class Colour
 	{
 	public:
 		double R, G, B, A;
-		CColour();
-		CColour(double R, double G, double B);
-		CColour(double R, double G, double B, double A);
+		Colour();
+		Colour(double R, double G, double B);
+		Colour(double R, double G, double B, double A);
 
-		CColour& Normalize();
+		Colour& Normalize();
 		
-		static CColour Blend(const CColour& A, const CColour& B);
-		static double Distance(const CColour& A, const CColour& B);
+		static Colour Blend(const Colour& A, const Colour& B);
+		static double Distance(const Colour& A, const Colour& B);
 
-		static const CColour& None();
+		static const Colour& None();
 
-		CColour operator+(const CColour& A) const;
-		CColour operator-(const CColour& A) const;
-		CColour& operator+=(const CColour& A);
-		CColour& operator-=(const CColour& A);
-		bool operator==(const CColour& A) const;
-		bool operator!=(const CColour& A) const;
+		Colour operator+(const Colour& A) const;
+		Colour operator-(const Colour& A) const;
+		Colour& operator+=(const Colour& A);
+		Colour& operator-=(const Colour& A);
+		bool operator==(const Colour& A) const;
+		bool operator!=(const Colour& A) const;
 	};
 
 
 
 	// literals
 	/*
-	CSize operator "" _w(long double Value);
-	CSize operator "" _h(long double Value);
+	Size operator "" _w(long double Value);
+	Size operator "" _h(long double Value);
 
-	CVector operator "" _x(long double Value);
-	CVector operator "" _t(long double Value);
+	Vector operator "" _x(long double Value);
+	Vector operator "" _t(long double Value);
 	*/
 };
 
 // outside namespace
 // tostring:
-std::ostream& operator<<(std::ostream& stream, const Consor::CSize& value);
-std::ostream& operator<<(std::ostream& stream, const Consor::CVector& value);
-std::ostream& operator<<(std::ostream& stream, const Consor::CColour& value);
+std::ostream& operator<<(std::ostream& stream, const Consor::Size& value);
+std::ostream& operator<<(std::ostream& stream, const Consor::Vector& value);
+std::ostream& operator<<(std::ostream& stream, const Consor::Colour& value);
 
 #endif

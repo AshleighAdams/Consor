@@ -7,16 +7,16 @@ using namespace Consor::Util;
 
 CFrequencyController::CFrequencyController(const string& Name, double Frequency)
 {
-	m_Frequency = Frequency;
-	m_FequencyTime = 1.0 / m_Frequency;
-	m_Next = Util::GetTime() + m_FequencyTime;
-	m_Delta = 0;
-	m_Name = Name;
+	_Frequency = Frequency;
+	_FequencyTime = 1.0 / _Frequency;
+	_Next = Util::GetTime() + _FequencyTime;
+	_Delta = 0;
+	_Name = Name;
 }
 
 void CFrequencyController::SetNextTime(double Time)
 {
-	m_Next = Time;
+	_Next = Time;
 }
 void CFrequencyController::ThinkIn(double Seconds)
 {
@@ -25,28 +25,28 @@ void CFrequencyController::ThinkIn(double Seconds)
 
 double CFrequencyController::NextTime() const
 {
-	return m_Next;
+	return _Next;
 }
 
 bool CFrequencyController::Check()
 {
-	if(Util::GetTime() < m_Next)
+	if(Util::GetTime() < _Next)
 		return false;
 
-	m_Next += m_FequencyTime;
+	_Next += _FequencyTime;
 
-	if(m_Next < Util::GetTime()) // timeout
+	if(_Next < Util::GetTime()) // timeout
 	{
-		ThinkIn(m_FequencyTime);
+		ThinkIn(_FequencyTime);
 	}
 
 
-	m_Delta = Util::GetTime() - m_LastThink;
-	m_LastThink = Util::GetTime();
+	_Delta = Util::GetTime() - _LastThink;
+	_LastThink = Util::GetTime();
 	return true;
 }
 
 double CFrequencyController::Delta() const
 {
-	return m_Delta;
+	return _Delta;
 }

@@ -6,16 +6,16 @@
 
 namespace Consor
 {
-	class CLabel : public CControl
+	class Label : public CControl
 	{
 	protected:
-		std::string m_Text;
-		std::string m_SetText;
+		std::string _Text;
+		std::string _SetText;
 	public:
-		CLabel();
+		Label();
 		void SetText(const std::string& Text);
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);
-		virtual void ForceResize(const CSize& Size);
+		virtual void ForceResize(const Size& Size);
 	};
 }
 

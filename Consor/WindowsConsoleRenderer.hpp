@@ -57,23 +57,23 @@ namespace Consor
 		FIX_OPERATOR(CharAttributes, +);
 #undef FIX_OPERATOR
 
-		class CWindowsConsoleRenderer;
+		class WindowsConsoleRenderer;
 
 		class CWindowsCharInformation : public ICharInformation
 		{
-			CWindowsConsoleRenderer* m_pRenderer;
-			CVector m_Position;
+			WindowsConsoleRenderer* _pRenderer;
+			Vector _Position;
 		public:
-			CWindowsCharInformation(CWindowsConsoleRenderer* pRenderer, CVector pos);
+			CWindowsCharInformation(WindowsConsoleRenderer* pRenderer, Vector pos);
 			void SetAttributes(CharAttributes attr);
 			CharAttributes GetAttributes();
-			void SetPosition(const CVector& pos);
+			void SetPosition(const Vector& pos);
 
-			void SetForegroundColour(const CColour& col);
-			CColour GetForegroundColour();
+			void SetForegroundColour(const Colour& col);
+			Colour GetForegroundColour();
 
-			void SetBackgroundColour(const CColour& col);
-			CColour GetBackgroundColour();
+			void SetBackgroundColour(const Colour& col);
+			Colour GetBackgroundColour();
 
 			void SetChar(char val);
 			char GetChar();
@@ -83,7 +83,7 @@ namespace Consor
 			char32_t GetUnicodeChar();
 		};
 
-		class CWindowsConsoleRenderer : public IConsoleRenderer
+		class WindowsConsoleRenderer : public IConsoleRenderer
 		{
 			friend class CWindowsCharInformation;
 
@@ -91,41 +91,41 @@ namespace Consor
 		public:
 //#endif
 
-			HANDLE          m_BufferHandle;
-			HANDLE          m_STDOutHandle;
-			int             m_Width;
-			int             m_Height;
-			CHAR_INFO*      m_pBuffer;
-			CHAR_INFO*      m_pBufferDelta;
-			bool            m_WroteOnce;
+			HANDLE          _BufferHandle;
+			HANDLE          _STDOutHandle;
+			int             _Width;
+			int             _Height;
+			CHAR_INFO*      _pBuffer;
+			CHAR_INFO*      _pBufferDelta;
+			bool            _WroteOnce;
 
 			CHAR_INFO& _CharInfoAt(int x, int y);
 
-			CColour         m_ColourTable[16];
-			CColour         m_OriginalColourTable[16];
+			Colour         _ColourTable[16];
+			Colour         _OriginalColourTable[16];
 		public:
-			CWindowsConsoleRenderer();
-			~CWindowsConsoleRenderer();
+			WindowsConsoleRenderer();
+			~WindowsConsoleRenderer();
 
 			std::string RendererName();
 			std::string VersionString();
 
-			std::unique_ptr<ICharInformation> GetCharInformation(const CVector& pos);
+			std::unique_ptr<ICharInformation> GetCharInformation(const Vector& pos);
 			void FlushToScreen();
-			CSize Size();
+			Size GetSize();
 
 			bool SupportsUnicode();
 			size_t MaxColours();
-			void GetColours(size_t Count, CColour* pColours);
-			void SetColours(size_t Count, CColour* pColours);
+			void GetColours(size_t Count, Colour* pColours);
+			void SetColours(size_t Count, Colour* pColours);
 			void ResetColours();
 
 			void SetTitle(const std::string& Title);
 #ifdef WINDOWS_CONSOLE_RENDERER_FAST
-			void DrawBox(const CVector& pos, const CSize& size, const CColour& col);
+			void DrawBox(const Vector& pos, const Size& size, const Colour& col);
 			//leave DrawRect to the abstract renderer, it's way, way too messy for us to keep it up to date here
-			//void DrawRect(const CVector& pos, const CSize& size, const CColour& fgcol, const CColour& bgcol);
-			void DrawString(const std::string& str, const CVector& pos, const CColour& fgcol, const CColour& bgcol);
+			//void DrawRect(const Vector& pos, const Size& size, const Colour& fgcol, const Colour& bgcol);
+			void DrawString(const std::string& str, const Vector& pos, const Colour& fgcol, const Colour& bgcol);
 #endif
 		};
 	};

@@ -9,18 +9,18 @@
 
 namespace Consor
 {
-	class CScrollContainer : public CControl
+	class ScrollContainer : public CControl
 	{
 	protected:
-		CControl* m_pClient;
-		CHorizontalScrollbar m_HScrollbar;
-		CVerticalScrollbar m_VScrollbar;
+		CControl* _pClient;
+		HorizontalScrollbar _HScrollbar;
+		VerticalScrollbar _VScrollbar;
 	public:
-		CScrollContainer(CControl& Client, const CSize& Size);
-		CScrollContainer(){} // this should never actually be used
-		virtual CSize Size();
-		virtual void OnResize(const CSize& Size);
-		virtual void ForceResize(const CSize& Size);
+		ScrollContainer(CControl& Client, const Size& Size);
+		ScrollContainer(){} // this should never actually be used
+		virtual Size GetSize();
+		virtual void OnResize(const Size& Size);
+		virtual void ForceResize(const Size& Size);
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);
 		virtual bool HandleInput(Input::Key Key, Input::IInputSystem& System);
 		virtual bool CanFocus();

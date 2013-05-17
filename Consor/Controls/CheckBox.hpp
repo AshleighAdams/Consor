@@ -8,20 +8,20 @@
 
 namespace Consor
 {
-	class CCheckBox : public CControl
+	class CheckBox : public CControl
 	{
 	protected:
-		CLabel m_Label;
-		bool m_Checked;
+		Label _Label;
+		bool _Checked;
 	public:
-		CCheckBox();
+		CheckBox();
 		void SetText(std::string Text);
 		bool Checked();
 		void SetChecked(bool Value);
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);
-		virtual CSize Size();
-		virtual void ForceResize(const CSize& Size);
-		virtual void OnResize(const CSize& Size);
+		virtual Size GetSize();
+		virtual void ForceResize(const Size& Size);
+		virtual void OnResize(const Size& Size);
 		virtual bool HandleInput(Input::Key Key, Input::IInputSystem& System);
 		virtual bool CanFocus();
 	};

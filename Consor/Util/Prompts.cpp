@@ -23,13 +23,13 @@ std::string Util::MessageBox(const std::string& Message, const std::string& Titl
 	string ret = "";
 
 
-	CFlowContainer main_buttons(CFlowContainer::FlowAxis::Horizontal, 1);
+	FlowContainer main_buttons(FlowContainer::FlowAxis::Horizontal, 1);
 
-	list<tuple<CButton*, string>> CreatedButtons;
+	list<tuple<Button*, string>> CreatedButtons;
 
 	for(const string& btn : Buttons)
 	{
-		CButton* pbtn = new CButton;
+		Button* pbtn = new Button;
 		pbtn->SetText(btn);
 
 		pbtn->Click += bind([&](string buttontext)
@@ -40,25 +40,25 @@ std::string Util::MessageBox(const std::string& Message, const std::string& Titl
 		main_buttons.AddControl(*pbtn);
 	}
 
-	CAlignContainer align_buttons(main_buttons, CSize(), CAlignContainer::Axis::Horizotal, CAlignContainer::Align::Center);
-	CLabel msg;
+	AlignContainer align_buttons(main_buttons, Size(), AlignContainer::Axis::Horizotal, AlignContainer::Align::Center);
+	Label msg;
 	msg.SetText(Message);
-	msg.ForceResize(CSize(40, 1));
+	msg.ForceResize(Size(40, 1));
 
-	CFlowContainer main_flow(CFlowContainer::FlowAxis::Vertical, 0.0);
+	FlowContainer main_flow(FlowContainer::FlowAxis::Vertical, 0.0);
 	main_flow.AddControl(msg);
 	main_flow.AddControl(align_buttons);
 
-	align_buttons.ForceResize(main_flow.Size());
-	CWindowContainer window(main_flow, Title);
-	WindowSystem::RegisterWindow(window, CVector(-1, -1));
+	align_buttons.ForceResize(main_flow.GetSize());
+	WindowContainer window(main_flow, Title);
+	WindowSystem::RegisterWindow(window, Vector(-1, -1));
 	
 	while(ret.length() == 0)
 	{
 		Util::Sleep(0.1);
 	}
 
-	for(tuple<CButton*, string> tup : CreatedButtons)
+	for(tuple<Button*, string> tup : CreatedButtons)
 		delete get<0>(tup);
 
 	WindowSystem::UnregisterWindow(window);
@@ -70,18 +70,18 @@ std::string Util::ChoiceList(const std::string& Message, const std::string& Titl
 	bool running = true;
 	bool cancled = false;
 
-	CRadioBox radio;
+	RadioBox radio;
 
 	for(const string& choice : Choices)
 		radio.AddChoice(choice);
 
 
-	CFlowContainer flow_buttons(CFlowContainer::FlowAxis::Horizontal, 1.0);
-	CLabel msg;
+	FlowContainer flow_buttons(FlowContainer::FlowAxis::Horizontal, 1.0);
+	Label msg;
 	msg.SetText(Message);
-	msg.ForceResize(CSize(40, 1));
+	msg.ForceResize(Size(40, 1));
 
-	CButton ok,cancel;
+	Button ok,cancel;
 	ok.SetText("OK");
 	cancel.SetText("Cancel");
 
@@ -102,17 +102,17 @@ std::string Util::ChoiceList(const std::string& Message, const std::string& Titl
 	flow_buttons.AddControl(ok);
 	flow_buttons.AddControl(cancel);
 
-	CAlignContainer align_buttons(flow_buttons, CSize(), CAlignContainer::Axis::Horizotal, CAlignContainer::Align::Center);
+	AlignContainer align_buttons(flow_buttons, Size(), AlignContainer::Axis::Horizotal, AlignContainer::Align::Center);
 
 
-	CFlowContainer main_flow(CFlowContainer::FlowAxis::Vertical, 0);
+	FlowContainer main_flow(FlowContainer::FlowAxis::Vertical, 0);
 	main_flow.AddControl(msg);
 	main_flow.AddControl(radio);
 	main_flow.AddControl(align_buttons);
 
-	align_buttons.ForceResize(main_flow.Size());
-	CWindowContainer window(main_flow, Title);
-	WindowSystem::RegisterWindow(window, CVector(-1, -1));
+	align_buttons.ForceResize(main_flow.GetSize());
+	WindowContainer window(main_flow, Title);
+	WindowSystem::RegisterWindow(window, Vector(-1, -1));
 
 	while(running)
 	{
@@ -128,27 +128,27 @@ std::string Util::InputBox(const std::string& Message, const std::string& Title)
 {
 	bool ret = false;
 
-	CFlowContainer main_buttons(CFlowContainer::FlowAxis::Horizontal, 1.0);
-	CButton ok;
+	FlowContainer main_buttons(FlowContainer::FlowAxis::Horizontal, 1.0);
+	Button ok;
 	ok.SetText("OK");
 	main_buttons.AddControl(ok);
 
-	CAlignContainer align_buttons(main_buttons, CSize(), CAlignContainer::Axis::Horizotal, CAlignContainer::Align::Center);
-	CLabel msg;
+	AlignContainer align_buttons(main_buttons, Size(), AlignContainer::Axis::Horizotal, AlignContainer::Align::Center);
+	Label msg;
 	msg.SetText(Message);
-	msg.ForceResize(CSize(40, 1));
+	msg.ForceResize(Size(40, 1));
 
-	CTextBox tb;
+	TextBox tb;
 	
 
-	CFlowContainer main_flow(CFlowContainer::FlowAxis::Vertical, 0.0);
+	FlowContainer main_flow(FlowContainer::FlowAxis::Vertical, 0.0);
 	main_flow.AddControl(msg);
 	main_flow.AddControl(tb);
 	main_flow.AddControl(align_buttons);
 
-	align_buttons.ForceResize(main_flow.Size());
-	CWindowContainer window(main_flow, Title);
-	WindowSystem::RegisterWindow(window, CVector(-1, -1));
+	align_buttons.ForceResize(main_flow.GetSize());
+	WindowContainer window(main_flow, Title);
+	WindowSystem::RegisterWindow(window, Vector(-1, -1));
 	
 	ok.Click += [&]()
 	{

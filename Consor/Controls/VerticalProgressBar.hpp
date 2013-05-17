@@ -9,14 +9,14 @@
 
 namespace Consor
 {
-	class CVerticalProgressBar : public CProgressBar
+	class VerticalProgressBar : public CProgressBar
 	{
-		bool m_GraphMode;
-		size_t m_GraphIndex;
+		bool _GraphMode;
+		size_t _GraphIndex;
 	public:
 		CHook<double, size_t> Click;
 
-		CVerticalProgressBar();
+		VerticalProgressBar();
 		void SetGraphMode(size_t Index); // allows focusing, and input
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);
 		virtual bool HandleInput(Input::Key Key, Input::IInputSystem& System);

@@ -3,35 +3,35 @@
 using namespace Consor;
 using namespace std;
 
-CFlowContainer::CFlowContainer(CFlowContainer::FlowAxis Axis, double Seperation)
+FlowContainer::FlowContainer(FlowContainer::FlowAxis Axis, double Seperation)
 {
-	m_Axis = Axis;
-	m_Seperation = Seperation;
-	m_Focused = 0;
+	_Axis = Axis;
+	_Seperation = Seperation;
+	_Focused = 0;
 }
 
-size_t CFlowContainer::m_Focusable()
+size_t FlowContainer::_Focusable()
 {
 	size_t ret = 0;
 
-	for(CControl* c : m_Controls)
+	for(CControl* c : _Controls)
 		if(c->CanFocus())
 			ret++;
 
 	return ret;
 }
 
-CControl* CFlowContainer::m_GetFocused()
+CControl* FlowContainer::_GetFocused()
 {
-	if(m_Focusable() == 0)
+	if(_Focusable() == 0)
 		return nullptr;
 
 	size_t cur = 0;
 
-	for(CControl* c : m_Controls)
+	for(CControl* c : _Controls)
 		if(c->CanFocus())
 		{
-			if(m_Focused == cur)
+			if(_Focused == cur)
 				return c;
 			cur++;
 		}
@@ -39,35 +39,35 @@ CControl* CFlowContainer::m_GetFocused()
 	return nullptr;
 }
 
-CSize CFlowContainer::Size()
+Size FlowContainer::GetSize()
 {
-	CSize ret;
+	Size ret;
 
 	double span = 0.0;
 
-	for(CControl* ctrl : m_Controls)
+	for(CControl* ctrl : _Controls)
 	{
-		CSize size = ctrl->Size();
+		Size size = ctrl->GetSize();
 
-		if(m_Axis == CFlowContainer::FlowAxis::Vertical)
+		if(_Axis == FlowContainer::FlowAxis::Vertical)
 		{
 			if(size.Width > ret.Width)
 				ret.Width = size.Width;
 
-			span += size.Height + m_Seperation;
+			span += size.Height + _Seperation;
 		}
 		else
 		{
 			if(size.Height > ret.Height)
 				ret.Height = size.Height;
 
-			span += size.Width + m_Seperation;
+			span += size.Width + _Seperation;
 		}
 	}
 
-	span -= m_Seperation;
+	span -= _Seperation;
 
-	if(m_Axis == CFlowContainer::FlowAxis::Vertical)
+	if(_Axis == FlowContainer::FlowAxis::Vertical)
 		ret.Height = span;
 	else
 		ret.Width = span;
@@ -75,23 +75,23 @@ CSize CFlowContainer::Size()
 	return ret;
 }
 
-void CFlowContainer::OnResize(const CSize& Size)
+void FlowContainer::OnResize(const Size& Size)
 {
 }
 
-void CFlowContainer::ForceResize(const CSize& Size)
+void FlowContainer::ForceResize(const Size& Size)
 {
-	throw std::exception("`CFlowContainer' can't be resized, please use a `CScrollContainer'");
+	throw std::exception("`FlowContainer' can't be resized, please use a `ScrollContainer'");
 }
 
-void CFlowContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
+void FlowContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
-	CVector pos = CVector(0, 0);
-	CControl* pFocused = m_GetFocused();
+	Vector pos = Vector(0, 0);
+	CControl* pFocused = _GetFocused();
 
-	for(CControl* ctrl : m_Controls)
+	for(CControl* ctrl : _Controls)
 	{
-		CSize ctrl_size = ctrl->Size();
+		Size ctrl_size = ctrl->GetSize();
 
 		if(Renderer.InRenderBounds(pos, ctrl_size))
 		{
@@ -102,16 +102,16 @@ void CFlowContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasF
 		//else
 		//	Renderer.SetTitle("Control out of renderbounds!");
 
-		if(m_Axis == CFlowContainer::FlowAxis::Vertical)
-			pos.Y += ctrl_size.Height + m_Seperation;
+		if(_Axis == FlowContainer::FlowAxis::Vertical)
+			pos.Y += ctrl_size.Height + _Seperation;
 		else
-			pos.X += ctrl_size.Width + m_Seperation;
+			pos.X += ctrl_size.Width + _Seperation;
 	}
 }
 
-bool CFlowContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
+bool FlowContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
-	CControl* pFocused = m_GetFocused();
+	CControl* pFocused = _GetFocused();
 
 	if(pFocused && pFocused->HandleInput(Key, System))
 		return true;
@@ -119,7 +119,7 @@ bool CFlowContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
 	Input::Key Next = Input::Key::Down;
 	Input::Key Prev = Input::Key::Up;
 
-	if(m_Axis == FlowAxis::Horizontal)
+	if(_Axis == FlowAxis::Horizontal)
 	{
 		Next = Input::Key::Right;
 		Prev = Input::Key::Left;
@@ -127,44 +127,44 @@ bool CFlowContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
 
 	if(Key == Prev)
 	{
-		if(m_Focused <= 0)
+		if(_Focused <= 0)
 			return false;
-		m_Focused--;
+		_Focused--;
 		return true;
 	}
 	else if(Key == Next || Key == Input::Key::Tab)
 	{
-		size_t focusable = m_Focusable();
+		size_t focusable = _Focusable();
 
-		if(m_Focused >= focusable - 1)
+		if(_Focused >= focusable - 1)
 			return false;
-		m_Focused++;
+		_Focused++;
 		return true;
 	}
 
 	return false;
 }
 
-bool CFlowContainer::CanFocus()
+bool FlowContainer::CanFocus()
 {
-	for(CControl* Control : m_Controls) // return true if one of hour controls can obtain focus
+	for(CControl* Control : _Controls) // return true if one of hour controls can obtain focus
 		if(Control->CanFocus())
 			return true;
 	return false;
 }
 
-void CFlowContainer::AddControl(CControl& Control, double Size)
+void FlowContainer::AddControl(CControl& Control, double SizeTo)
 {
-	CSize size = Control.Size();
+	Size size = Control.GetSize();
 	
-	if(Size  > 0)
+	if(SizeTo  > 0)
 	{
-		if(m_Axis == FlowAxis::Horizontal)
-			size.Height = Size;
+		if(_Axis == FlowAxis::Horizontal)
+			size.Height = SizeTo;
 		else
-			size.Width = Size;
+			size.Width = SizeTo;
 
 		Control.ForceResize(size);
 	}
-	m_Controls.push_back(&Control);
+	_Controls.push_back(&Control);
 }

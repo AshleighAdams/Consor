@@ -9,12 +9,12 @@ namespace Consor
 	{
 		class CFrequencyController
 		{
-			double m_Next;
-			double m_Frequency;
-			double m_FequencyTime;
-			double m_Delta;
-			double m_LastThink;
-			std::string m_Name;
+			double _Next;
+			double _Frequency;
+			double _FequencyTime;
+			double _Delta;
+			double _LastThink;
+			std::string _Name;
 		public:
 			CFrequencyController(const std::string& Name, double Frequency);
 
