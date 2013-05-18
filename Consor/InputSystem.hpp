@@ -57,6 +57,7 @@ namespace Consor
 		class IInputSystem // Jookia is the one who wanted this to be instanced
 		{
 		public:
+			virtual ~IInputSystem() {};
 			virtual bool KeyWaiting() = 0;
 			virtual Key GetKeyPress() = 0;
 			virtual bool ControlDown() = 0;

@@ -1,6 +1,8 @@
 #ifndef CONSOLE_RENDERER_H
 #define CONSOLE_RENDERER_H
 
+#include <uchar.h>
+
 #include "Units.hpp"
 #include <string>
 #include <memory>
@@ -32,8 +34,8 @@ namespace Consor
 
 		struct renderbound_t
 		{
-			Vector Pos;
-			Size Size;
+			Vector pos;
+			Size size;
 		};
 
 		class IConsoleRenderer
