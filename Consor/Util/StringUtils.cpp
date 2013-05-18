@@ -1,10 +1,12 @@
 #include "StringUtils.hpp"
 
+#include <numeric>
+
 std::string Consor::Util::FormatTimeSpan(double Time)
 {
 	using namespace std;
 
-	if(Time != Time)
+	if(Time != Time || Time == std::numeric_limits<double>::infinity())
 		return "\u221E";
 
 	string names[] = {
