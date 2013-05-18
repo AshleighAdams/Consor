@@ -79,26 +79,26 @@ void IConsoleRenderer::PushRenderBounds(const Vector& from_a, const Size& size_a
 	Size size = Size((int)size_a.Width, (int)size_a.Height);
 	
 	//rb.Pos = from + _CurrentRenderBound.Pos; // this is added as the new renderbounds will apear to be the full console size
-	rb.Pos = from + _CurrentOffset; // this should be correc,t but not fully tested...
-	rb.Size = size;
+	rb.pos = from + _CurrentOffset; // this should be correc,t but not fully tested...
+	rb.size = size;
 
 	Vector offset = rb.Pos;
 	
 	if(_Bounds.size() != 0)
 	{
-		if(rb.Pos.X < _CurrentRenderBound.Pos.X)
-			rb.Pos.X = _CurrentRenderBound.Pos.X;
-		if(rb.Pos.X > _CurrentRenderBound.Pos.X + _CurrentRenderBound.Size.Width)
-			rb.Size.Width = 0; // too far over to the right...
-		if(rb.Pos.X + rb.Size.Width > _CurrentRenderBound.Pos.X + _CurrentRenderBound.Size.Width)
-			rb.Size.Width = (_CurrentRenderBound.Pos.X + _CurrentRenderBound.Size.Width) - rb.Pos.X;
+		if(rb.pos.X < _CurrentRenderBound.pos.X)
+			rb.pos.X = _CurrentRenderBound.pos.X;
+		if(rb.pos.X > _CurrentRenderBound.pos.X + _CurrentRenderBound.size.Width)
+			rb.size.Width = 0; // too far over to the right...
+		if(rb.pos.X + rb.size.Width > _CurrentRenderBound.pos.X + _CurrentRenderBound.size.Width)
+			rb.size.Width = (_CurrentRenderBound.pos.X + _CurrentRenderBound.size.Width) - rb.pos.X;
 
-		if(rb.Pos.Y < _CurrentRenderBound.Pos.Y)
-			rb.Pos.Y = _CurrentRenderBound.Pos.Y;
-		if(rb.Pos.Y > _CurrentRenderBound.Pos.Y + _CurrentRenderBound.Size.Height)
-			rb.Size.Height = 0; // too far over to the right...
-		if(rb.Pos.Y + rb.Size.Height > _CurrentRenderBound.Pos.Y + _CurrentRenderBound.Size.Height)
-			rb.Size.Height = (_CurrentRenderBound.Pos.Y + _CurrentRenderBound.Size.Height) - rb.Pos.Y;
+		if(rb.pos.Y < _CurrentRenderBound.pos.Y)
+			rb.pos.Y = _CurrentRenderBound.pos.Y;
+		if(rb.pos.Y > _CurrentRenderBound.pos.Y + _CurrentRenderBound.size.Height)
+			rb.size.Height = 0; // too far over to the right...
+		if(rb.pos.Y + rb.size.Height > _CurrentRenderBound.pos.Y + _CurrentRenderBound.size.Height)
+			rb.size.Height = (_CurrentRenderBound.pos.Y + _CurrentRenderBound.size.Height) - rb.pos.Y;
 	}
 
 	_Bounds.push_back(rb);
@@ -121,7 +121,7 @@ void IConsoleRenderer::PopRenderBounds()
 
 Size IConsoleRenderer::RenderSize()
 {
-	return Size(_CurrentRenderBound.Size.Width, _CurrentRenderBound.Size.Height);
+	return Size(_CurrentRenderBound.size.Width, _CurrentRenderBound.size.Height);
 }
 
 
@@ -397,14 +397,14 @@ bool IConsoleRenderer::InRenderBounds(const Vector& pos, Vector* dir)
 	x += (int)_CurrentOffset.X;
 	y += (int)_CurrentOffset.Y;
 
-	if(x < (int)(_CurrentRenderBound.Pos.X))
+	if(x < (int)(_CurrentRenderBound.pos.X))
 	{
 		if(!dir)
 			return false;
 		dir->X = -1;
 		ret = false;
 	}
-	if(y < (int)(_CurrentRenderBound.Pos.Y))
+	if(y < (int)(_CurrentRenderBound.pos.Y))
 	{
 		if(!dir)
 			return false;
@@ -416,7 +416,7 @@ bool IConsoleRenderer::InRenderBounds(const Vector& pos, Vector* dir)
 		ret = false;
 	}
 
-	if(x > (int)(_CurrentRenderBound.Pos.X + _CurrentRenderBound.Size.Width - 1))
+	if(x > (int)(_CurrentRenderBound.pos.X + _CurrentRenderBound.size.Width - 1))
 	{
 		if(!dir)
 			return false;
@@ -425,7 +425,7 @@ bool IConsoleRenderer::InRenderBounds(const Vector& pos, Vector* dir)
 			return false;
 		ret = false;
 	}
-	if(y > (int)(_CurrentRenderBound.Pos.Y + _CurrentRenderBound.Size.Height - 1))
+	if(y > (int)(_CurrentRenderBound.pos.Y + _CurrentRenderBound.size.Height - 1))
 	{
 		if(!dir)
 			return false;
