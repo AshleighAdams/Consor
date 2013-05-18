@@ -6,6 +6,7 @@
 #include <mutex>
 #include <memory>
 #include <thread>
+#include <functional>
 
 namespace Consor
 {
@@ -32,6 +33,9 @@ namespace Consor
 		extern void HandleInput(Input::Key key, Input::IInputSystem& is);
 		extern void RegisterWindow(Control& control, Vector pos);
 		extern void UnregisterWindow(Control& control);
+
+		// automatically unregistered when pControl is unregistered (if not nullptr)
+		void RegisterHotKey(Control* pControl, Input::Key Key, bool Control, bool Shift, std::function<void()> callback);
 
 		extern bool Running();
 		extern void Close();
