@@ -4,11 +4,18 @@
 #include <string>
 #include "StringUtils.hpp"
 
+#include <functional>
+
 namespace Consor
 {
 	namespace Util
 	{
+		// FUCK YOU MICROSOFT
+		//using LogCallback = std::function<void(const std::string&)>;
+		typedef std::function<void(const std::string&)> LogCallback;
+
 		extern void Log(const std::string& Message);
+		void HookLog(LogCallback callback);
 
 		template<class... Args>
 		inline void Log(const char* pFormat, Args... args)
