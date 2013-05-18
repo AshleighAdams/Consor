@@ -65,6 +65,11 @@ int main(int count, char** values)
 		Consor::WindowSystem::Close();
 	});
 
+	Consor::WindowSystem::RegisterHotKey(nullptr, Consor::Input::Key::F2, false, false, []()
+	{
+		cerr << "CALLBACK";
+	});
+
 	list<string> skins;
 	skins.push_back("Default");
 	skins.push_back("Sane");

@@ -1,6 +1,9 @@
 #include "WindowSystem.hpp"
 #include "Util/Time.hpp"
+#include "Util/Debug.hpp"
 #include "InputSystem.hpp"
+
+#include <unordered_map>
 
 using namespace Consor;
 using namespace std;
@@ -15,6 +18,60 @@ static std::thread _DrawThread;
 static std::list<windowinfo_t> _Registered;
 static bool _Running;
 static bool _Close;
+static
+
+struct _hotkey_info
+{
+	Input::Key key;
+	bool ctrl;
+	bool shift;
+	function<void()> callback;
+	void* ptr; // to prevent derefrencing
+};
+
+static std::list<_hotkey_info> _HotKeys;
+
+void WindowSystem::RegisterHotKey(Control* pControl, Input::Key Key, bool Control, bool Shift, function<void()> callback)
+{
+	_Mutex.lock();
+
+	_hotkey_info hotkey;
+	hotkey.callback = callback;
+	hotkey.ctrl = Control;
+	hotkey.shift = Shift;
+	hotkey.key = Key;
+	hotkey.ptr = pControl;
+
+	_HotKeys.push_back(hotkey);
+
+	_Mutex.unlock();
+}
+
+bool CheckHotkeys(Input::IInputSystem& System, Input::Key Key)
+{
+	bool ret = false;
+
+	for(auto hk : _HotKeys)
+	{
+		if(hk.key == Key && hk.ctrl == System.ControlDown() && hk.shift == System.ShiftDown())
+		{
+			ret = true;
+			_Mutex.unlock();
+			hk.callback();
+			_Mutex.lock();
+		}
+	}
+
+	return ret;
+}
+
+void RemoveHotkeys(void* ptr)
+{
+	_HotKeys.remove_if([&](const _hotkey_info& hk) -> bool
+	{
+		return hk.ptr == ptr;
+	});
+}
 
 bool WindowSystem::Setup(Console::IConsoleRenderer* Renderer, Input::IInputSystem* input)
 {
@@ -90,7 +147,7 @@ void WindowSystem::HandleInput(Input::Key key, Input::IInputSystem& is)
 {
 	_Mutex.lock();
 
-	if(_Registered.begin() == _Registered.end())
+	if(CheckHotkeys(is, key) || _Registered.begin() == _Registered.end())
 	{
 		_Mutex.unlock();
 		return;
@@ -116,6 +173,8 @@ void WindowSystem::HandleInput(Input::Key key, Input::IInputSystem& is)
 void WindowSystem::UnregisterWindow(Control& control)
 {
 	_Mutex.lock();
+	RemoveHotkeys(&control);
+
 	_Registered.remove_if([&](const windowinfo_t& info)
 	{
 		return info.pControl == &control;
