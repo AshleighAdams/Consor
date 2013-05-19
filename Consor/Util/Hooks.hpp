@@ -115,40 +115,34 @@ namespace Consor
 			_Subscribed.remove(*Handle);
 			Handle->Remove();
 		}
-
+		
+		
+		
 		inline void operator()(Args... args)
 		{
-			bool canresume = false;
-
-			std::thread* pThrd = new std::thread([&]()
+			auto func = [&](Args... subargs)
 			{
-				//std::thread* pThread = pThrd;
-				canresume = true;
-
 				_CallMutex.lock();
-
-				// fuck it, lets just leak memory
-				//delete _pLastCallThread;
-				//_pLastCallThread = nullptr;
-
+				
 				for(handle_p hand : _ToRemove)
 					hand->Unregister();
 				_ToRemove.clear();
-
+				
 				_Itterating = true;
 				for(handle_p hand : _Subscribed)
 				{
 					_CallMutex.unlock();
-					(*hand)(args...);
+					(*hand)(subargs...);
 					_CallMutex.lock();
 				}
 				_Itterating = false;
-				//_pLastCallThread = pThread;
 				_CallMutex.unlock();
-			});
-
-			while(!canresume)
-				;
+			};
+			
+			auto bound_func = std::bind(func, args...);
+			
+			// TODO: this leaks memory
+			std::thread* t = new std::thread(bound_func);
 		}
 	};
 };

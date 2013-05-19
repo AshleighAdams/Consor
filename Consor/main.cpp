@@ -2,14 +2,25 @@
 #include <thread>
 #include <mutex>
 
-#include "WindowsConsoleRenderer.hpp"
+#ifdef _WIN32
+	#include "WindowsConsoleRenderer.hpp"
+	#include "WindowsInputSystem.hpp"
+	typedef Consor::Console::WindowsConsoleRenderer PlatformRenderer;
+	typedef Consor::Input::WindowsInputSystem PlatformInputSystem;
+#else
+	#include "ANSIConsoleRenderer.hpp"
+	#include "LinuxInputSystem.hpp"
+	typedef Consor::Console::ANSIConsoleRenderer PlatformRenderer;
+	typedef Consor::Input::LinuxInputSystem PlatformInputSystem;
+#endif
+
 #include "Util/StringUtils.hpp"
 #include "Util/Time.hpp"
 #include "Util/FrequencyController.hpp"
 #include "Util/Math.hpp"
 #include "Util/Prompts.hpp"
 
-#include "WindowsInputSystem.hpp"
+
 
 #include "Controls/Label.hpp"
 #include "Controls/Button.hpp"
@@ -51,13 +62,13 @@ public:
 	};
 };
 
-#include <codecvt>
+//#include <codecvt>
 #include <locale>
 
 int main(int count, char** values)
 {
-	Consor::WindowSystem::Setup(new Consor::Console::WindowsConsoleRenderer(),
-		new Consor::Input::WindowsInputSystem());
+	Consor::WindowSystem::Setup(new PlatformRenderer(),
+		new PlatformInputSystem());
 
 	atexit([]()
 	{
