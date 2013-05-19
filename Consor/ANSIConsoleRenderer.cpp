@@ -6,6 +6,7 @@
 
 // STL
 #include <assert.h>
+#include <stdexcept>
 #include <sstream>
 
 // Linux specific?
@@ -109,6 +110,13 @@ ANSIConsoleRenderer::ANSIConsoleRenderer()
 	
 	PushRenderBounds(Vector(), Size(_Width, _Height));
 	_pBuffer = new ANSI_CHAR_INFO[_Width * _Height];
+	
+	for(size_t i = 0; i < _Width * _Height; i++)
+	{
+		_pBuffer[i].Letter = ' ';
+		_pBuffer[i].FG = Colour(1,1,1);
+		_pBuffer[i].BG = Colour();
+	}
 }
 
 ANSIConsoleRenderer::~ANSIConsoleRenderer()
@@ -142,9 +150,9 @@ string ANSIConsoleRenderer::RendererName()
 
 string ANSIConsoleRenderer::VersionString()
 {
-	return "built " __DATE__ " " __TIME__ ";"
+	return "built " __DATE__ " " __TIME__ ";";
 
-
+/*
 	" abstract renderer;"
 	
 	" impliments and supports:"
@@ -187,6 +195,7 @@ string ANSIConsoleRenderer::VersionString()
 	"; C++ version: " + to_string(__cplusplus) +
 	"; bits: " + to_string(sizeof(size_t) * 8) + ";"
 	;
+*/
 }
 
 size_t ANSIConsoleRenderer::_ColourToColourIndex(const Colour& targ)
@@ -218,7 +227,7 @@ void ANSIConsoleRenderer::FlushToScreen()
 	
 	for(size_t y = 0; y < _Height; y++)
 	{
-		ANSI::GenerateEscapeSequence(ss, '[', ANSI::EscapeSequence::CursorPosition, to_string(y + 1), "1"); // y; x
+		ANSI::GenerateEscapeSequence(cout, '[', ANSI::EscapeSequence::CursorPosition, to_string(y + 1), "1"); // y; x
 		
 		for(size_t x = 0; x < _Width; x++)
 		{
@@ -226,27 +235,31 @@ void ANSIConsoleRenderer::FlushToScreen()
 			
 			if(current_fg != info.FG)
 			{
-				ANSI::GenerateEscapeSequence(ss, '[', ANSI::EscapeSequence::SelectGraphicRendition, ANSI::GraphicRendition::TextColour256, "5", _ColourToColourIndex(info.FG));
+				ANSI::GenerateEscapeSequence(cout, '[', ANSI::EscapeSequence::SelectGraphicRendition, ANSI::GraphicRendition::TextColour256, "5", _ColourToColourIndex(info.FG));
 				current_fg = info.FG;
 			}
 			
 			if(current_bg != info.BG)
 			{
-				ANSI::GenerateEscapeSequence(ss, '[', ANSI::EscapeSequence::SelectGraphicRendition, ANSI::GraphicRendition::BackgroundColour256, "5", _ColourToColourIndex(info.FG));
+				ANSI::GenerateEscapeSequence(cout, '[', ANSI::EscapeSequence::SelectGraphicRendition, ANSI::GraphicRendition::BackgroundColour256, "5", _ColourToColourIndex(info.BG));
 				current_bg = info.BG;
 			}
 			
-			ss << info.Letter;
+			//if(y == 0 && x == 0)
+				cout << string() + (char)info.Letter;
+			//ss << "" + info.Letter;
 		}
 	}
-	
-	cout << ss.str();
+	cout.flush();
+	//cout << ss.str();
 }
 
 std::unique_ptr<ICharInformation> ANSIConsoleRenderer::GetCharInformation(const Vector& pos)
 {
 	ICharInformation* pInfo = new ANSICharInformation(*this, pos);
-	return std::unique_ptr<ICharInformation>(pInfo);
+	
+	std::unique_ptr<ICharInformation> info = std::unique_ptr<ICharInformation>(pInfo);
+	return std::move(info);
 }
 
 Size ANSIConsoleRenderer::GetSize()
@@ -267,7 +280,7 @@ size_t ANSIConsoleRenderer::MaxColours()
 
 void ANSIConsoleRenderer::GetColours(size_t Count, Colour* pColours)
 {
-	assert(ANSI_MAX_COLOURS <= Count);
+	assert(Count <= ANSI_MAX_COLOURS);
 	
 	for(size_t i = 0; i < Count; i++)
 		pColours[i] = _ColourTable[i];
@@ -299,7 +312,7 @@ string tohexcolour(Colour col)
 
 void ANSIConsoleRenderer::SetColours(size_t Count, Colour* pColours)
 {
-	assert(ANSI_MAX_COLOURS <= Count);
+	assert(Count <= ANSI_MAX_COLOURS);
 	
 	for(size_t i = 0; i < Count; i++)
 	{

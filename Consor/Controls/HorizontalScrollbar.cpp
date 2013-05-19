@@ -1,5 +1,5 @@
 ﻿#include "HorizontalScrollbar.hpp"
-#include "Util/Math.hpp"
+#include "../Util/Math.hpp"
 
 using namespace Consor;
 

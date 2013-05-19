@@ -1,16 +1,16 @@
 #include "Prompts.hpp"
 #include "Time.hpp"
 
-#include "Containers/WindowContainer.hpp"
-#include "Containers/FlowContainer.hpp"
-#include "Containers/AlignContainer.hpp"
+#include "../Containers/WindowContainer.hpp"
+#include "../Containers/FlowContainer.hpp"
+#include "../Containers/AlignContainer.hpp"
 
-#include "Controls/Button.hpp"
-#include "Controls/TextBox.hpp"
-#include "Controls/Label.hpp"
-#include "Controls/RadioBox.hpp"
+#include "../Controls/Button.hpp"
+#include "../Controls/TextBox.hpp"
+#include "../Controls/Label.hpp"
+#include "../Controls/RadioBox.hpp"
 
-#include "WindowSystem.hpp"
+#include "../WindowSystem.hpp"
 
 #include <assert.h>
 

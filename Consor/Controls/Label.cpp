@@ -1,5 +1,5 @@
 #include "Label.hpp"
-#include "Util/StringUtils.hpp"
+#include "../Util/StringUtils.hpp"
 
 using namespace Consor;
 

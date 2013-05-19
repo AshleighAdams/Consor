@@ -1,5 +1,7 @@
 #include "FlowContainer.hpp"
 
+#include <stdexcept>
+
 using namespace Consor;
 using namespace std;
 
@@ -81,7 +83,9 @@ void FlowContainer::OnResize(const Size& Size)
 
 void FlowContainer::ForceResize(const Size& Size)
 {
+#ifndef __GNUG__
 	throw std::exception("`FlowContainer' can't be resized, please use a `ScrollContainer'");
+#endif
 }
 
 void FlowContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)

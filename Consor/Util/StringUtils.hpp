@@ -3,6 +3,9 @@
 
 #include <string>
 #include <sstream>
+#include <stdexcept>
+#include <limits>
+#include <cmath>
 
 namespace Consor
 {

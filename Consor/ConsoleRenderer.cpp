@@ -42,13 +42,16 @@ bool IConsoleRenderer::SupportsUnicode()
 void IConsoleRenderer::DrawString(const std::string& str, const Vector& Pos, const Colour& fgcol, const Colour& bgcol)
 {
 	Vector pos = Pos;
-	u32string unistr = wstring_convert<codecvt_utf8_utf16<char32_t>, char32_t>().from_bytes(str);
-
+	unique_ptr<ICharInformation> info = GetCharInformation(pos);
+	
 	bool unicode = SupportsUnicode();
 
-	unique_ptr<ICharInformation> info = GetCharInformation(pos);
-
+#ifdef __GNUG__
+	for(const char32_t& letter : str)
+#else
+	u32string unistr = wstring_convert<codecvt_utf8_utf16<char32_t>, char32_t>().from_bytes(str);
 	for(const char32_t& letter : unistr)
+#endif
 	{
 		info->SetPosition(pos);
 
@@ -82,7 +85,7 @@ void IConsoleRenderer::PushRenderBounds(const Vector& from_a, const Size& size_a
 	rb.pos = from + _CurrentOffset; // this should be correc,t but not fully tested...
 	rb.size = size;
 
-	Vector offset = rb.Pos;
+	Vector offset = rb.pos;
 	
 	if(_Bounds.size() != 0)
 	{

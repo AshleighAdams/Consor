@@ -1,6 +1,8 @@
 #ifndef CONTROL_H
 #define CONTROL_H
 
+#include <stdexcept>
+
 #include "Units.hpp"
 #include "Skin.hpp"
 #include "ConsoleRenderer.hpp"

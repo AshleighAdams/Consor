@@ -1,6 +1,6 @@
 #include "TextBox.hpp"
-#include "Util/StringUtils.hpp"
-#include "Util/Time.hpp"
+#include "../Util/StringUtils.hpp"
+#include "../Util/Time.hpp"
 using namespace Consor;
 
 TextBox::TextBox()
