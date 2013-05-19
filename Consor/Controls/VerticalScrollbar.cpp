@@ -1,6 +1,6 @@
 ﻿#include "VerticalScrollbar.hpp"
 
-#include "Util/Math.hpp"
+#include "../Util/Math.hpp"
 
 #include <string>
 #include <cmath>

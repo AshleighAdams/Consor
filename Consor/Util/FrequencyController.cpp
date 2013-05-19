@@ -1,5 +1,5 @@
-#include "Util/FrequencyController.hpp"
-#include "Util/Time.hpp"
+#include "FrequencyController.hpp"
+#include "Time.hpp"
 
 using namespace std;
 using namespace Consor;

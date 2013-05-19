@@ -1,7 +1,7 @@
 #include "ProgressBar.hpp"
-#include "Util/StringUtils.hpp"
-#include "Util/Math.hpp"
-#include "Units.hpp"
+#include "../Util/StringUtils.hpp"
+#include "../Util/Math.hpp"
+#include "../Units.hpp"
 
 #include <string>
 
