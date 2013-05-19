@@ -18,7 +18,7 @@ static std::thread _DrawThread;
 static std::list<windowinfo_t> _Registered;
 static bool _Running;
 static bool _Close;
-static
+
 
 struct _hotkey_info
 {
