@@ -1,23 +1,27 @@
-
-#include "ANSIConsoleRenderer.hpp"
-
 // Consor
+#include "ANSIConsoleRenderer.hpp"
 #include "Util/Debug.hpp"
+
+using namespace Consor;
+using namespace Consor::Console;
 
 // STL
 #include <assert.h>
 #include <stdexcept>
 #include <sstream>
+using namespace std;
 
 // Linux specific?
 #include <sys/ioctl.h>
 #include <unistd.h>
 // end Linux specific ?
 
-using namespace std;
+//Boost
+#include <boost/locale.hpp>
+using namespace boost::locale::conv;
 
-using namespace Consor;
-using namespace Consor::Console;
+
+
 
 
 ANSICharInformation::ANSICharInformation(ANSIConsoleRenderer& Parent, const Vector& pos)
@@ -87,14 +91,30 @@ char32_t ANSICharInformation::GetUnicodeChar()
 
 ANSI_CHAR_INFO& ANSIConsoleRenderer::_GetCharInfo(const Vector& vec)
 {
-	static ANSI_CHAR_INFO null;
+	static ANSI_CHAR_INFO dummy;
 	
-	Vector realpos = Vector((int)vec.X, (int)vec.Y);
+	int x = vec.X;
+	int y = vec.Y;
 	
-	if(!InRenderBounds(realpos, nullptr))
-		return null;
-		
-	return _pBuffer[(int)realpos.X + _Height * (int)realpos.Y];
+	x += (int)_CurrentOffset.X;
+	y += (int)_CurrentOffset.Y;
+
+	if(x < (int)(_CurrentRenderBound.pos.X))
+		return dummy;
+	if(y < (int)(_CurrentRenderBound.pos.Y))
+		return dummy;
+
+	if(x > (int)(_CurrentRenderBound.pos.X + _CurrentRenderBound.size.Width - 1))
+		return dummy;
+	if(y > (int)(_CurrentRenderBound.pos.Y + _CurrentRenderBound.size.Height - 1))
+		return dummy;
+
+	if(x < 0 || (int)(x >= _Width))
+		return dummy;
+	if(y < 0 || (int)(y >= _Height))
+		return dummy;
+
+	return _pBuffer[x + _Width * y];
 }
 
 
@@ -152,7 +172,6 @@ string ANSIConsoleRenderer::VersionString()
 {
 	return "built " __DATE__ " " __TIME__ ";";
 
-/*
 	" abstract renderer;"
 	
 	" impliments and supports:"
@@ -195,7 +214,6 @@ string ANSIConsoleRenderer::VersionString()
 	"; C++ version: " + to_string(__cplusplus) +
 	"; bits: " + to_string(sizeof(size_t) * 8) + ";"
 	;
-*/
 }
 
 size_t ANSIConsoleRenderer::_ColourToColourIndex(const Colour& targ)
@@ -245,9 +263,9 @@ void ANSIConsoleRenderer::FlushToScreen()
 				current_bg = info.BG;
 			}
 			
-			//if(y == 0 && x == 0)
-				cout << string() + (char)info.Letter;
-			//ss << "" + info.Letter;
+			string u8str = utf_to_utf<char>(&info.Letter, &info.Letter + 1);
+			cout << u8str;
+			//wcout << (wchar_t)info.Letter;
 		}
 	}
 	cout.flush();
