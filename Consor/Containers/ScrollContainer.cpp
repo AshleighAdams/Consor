@@ -182,7 +182,6 @@ bool ScrollContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
 	if(System.ControlDown())
 	{
-		char x = (char)Key;
 		bool handeled = false;
 
 		switch(Key)
@@ -199,6 +198,8 @@ bool ScrollContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
 		case Input::Key::Down:
 			handeled = ScrollDown();
 			break;
+		default:
+			handeled = false;
 		}
 
 		if(handeled)

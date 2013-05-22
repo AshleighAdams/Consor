@@ -85,12 +85,14 @@ namespace Consor
 
 		inline handle_p operator+=(const function_t& Function)
 		{
-			handle_t* handle = new handle_t(this, Function);
+			handle_p shared_ptr = std::make_shared<handle_t>(this, Function);
+			
+			//HookHandle<Args...>* handle = new HookHandle<Args...>(this, Function);
 
-			handle_p sp(handle);
+			//handle_p sp(handle);
 
-			_Subscribed.push_back(sp);
-			return sp;
+			_Subscribed.push_back(shared_ptr);
+			return shared_ptr;
 		}
 
 		inline void operator-=(handle_t* pHandle)

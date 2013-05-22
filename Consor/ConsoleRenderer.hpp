@@ -1,7 +1,9 @@
 #ifndef CONSOLE_RENDERER_H
 #define CONSOLE_RENDERER_H
 
+#ifndef _MSC_VER
 #include <uchar.h>
+#endif
 
 #include "Units.hpp"
 #include <string>

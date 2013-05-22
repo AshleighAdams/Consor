@@ -2,12 +2,23 @@
 
 cd ./Consor
 
-files=`find ./ -name "*.cpp" | grep -v "Windows"`
-g++-4.8 -g -std=c++11 -pthread $files -o ../consor_linux_test -lboost_locale
+# we want to use g++-4.8, you should change this to your compiler
+compiler="g++-4.8"
+link=""
 
-objs=`find ./ -name "*.o"`
-rm $objs
+# general stuff
+output="linux_build/consor"
+std="c++11"
+debug="-g"
+files=`find ./ -name "*.cpp" | grep -v "Windows"`
+
+# link to the boost locale lib
+link=$link"-lboost_locale "
+
+echo `$compiler $debug -std=$std -pthread $files -o ../$output $link`
+
+#objs=`find ./ -name "*.o"`
+#rm $objs
 
 cd -
 
-#c++ 

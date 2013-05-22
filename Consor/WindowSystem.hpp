@@ -47,7 +47,8 @@ namespace Consor
 		{
 			using namespace _priv_WindowSystem;
 			Lock();
-			std::shared_ptr<ISkin> skin = std::shared_ptr<ISkin>(new Skin(Renderer()));
+			std::shared_ptr<ISkin> skin = std::make_shared<Skin>(Renderer());
+			//memleak fix: std::shared_ptr<ISkin>(new Skin(Renderer()));
 			_SetSkin(skin);
 			Unlock();
 			return skin;
