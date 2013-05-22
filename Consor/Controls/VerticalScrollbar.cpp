@@ -35,11 +35,14 @@ void VerticalScrollbar::SetChangeSize(double ChangeSize)
 	_ChangeSize = ChangeSize;
 }
 
+void VerticalScrollbar::SetScrollRegionSize(double RegionSize)
+{
+	_ScrollRegionSize = RegionSize;
+}
+
 double VerticalScrollbar::GetBarSize()
 {
-	if(_ChangeSize <= 0)
-		return 1;
-	return _ChangeSize * GetSize().Height;
+	return GetSize().Height / _ScrollRegionSize * GetSize().Height;
 }
 
 
