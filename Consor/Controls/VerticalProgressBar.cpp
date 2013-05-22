@@ -33,7 +33,7 @@ void VerticalProgressBar::Draw(Consor::Console::IConsoleRenderer& Renderer, bool
 
 	std::unique_ptr<Console::ICharInformation> info = Renderer.GetCharInformation(Vector());
 
-	int y;
+	int y = 0;
 	for(int x = 0; x < Util::Round(barsz.Width, 1.0); x++)
 	{
 		for(y = 0; y < Util::Round(barsz.Height, 1.0); y++)

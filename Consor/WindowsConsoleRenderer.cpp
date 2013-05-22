@@ -426,14 +426,14 @@ CHAR_INFO& WindowsConsoleRenderer::_CharInfoAt(int x, int y)
 	x += (int)_CurrentOffset.X;
 	y += (int)_CurrentOffset.Y;
 
-	if(x < (int)(_CurrentRenderBound.Pos.X))
+	if(x < (int)(_CurrentRenderBound.pos.X))
 		return dummy;
-	if(y < (int)(_CurrentRenderBound.Pos.Y))
+	if(y < (int)(_CurrentRenderBound.pos.Y))
 		return dummy;
 
-	if(x > (int)(_CurrentRenderBound.Pos.X + _CurrentRenderBound.Size.Width - 1))
+	if(x > (int)(_CurrentRenderBound.pos.X + _CurrentRenderBound.size.Width - 1))
 		return dummy;
-	if(y > (int)(_CurrentRenderBound.Pos.Y + _CurrentRenderBound.Size.Height - 1))
+	if(y > (int)(_CurrentRenderBound.pos.Y + _CurrentRenderBound.size.Height - 1))
 		return dummy;
 
 	if(x < 0 || (int)(x >= _Width))

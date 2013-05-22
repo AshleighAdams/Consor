@@ -39,7 +39,7 @@ bool LinuxInputSystem::KeyWaiting()
 Key LinuxInputSystem::GetKeyPress() // these below arn't properly implimented
 {
 	termios oldt, newt;
-	int ch, oldf;
+	int ch;
 	
 	tcgetattr(STDIN_FILENO, &oldt);
 	newt = oldt;

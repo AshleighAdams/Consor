@@ -109,9 +109,9 @@ ANSI_CHAR_INFO& ANSIConsoleRenderer::_GetCharInfo(const Vector& vec)
 	if(y > (int)(_CurrentRenderBound.pos.Y + _CurrentRenderBound.size.Height - 1))
 		return dummy;
 
-	if(x < 0 || (int)(x >= _Width))
+	if(x < 0 || x >= (int)_Width)
 		return dummy;
-	if(y < 0 || (int)(y >= _Height))
+	if(y < 0 || y >= (int)_Height)
 		return dummy;
 
 	return _pBuffer[x + _Width * y];

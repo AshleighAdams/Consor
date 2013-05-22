@@ -37,7 +37,7 @@ std::string Consor::Util::FormatTimeSpan(double Time)
 	string ret;
 	double units = Time;
 	
-	for(int i = 0; i < sizeof(ajustment) / sizeof(ajustment[0]) - 1; i++)
+	for(unsigned int i = 0; i < sizeof(ajustment) / sizeof(ajustment[0]) - 1; i++)
 	{
 		long long unit = (long long)fmod(units, ajustment[i+1]);
 		units = units / ajustment[i+1];

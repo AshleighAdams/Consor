@@ -279,10 +279,9 @@ public:
 				CHAR_STATE(0x250C, RIGHT | DOWN);
 
 			default:
-				_State = 0;
+				return '?';
 			}
 		}
-
 
 		#undef CHAR_STATE
 	}
@@ -466,8 +465,8 @@ bool IConsoleRenderer::InRenderBounds(const Vector& pos, const Size& size)
 	test1 = pos;
 	test2 = pos + Vector(size.Width, size.Height);
 
-	bool inside1 = this->InRenderBounds(test1, &dir1);
-	bool inside2 = this->InRenderBounds(test2, &dir2);
+	/*bool inside1 =*/ this->InRenderBounds(test1, &dir1);
+	/*bool inside2 =*/ this->InRenderBounds(test2, &dir2);
 
 	if(dir1.Y == dir2.Y && dir1.Y != 0) // completley out of bounds in Y
 		return false;

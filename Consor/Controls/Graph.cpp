@@ -5,11 +5,11 @@ using namespace Consor;
 
 Graph::Graph(double Height) : 
 	_FlowHorz(Consor::FlowContainer::FlowAxis::Horizontal, 0),
-	_FlowGraphs(Consor::FlowContainer::FlowAxis::Horizontal, 0),
 	_FlowVert(Consor::FlowContainer::FlowAxis::Vertical, 0),
+	_FlowGraphs(Consor::FlowContainer::FlowAxis::Horizontal, 0),
 	_Height(Height),
-	_YLableAlign(_YLabel, Size(0, Height), AlignContainer::Axis::Vertical, AlignContainer::Align::Center),
-	_XLableAlign(_XLabel, Size(0, 1), AlignContainer::Axis::Horizotal, AlignContainer::Align::Center)
+	_XLableAlign(_XLabel, Size(0, 1), AlignContainer::Axis::Horizotal, AlignContainer::Align::Center),
+	_YLableAlign(_YLabel, Size(0, Height), AlignContainer::Axis::Vertical, AlignContainer::Align::Center)
 {
 	_FlowHorz.AddControl(_YLableAlign);
 	_FlowHorz.AddControl(_FlowVert);

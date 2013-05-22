@@ -79,10 +79,13 @@ bool WindowSystem::Setup(Console::IConsoleRenderer* Renderer, Input::IInputSyste
 
 	if(ran) 
 		return false;
-	
+
 	_pRenderer = Renderer;
 	_pInput = input;
-	_pSkin = std::shared_ptr<ISkin>(new DefaultSkin(*Renderer));
+
+	if(!_pSkin) // allow a default to be set, don't force this on Setup
+		_pSkin = std::make_shared<DefaultSkin>(*Renderer);
+	//_pSkin = std::shared_ptr<ISkin>(new DefaultSkin(*Renderer));
 	_Running = true;
 	_Close = false;
 

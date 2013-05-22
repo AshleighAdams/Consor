@@ -42,6 +42,26 @@
 
 using namespace std;
 
+// this skin is usefull for debugging in Linux, as the colours don't become hard to read when the debugger is invoked
+class MonoSkin : public Consor::DefaultSkin
+{
+public:
+	MonoSkin(Consor::Console::IConsoleRenderer& Renderer)
+	{
+		WindowLeft = WindowRight = ' ';
+		_ColourPos = 0;
+
+		Foreground = RequestColour(Renderer, Consor::Colour(1, 1, 1));
+		ForegroundShine = Foreground;
+		Background = RequestColour(Renderer, Consor::Colour(0, 0, 0));
+		AlternateBackground = Background;
+		FocusColour = RequestColour(Renderer, Consor::Colour(0.5, 0.5, 0.5));
+		ProgressPercent = Consor::Colour(0, 0, 0, 0);
+		ProgressForeground = Foreground;
+		CanvasColour = Background;
+	}
+};
+
 class CSaneSkin : public Consor::DefaultSkin
 {
 public:
@@ -70,6 +90,8 @@ int main(int count, char** values)
 	Consor::WindowSystem::Setup(new PlatformRenderer(),
 		new PlatformInputSystem());
 
+	Consor::WindowSystem::SetSkin<MonoSkin>();
+
 	atexit([]()
 	{
 		// safley close the window system at exit
@@ -83,10 +105,15 @@ int main(int count, char** values)
 
 	list<string> skins;
 	skins.push_back("Default");
+	skins.push_back("Mono");
 	skins.push_back("Sane");
 	skins.push_back("Hacker");
 	string selected = Consor::Util::ChoiceList("Please select a skin.", "Select Skin", skins);
 
+	if(selected == "Mono")
+	{
+		Consor::WindowSystem::SetSkin<MonoSkin>();
+	}
 	if(selected == "Sane")
 	{
 		Consor::WindowSystem::SetSkin<CSaneSkin>();
@@ -211,7 +238,7 @@ int main(int count, char** values)
 
 		string reasons[] = {"information", "datapack", "members", "updates", "earth", "universe", "lorem ipsum", "oxford dictionary"};
 
-		for(int i = 0; i < (sizeof reasons / sizeof reasons[0]); i++)
+		for(unsigned int i = 0; i < (sizeof reasons / sizeof reasons[0]); i++)
 		{
 			addtext(Util::FormatString("downloading \"%\"...", reasons[i])); Util::Sleep(0.75);
 		}
