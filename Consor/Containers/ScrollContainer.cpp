@@ -62,6 +62,7 @@ void ScrollContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool Has
 
 		double incremant = 1.0 / (clientsize.Width - selfsize.Width);
 		_HScrollbar.SetChangeSize(incremant);
+		_HScrollbar.SetScrollRegionSize(clientsize.Width);
 
 		Renderer.PushRenderBounds(Vector(0, selfsize.Height - hscrollsize.Height), hscrollsize);
 			_HScrollbar.Draw(Renderer, HasFocus, Skin);
@@ -75,6 +76,7 @@ void ScrollContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool Has
 
 		double incremant = 1.0 / (clientsize.Height - selfsize.Height);
 		_VScrollbar.SetChangeSize(incremant);
+		_VScrollbar.SetScrollRegionSize(clientsize.Height);
 
 		Renderer.PushRenderBounds(Vector(selfsize.Width - vscrollsize.Width, 0), vscrollsize);
 			_VScrollbar.Draw(Renderer, HasFocus, Skin);

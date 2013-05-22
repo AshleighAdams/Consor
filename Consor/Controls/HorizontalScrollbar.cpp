@@ -8,6 +8,7 @@ HorizontalScrollbar::HorizontalScrollbar(const Size& Size)
 	_Value = 0;
 	_Size = Size;
 	_ChangeSize = -1;
+	_ScrollRegionSize = 1;
 }
 
 HorizontalScrollbar::HorizontalScrollbar()
@@ -32,11 +33,14 @@ void HorizontalScrollbar::SetChangeSize(double ChangeSize)
 	_ChangeSize = ChangeSize;
 }
 
+void HorizontalScrollbar::SetScrollRegionSize(double RegionSize)
+{
+	_ScrollRegionSize = RegionSize;
+}
+
 double HorizontalScrollbar::GetBarSize()
 {
-	if(_ChangeSize <= 0)
-		return 1;
-	return _ChangeSize * GetSize().Width;
+	return GetSize().Width / _ScrollRegionSize * GetSize().Width;
 }
 
 void HorizontalScrollbar::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
