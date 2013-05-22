@@ -62,6 +62,9 @@ namespace Consor
 		char32_t WindowLeft;
 		char32_t WindowRight;
 
+		DefaultSkin(Console::IConsoleRenderer& Renderer, bool Dontset) : ISkin(Renderer)
+		{
+		}
 	public:
 		DefaultSkin(Console::IConsoleRenderer& Renderer) : ISkin(Renderer)
 		{
@@ -180,7 +183,7 @@ namespace Consor
 	class HackerSkin : public DefaultSkin
 	{
 	public:
-		HackerSkin(Console::IConsoleRenderer& Renderer) : DefaultSkin(Renderer)
+		HackerSkin(Console::IConsoleRenderer& Renderer) : DefaultSkin(Renderer, true)
 		{
 			if(!Renderer.SupportsUnicode())
 			{
@@ -194,7 +197,6 @@ namespace Consor
 				WindowRight = 0x2514;
 			}
 
-			Renderer.ResetColours();
 			CanvasColour = RequestColour(Renderer, Colour());
 			Foreground = RequestColour(Renderer, Colour(1, 0.5, 0));
 			ForegroundShine = RequestColour(Renderer, Colour(1, 0.5, 0.25));
