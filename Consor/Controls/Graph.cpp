@@ -18,7 +18,7 @@ Graph::Graph(double Height) :
 
 	_Click = [&](double a, size_t b)
 	{
-		this->Click(a, b);
+		this->Click(b, a); // flipped over Y, X to X, Y
 	};
 }
 
@@ -44,7 +44,7 @@ bool Graph::CanFocus()
 }
 
 
-void Graph::AddBar(double Value)
+VerticalProgressBar& Graph::AddBar(double Value)
 {
 	VerticalProgressBar* pb = new VerticalProgressBar();
 	pb->ForceResize(Size(1, _Height));
@@ -56,6 +56,8 @@ void Graph::AddBar(double Value)
 	_ToDelete.push_back(pb);
 	_FlowGraphs.AddControl(*pb);
 	_XLableAlign.ForceResize(_FlowGraphs.GetSize());
+
+	return *pb;
 }
 
 void Graph::SetXLable(const std::string& Text)

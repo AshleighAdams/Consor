@@ -4,6 +4,7 @@
 #include "../Control.hpp"
 #include "ProgressBar.hpp"
 #include "Label.hpp"
+#include "VerticalProgressBar.hpp"
 
 #include "../Containers/FlowContainer.hpp"
 #include "../Containers/AlignContainer.hpp"
@@ -26,14 +27,14 @@ namespace Consor
 		AlignContainer _XLableAlign, _YLableAlign;
 		std::function<void(double, size_t)> _Click;
 	public:
-		Consor::Hook<double, size_t> Click;
+		Consor::Hook<size_t, double> Click;
 		Graph(double Height);
 		~Graph();
 		virtual Size GetSize();
 		virtual void Draw(Console::IConsoleRenderer& Renderer, bool HasFocus, const ISkin& Skin);
 		virtual bool HandleInput(Input::Key Key, Input::IInputSystem& System);
 		virtual bool CanFocus();
-		virtual void AddBar(double Value);
+		virtual VerticalProgressBar& AddBar(double Value);
 
 		virtual void SetXLable(const std::string& Text);
 		virtual void SetYLable(const std::string& Text);

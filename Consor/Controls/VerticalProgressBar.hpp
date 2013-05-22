@@ -11,13 +11,15 @@ namespace Consor
 {
 	class VerticalProgressBar : public ProgressBar
 	{
-		bool _GraphMode;
+		bool _GraphMode, _ColourOverrid;
 		size_t _GraphIndex;
+		Colour _CustomColour;
 	public:
 		Hook<double, size_t> Click;
 
 		VerticalProgressBar();
 		void SetGraphMode(size_t Index); // allows focusing, and input
+		void ColourOveride(const Consor::Colour& col);
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);
 		virtual bool HandleInput(Input::Key Key, Input::IInputSystem& System);
 		virtual bool CanFocus();

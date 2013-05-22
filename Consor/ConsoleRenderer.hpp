@@ -47,6 +47,11 @@ namespace Consor
 			std::list<Vector> _Offsets;
 			Vector _CurrentOffset;
 			renderbound_t _CurrentRenderBound;
+
+			size_t _CurrentColour;
+			bool _FlushColours;
+			std::list<Colour> _NewColours;
+			virtual std::tuple<Colour, bool> _ClosestColourMatch(const Colour& target, bool only_created = false) = 0;
 		public:
 			virtual ~IConsoleRenderer(){}
 
@@ -64,6 +69,10 @@ namespace Consor
 			virtual void GetColours(size_t Count, Colour* pColours) = 0;
 			virtual void SetColours(size_t Count, Colour* pColours) = 0;
 			virtual void ResetColours() = 0;
+			// this function is a helper which uses the ones above, if you directly modify the colour table
+			// don't be supprised if bugs arise
+			virtual Colour RequestColour(const Colour& target, bool make = false);
+			virtual void FlushRequestedColours();
 
 			virtual void SetTitle(const std::string& Title) = 0;
 

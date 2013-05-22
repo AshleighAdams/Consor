@@ -30,7 +30,7 @@ void Label::ForceResize(const Size& size)
 {
 	size_t width,height;
 
-	_Text = Util::WrapText(_SetText, size.Width, &width, &height);
+	_Text = Util::WrapText(_SetText, (size_t)size.Width, &width, &height);
 	_Size = Size(width, height); //(height > Size.Height ? height : Size.Height));
 
 	OnResize(_Size);

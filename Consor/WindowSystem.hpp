@@ -42,6 +42,8 @@ namespace Consor
 		extern std::string RendererName();
 		extern std::string RendererVersionString();
 
+		Colour RequestColour(const Colour& col, bool make = false);
+
 		template <class Skin>
 		static std::shared_ptr<ISkin> SetSkin()
 		{

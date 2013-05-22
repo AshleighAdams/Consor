@@ -5,6 +5,8 @@
 
 using namespace std;
 
+#include "Util/Debug.hpp"
+
 using namespace Consor;
 using namespace Consor::Console;
 
@@ -24,8 +26,8 @@ void IConsoleRenderer::DrawBox(const Vector& pos, const Size& size, const Colour
 
 	unique_ptr<ICharInformation> info = GetCharInformation(Vector());
 
-	for(int x = pos.X; x < pos.X + size.Width; x++)
-		for(int y = pos.Y; y < pos.Y + size.Height; y++)
+	for(size_t x = pos.X; x < pos.X + size.Width; x++)
+		for(size_t y = pos.Y; y < pos.Y + size.Height; y++)
 		{
 			info->SetPosition(Vector(x, y));
 			info->SetChar(box);
@@ -127,6 +129,54 @@ Size IConsoleRenderer::RenderSize()
 	return Size(_CurrentRenderBound.size.Width, _CurrentRenderBound.size.Height);
 }
 
+Colour IConsoleRenderer::RequestColour(const Colour& target, bool make)
+{
+	std::tuple<Colour, bool> result = this->_ClosestColourMatch(target, true);
+	
+	// if it was exact, or we don't want to make colours
+	if(!make || std::get<1>(result)) 
+		return std::get<0>(result); // then return the value
+	
+	// otherwise, add this to the list of colours to set (we don't do this yet, as it can be a slow process for just 1
+	// so we do it in a batch
+
+	if(this->MaxColours() == this->_CurrentColour + 1)
+	{
+		// crap, we ran out of usable colours!
+		// just return the closest result
+		Util::Log("warning: ran out of colours to assign when requesting colour %!", target);
+		return std::get<0>(result);
+	}
+
+	Util::Log("will create colour % as #%", target, this->_CurrentColour);
+
+	_NewColours.push_back(target);
+	_FlushColours = true;
+	_CurrentColour++;
+
+	return target;
+}
+
+void IConsoleRenderer::FlushRequestedColours()
+{
+	size_t i = _CurrentColour - _NewColours.size();
+	Util::Log("creating % requested colours", _NewColours.size());
+
+	Colour* pColours = new Colour[_CurrentColour];
+	this->GetColours(_CurrentColour, pColours);
+
+	for(const Colour& col : _NewColours) // assign the new colours
+	{
+		pColours[i] = col;
+		i++;
+	}
+
+	this->SetColours(_CurrentColour, pColours);
+	delete [] pColours;
+
+	_FlushColours = false;
+	_NewColours.clear();
+}
 
 /*
  MESSY MESSY MESSY MESSY MESSY MESSY MESSY MESSY MESSY MESSY MESSY MESSY MESSY MESSY MESSY MESSY MESSY MESSY MESSY MESSY MESSY
@@ -323,7 +373,7 @@ void IConsoleRenderer::DrawRect(const Vector& pos, const Size& size, const Colou
 	if(size.Width == 1)
 		;
 	else if(size.Height == 1)
-		for(int x = pos.X; x < pos.X + size.Width; x++)
+		for(size_t x = pos.X; x < pos.X + size.Width; x++)
 		{
 			info_top->SetPosition(Vector(x, pos.Y));
 			
@@ -332,7 +382,7 @@ void IConsoleRenderer::DrawRect(const Vector& pos, const Size& size, const Colou
 			info_top->SetBackgroundColour(Colour::Blend(bgcol, info_top->GetBackgroundColour()));
 		}
 	else
-	for(int x = pos.X; x < pos.X + size.Width; x++)
+	for(size_t x = pos.X; x < pos.X + size.Width; x++)
 	{
 		info_top->SetPosition(Vector(x, pos.Y));
 		info_bot->SetPosition(Vector(x, pos.Y + size.Height - 1));
@@ -356,7 +406,7 @@ void IConsoleRenderer::DrawRect(const Vector& pos, const Size& size, const Colou
 	if(size.Height == 1)
 		;
 	else if(size.Width == 1)
-		for(int y = pos.Y; y < pos.Y + size.Height; y++)
+		for(size_t y = pos.Y; y < pos.Y + size.Height; y++)
 		{
 			info_l->SetPosition(Vector(pos.X, y));
 
@@ -365,7 +415,7 @@ void IConsoleRenderer::DrawRect(const Vector& pos, const Size& size, const Colou
 			info_l->SetBackgroundColour(bgcol);
 		}
 	else
-	for(int y = pos.Y; y < pos.Y + size.Height; y++)
+	for(size_t y = pos.Y; y < pos.Y + size.Height; y++)
 	{
 		info_l->SetPosition(Vector(pos.X, y));
 		info_r->SetPosition(Vector(pos.X + size.Width - 1, y));
