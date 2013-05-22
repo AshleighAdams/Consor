@@ -11,20 +11,30 @@ VerticalProgressBar::VerticalProgressBar() : ProgressBar()
 {
 	_Size = Size(1, 10);
 	_GraphMode = false;
+	_ColourOverrid = false;
+}
+
+void VerticalProgressBar::ColourOveride(const Colour& col)
+{
+	_CustomColour = col;
+	_ColourOverrid = true;
 }
 
 void VerticalProgressBar::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
 	Size size = this->GetSize();
-	Colour bg = Skin.ProgressBarBackground(GetPercent());
-	Colour fg = Skin.ProgressBarForeground(GetPercent());
+	Colour bg = Skin.ProgressBarBackground(this->GetPercent());
+	Colour fg = Skin.ProgressBarForeground(this->GetPercent());
+
+	if(_ColourOverrid)
+		fg = _CustomColour;
 
 	if(HasFocus)
 		fg = Skin.LabelForegroundFocused();
 
 	Vector pos;
 
-	Size barsz = Size(size.Width, size.Height * GetPercent());
+	Size barsz = Size(size.Width, size.Height * this->GetPercent());
 	Renderer.DrawBox(pos, size, bg);
 	
 	char32_t block = 0x2588; //0x2588;

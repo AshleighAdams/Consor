@@ -93,8 +93,8 @@ namespace Consor
 
 			HANDLE          _BufferHandle;
 			HANDLE          _STDOutHandle;
-			int             _Width;
-			int             _Height;
+			size_t          _Width;
+			size_t          _Height;
 			CHAR_INFO*      _pBuffer;
 			CHAR_INFO*      _pBufferDelta;
 			bool            _WroteOnce;
@@ -103,6 +103,7 @@ namespace Consor
 
 			Colour         _ColourTable[16];
 			Colour         _OriginalColourTable[16];
+			std::tuple<Colour, bool> _ClosestColourMatch(const Colour& target, bool only_created = false);
 		public:
 			WindowsConsoleRenderer();
 			~WindowsConsoleRenderer();

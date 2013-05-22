@@ -95,6 +95,9 @@ CharAttributes FromBackgroundColour(WindowsConsoleRenderer& Renderer, const Colo
 WindowsConsoleRenderer::WindowsConsoleRenderer()
 {
 	_WroteOnce = false;
+	_FlushColours = false;
+	_CurrentColour = 0;
+
 	_STDOutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	CONSOLE_SCREEN_BUFFER_INFOEX info;
@@ -267,6 +270,10 @@ string WindowsConsoleRenderer::VersionString()
 
 void WindowsConsoleRenderer::FlushToScreen()
 {
+	// if requested, flush any newly created colours
+	if(this->_FlushColours)
+		this->FlushRequestedColours();
+
 	SMALL_RECT srctWriteRect; 
 
 	srctWriteRect.Left = srctWriteRect.Top = 0;
@@ -404,7 +411,47 @@ void WindowsConsoleRenderer::SetColours(size_t Count, Colour* pColours)
 
 void WindowsConsoleRenderer::ResetColours()
 {
+	this->_CurrentColour = 0;
+	this->_NewColours.clear();
 	SetColours(MaxColours(), _OriginalColourTable);
+}
+
+std::tuple<Colour, bool> WindowsConsoleRenderer::_ClosestColourMatch(const Colour& target, bool only_created)
+{
+	size_t max = only_created ? this->_CurrentColour : this->MaxColours();
+	
+	Colour* best = &this->_ColourTable[0];
+	double best_distance = Colour::Distance(*best, target);
+
+	// check the currently requested colours that have not been flushed yet...
+	for(Colour& col : _NewColours)
+	{
+		double distance = Colour::Distance(col, target);
+		if(distance <= best_distance)
+		{
+			best_distance = distance;
+			best = &col;
+		}
+	}
+
+	if(_NewColours.size() != 0 && best_distance < 0.0001) // we found a match, return it
+		return std::tuple<Colour, bool>(*best, true);
+
+	if(max == 0) // return along with false, as we have none to give out
+		return std::tuple<Colour, bool>(*best, false);
+
+	for(size_t col = 1; col < max; col++)
+	{
+		Colour* cur = &this->_ColourTable[col];
+		double distance = Colour::Distance(*cur, target);
+		if(distance < best_distance)
+		{
+			best_distance = distance;
+			best = cur;
+		}
+	}
+
+	return std::tuple<Colour, bool>(*best, best_distance < 0.0001);
 }
 
 void WindowsConsoleRenderer::SetTitle(const std::string& Title)

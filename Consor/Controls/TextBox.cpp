@@ -68,7 +68,7 @@ void TextBox::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, c
 				pos.X -= 3;
 			}
 
-			cursor_pos -= pos.X;
+			cursor_pos -= (size_t)pos.X;
 		}
 
 		Renderer.PushRenderBounds(pos, textarea);

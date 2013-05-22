@@ -9,66 +9,16 @@ namespace Consor
 {
 	class ISkin
 	{
-	protected:
-		size_t _ColourPos;
 	public:
+		ISkin(Console::IConsoleRenderer& Renderer)
+		{
+			// reset the renderer colours....
+			Renderer.ResetColours();
+		}
 		// returns the closest colour it can get
 		virtual Colour RequestColour(Console::IConsoleRenderer& Renderer, const Colour& target)
 		{
-			size_t maxcols = Renderer.MaxColours();
-			Colour* pColours = new Colour[maxcols];
-			Renderer.GetColours(maxcols, pColours);
-			
-
-			if(_ColourPos >= maxcols) // search for an existing colour
-			{
-				for(size_t i = 0; i < maxcols; i++) // look for an exact match
-				{
-					if(pColours[i] == target)
-					{
-						delete [] pColours;
-						return target;
-					}
-				}
-
-				Colour closest = pColours[0];
-				double closest_distance = Colour::Distance(target, closest);
-
-				for(size_t i = 1; i < maxcols; i++)
-				{
-					double distance = Colour::Distance(target, pColours[i]);
-
-					if(distance < closest_distance)
-					{
-						closest_distance = distance;
-						closest = pColours[i];
-					}
-				}
-
-				Util::Log("out of colours, using closest match % for % (dist: %)", closest, target, closest_distance);
-
-				delete [] pColours;
-				return closest;
-			}
-
-			for(size_t i = 0; i < _ColourPos; i++)
-			{
-				if(pColours[i] == target)
-				{
-					delete [] pColours;
-					return target;
-				}
-			}
-
-			// we didn't find the colour, create a new one...
-			Util::Log("creating console colour #% %", _ColourPos, target);
-			
-			pColours[_ColourPos] = target;
-			_ColourPos++;
-			Renderer.SetColours(_ColourPos, pColours);
-
-			delete [] pColours;
-			return target;
+			return Renderer.RequestColour(target, true);
 		}
 
 		virtual Colour Canvas() const = 0;
@@ -112,13 +62,8 @@ namespace Consor
 		char32_t WindowLeft;
 		char32_t WindowRight;
 
-		DefaultSkin()
-		{
-			WindowLeft = 196;
-			WindowRight = 196;
-		}
 	public:
-		DefaultSkin(Console::IConsoleRenderer& Renderer)
+		DefaultSkin(Console::IConsoleRenderer& Renderer) : ISkin(Renderer)
 		{
 			if(!Renderer.SupportsUnicode())
 			{
@@ -131,7 +76,6 @@ namespace Consor
 				WindowRight = 0x2500;
 			}
 
-			_ColourPos = 0;
 			CanvasColour = RequestColour(Renderer, Colour());
 			Foreground = RequestColour(Renderer, Colour(1, 1, 1));
 			ForegroundShine = RequestColour(Renderer, Colour(1, 1, 1));
@@ -236,7 +180,7 @@ namespace Consor
 	class HackerSkin : public DefaultSkin
 	{
 	public:
-		HackerSkin(Console::IConsoleRenderer& Renderer)
+		HackerSkin(Console::IConsoleRenderer& Renderer) : DefaultSkin(Renderer)
 		{
 			if(!Renderer.SupportsUnicode())
 			{
@@ -250,8 +194,7 @@ namespace Consor
 				WindowRight = 0x2514;
 			}
 
-			
-			_ColourPos = 0;
+			Renderer.ResetColours();
 			CanvasColour = RequestColour(Renderer, Colour());
 			Foreground = RequestColour(Renderer, Colour(1, 0.5, 0));
 			ForegroundShine = RequestColour(Renderer, Colour(1, 0.5, 0.25));

@@ -46,10 +46,9 @@ using namespace std;
 class MonoSkin : public Consor::DefaultSkin
 {
 public:
-	MonoSkin(Consor::Console::IConsoleRenderer& Renderer)
+	MonoSkin(Consor::Console::IConsoleRenderer& Renderer) : DefaultSkin(Renderer)
 	{
 		WindowLeft = WindowRight = ' ';
-		_ColourPos = 0;
 
 		Foreground = RequestColour(Renderer, Consor::Colour(1, 1, 1));
 		ForegroundShine = Foreground;
@@ -65,12 +64,11 @@ public:
 class CSaneSkin : public Consor::DefaultSkin
 {
 public:
-	CSaneSkin(Consor::Console::IConsoleRenderer& Renderer)
+	CSaneSkin(Consor::Console::IConsoleRenderer& Renderer) : DefaultSkin(Renderer)
 	{
 		WindowLeft = ' ';
 		WindowRight = ' ';
 
-		_ColourPos = 0;
 		Foreground = RequestColour(Renderer, Consor::Colour(0, 0, 0));
 		ForegroundShine = RequestColour(Renderer, Consor::Colour(1, 1, 1));
 		Background = RequestColour(Renderer, Consor::Colour(0.7, 0.7, 0.7));
@@ -91,7 +89,7 @@ int main(int count, char** values)
 		new PlatformInputSystem());
 
 	Consor::WindowSystem::SetSkin<MonoSkin>();
-
+	
 	atexit([]()
 	{
 		// safley close the window system at exit

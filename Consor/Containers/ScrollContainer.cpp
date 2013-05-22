@@ -214,9 +214,9 @@ bool ScrollContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
 		const double context = 1.0 - 0.1; //10% context
 
 		if(Key == Input::Key::PageDown || Key == Input::Key::Numpad3)
-			return ScrollDown(_Size.Height * context);
+			return ScrollDown((double)(_Size.Height * context));
 		else if(Key == Input::Key::PageUp || Key == Input::Key::Numpad9)
-			return ScrollUp(_Size.Height * context);
+			return ScrollUp((double)(_Size.Height * context));
 	}
 
 	return false;

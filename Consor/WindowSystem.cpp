@@ -217,6 +217,11 @@ bool WindowSystem::Running()
 	return _Running;
 }
 
+Colour WindowSystem::RequestColour(const Colour& col, bool make)
+{
+	return _pRenderer->RequestColour(col, make);
+}
+
 std::string WindowSystem::RendererName()
 {
 	return Renderer().RendererName();
