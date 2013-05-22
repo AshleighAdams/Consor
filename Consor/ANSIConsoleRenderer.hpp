@@ -114,6 +114,8 @@ namespace Consor
 			Colour _OriginalColourTable[ANSI_MAX_COLOURS];
 			ANSI_CHAR_INFO& _GetCharInfo(const Vector& vec);
 			size_t _ColourToColourIndex(const Colour& col);
+			// this func returns: closest colour, exact match
+			std::tuple<Colour, bool> _ClosestColourMatch(const Colour& col, bool OnlyCreated = false);
 		public:
 			ANSIConsoleRenderer();
 			~ANSIConsoleRenderer();

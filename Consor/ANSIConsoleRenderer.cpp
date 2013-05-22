@@ -120,6 +120,8 @@ ANSI_CHAR_INFO& ANSIConsoleRenderer::_GetCharInfo(const Vector& vec)
 
 ANSIConsoleRenderer::ANSIConsoleRenderer()
 {
+	_CurrentColour = 0;
+
 	struct winsize w;
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 	
@@ -216,6 +218,43 @@ string ANSIConsoleRenderer::VersionString()
 	;
 }
 
+tuple<Colour, bool> ANSIConsoleRenderer::_ClosestColourMatch(const Colour& target, bool only_created)
+{
+	size_t max = only_created ? this->_CurrentColour : this->MaxColours();
+
+	Colour* best = &this->_ColourTable[0];
+	double best_distance = Colour::Distance(*best, target);
+
+	for(Colour& col : _NewColours) // look for any new colours, maybe this colour has been requested, but not flushed yet!
+	{
+		double distance = Colour::Distance(col, target);
+		if(distance <= best_distance)
+		{
+			best_distance = distance;
+			best = &col;
+		}
+	}
+
+	if(_NewColours.size() != 0 && best_distance < 0.0001)
+		return std::tuple<Colour, bool>(*best, true);
+
+	if(max == 0) // none are allocated, return the first, with false (not found)
+		return std::tuple<Colour, bool>(*best, false);
+
+	for(size_t col = 1; col < max; col++)
+	{
+		Colour* cur = &this->_ColourTable[col];
+		double distance = Colour::Distance(*cur, target);
+		if(distance < best_distance)
+		{
+			best_distance = distance;
+			best = cur;
+		}
+	}
+
+	return std::tuple<Colour, bool>(*best, best_distance < 0.0001);
+}
+
 size_t ANSIConsoleRenderer::_ColourToColourIndex(const Colour& targ)
 {
 	size_t closest = 0;
@@ -240,6 +279,9 @@ void ANSIConsoleRenderer::_CheckConsoleSize()
 
 void ANSIConsoleRenderer::FlushToScreen()
 {
+	if(this->_FlushColours) // write any new colours!
+		this->FlushRequestedColours();
+
 	stringstream ss;
 	Colour current_fg = Colour(-1, -1, -1), current_bg = Colour(-1, -1, -1);
 	
@@ -268,6 +310,9 @@ void ANSIConsoleRenderer::FlushToScreen()
 			//wcout << (wchar_t)info.Letter;
 		}
 	}
+
+	if(this->_FlushColours)
+		this->FlushRequestedColours();
 	cout.flush();
 	//cout << ss.str();
 }
