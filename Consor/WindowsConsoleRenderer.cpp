@@ -353,6 +353,10 @@ void WindowsConsoleRenderer::FlushToScreen()
 		_WroteOnce = true;
 		memcpy(_pBufferDelta, _pBuffer, _Width * _Height * sizeof CHAR_INFO);
 	}
+
+	// again, we have this here (many things request colours inside Draw())
+	if(this->_FlushColours)
+		this->FlushRequestedColours();
 }
 
 Size WindowsConsoleRenderer::GetSize()
