@@ -1,7 +1,7 @@
 # Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
 [Bb]in/
 [Oo]bj/
-build_linux/
+linux_build/
 
 # mstest test results
 TestResults
