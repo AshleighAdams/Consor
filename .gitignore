@@ -2,6 +2,8 @@
 [Bb]in/
 [Oo]bj/
 linux_build/consor
+linux_build/*
+Snapshot/*
 
 # mstest test results
 TestResults
