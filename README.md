@@ -47,6 +47,34 @@ For example, a `ScrollContainer` whose client is a `FlowContainer` will result i
 Please note, an excepion will NOT be thrown upon rendering outside of the render bounds; this is intended behavour, primamarially for use with the `ScrollContainer`.
 If you absoloutly must, and your control does not influence other controls (such as a tool tip), you may manually adjust the render bounds stack, but this is not advised and strongly discouraged as compatability may break, or it could interfere with other controls.
 
+##### Positioning
+
+While it may be hard to wrap your head around this concept at first, this tree should give you an idea of how it works:
+
+```
+WindowContainer ("Flow Test")
+	FlowContainer (Vertical, spacing 1)
+		Label ("Some message can go...")
+		HScrollBar
+		AlignContainer (Horizontal, center)
+			FlowContainer (Horizontal, spacing 1)
+				Button ("OK")
+				Button ("Cancel")
+				
+# Button actually consists of:
+Button
+	AlignContainer (Vertical, center)
+		AlignContainer (Horizontal, center)
+			Label (button_text)
+```	
+We can see this layed out as an image here:
+
+![alt text](http://screenshot.xiatek.org/Kobra/1368283806.png "Layout")
+
+And what it results in:
+
+![alt text](http://screenshot.xiatek.org/Kobra/1368281849.png "Layout")
+
 
 #### Input System
 
@@ -123,3 +151,5 @@ A position requested of -1, -1 should be centered, and those in the range of 0 t
 
 The idea of `WindowSystem` is to provide a simple and generic way to create a window for the user (for Prompts, etc...), you may expand or replace `Consor::WindowSystem` with your own.  
 The easiest way to achive this, would be to create a blank control of the same size of the console (`IConsoleRenderer::GetSize()`) and use it as your base window system.  This keeps compatibility with prompts (`MessageBox`, `ChoiceList`, and `InputBox`) and any other applications that may use the same instance of `WindowSystem`, while allowing you to build upon your own canvas.
+
+The window system also impliments support for hot keys via the use of `WindowSystem::RegisterHotKey(Control* pControl, bool Shift, bool Ctrl, std::function<void()> Callback)`.  Upon the key combo being pressed, `Callback` will be invoked; if `WindowSystem::UnregisterWindow(Control* pControl)`'s pControl matches an existing hot key, then the hot key will be removed.
