@@ -147,7 +147,7 @@ top
 
 The current Window System that is inbuilt into Consor positions any control into a desirable, or requested position.
 
-A position requested of -1, -1 should be centered, and those in the range of 0 to 1 should be positioned said percentage along the screen.  So `(-1.0, 2.0/3.0)` will be positioned center X, and 2/3rds down the screen.
+A position requested of -1, -1 should be centered, and those in the range of 0 to 1 (0 to 1 not implimented yet) should be positioned said percentage along the screen.  So `(-1.0, 2.0/3.0)` will be positioned center X, and 2/3rds down the screen.
 
 The idea of `WindowSystem` is to provide a simple and generic way to create a window for the user (for Prompts, etc...), you may expand or replace `Consor::WindowSystem` with your own.  
 The easiest way to achive this, would be to create a blank control of the same size of the console (`IConsoleRenderer::GetSize()`) and use it as your base window system.  This keeps compatibility with prompts (`MessageBox`, `ChoiceList`, and `InputBox`) and any other applications that may use the same instance of `WindowSystem`, while allowing you to build upon your own canvas.
