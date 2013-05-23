@@ -64,9 +64,9 @@ namespace Consor
 	class Hook
 	{
 	public:
-		typedef HookHandle<Args...>			handle_t;
-		typedef std::function<void(Args...)>	function_t;
-		typedef	std::shared_ptr<handle_t>		handle_p;
+		typedef HookHandle<Args...>             handle_t;
+		typedef std::function<void(Args...)>    function_t;
+		typedef	std::shared_ptr<handle_t>       handle_p;
 	private:
 		std::list<handle_p> _Subscribed;
 		std::mutex _CallMutex;
@@ -85,14 +85,8 @@ namespace Consor
 
 		inline handle_p operator+=(const function_t& Function)
 		{
-			handle_p shared_ptr = std::make_shared<handle_t>(this, Function);
-			
-			//HookHandle<Args...>* handle = new HookHandle<Args...>(this, Function);
-
-			//handle_p sp(handle);
-
-			_Subscribed.push_back(shared_ptr);
-			return shared_ptr;
+			_Subscribed.emplace_back(new handle_t(this, Function));
+			return _Subscribed.back();
 		}
 
 		inline void operator-=(handle_t* pHandle)
@@ -101,8 +95,7 @@ namespace Consor
 			
 			_Subscribed.remove_if([&](const handle_p& other)
 			{
-				handle_t* pOther = &*other;
-				return pHandle == pOther;
+				return pHandle == other.get();
 			});
 			
 			//_CallMutex.unlock();
@@ -129,10 +122,7 @@ namespace Consor
 			};
 			
 			auto bound_func = std::bind(func, args...);
-			
 			_Threads.push_back(std::thread(bound_func));
-			// TODO: this leaks memory
-			//std::thread* t = new std::thread(bound_func);
 		}
 	};
 };
