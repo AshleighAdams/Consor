@@ -81,6 +81,12 @@ namespace Consor
 			for(std::thread& t : _Threads)
 				if(t.joinable())
 					t.join();
+			
+			for(const handle_p& handle : _Subscribed)
+			{
+				handle_t* hand = handle.get();
+				hand->_pHook = nullptr;
+			}
 		}
 
 		inline handle_p operator+=(const function_t& Function)
