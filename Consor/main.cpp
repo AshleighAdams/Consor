@@ -89,6 +89,7 @@ int main(int count, char** values)
 		new PlatformInputSystem());
 
 	Consor::WindowSystem::SetSkin<MonoSkin>();
+	Consor::WindowSystem::Renderer().SetTitle("Consor test application");
 	
 	atexit([]()
 	{
