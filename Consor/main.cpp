@@ -2,17 +2,8 @@
 #include <thread>
 #include <mutex>
 
-#ifdef _WIN32
-	#include "WindowsConsoleRenderer.hpp"
-	#include "WindowsInputSystem.hpp"
-	typedef Consor::Console::WindowsConsoleRenderer PlatformRenderer;
-	typedef Consor::Input::WindowsInputSystem PlatformInputSystem;
-#else
-	#include "ANSIConsoleRenderer.hpp"
-	#include "LinuxInputSystem.hpp"
-	typedef Consor::Console::ANSIConsoleRenderer PlatformRenderer;
-	typedef Consor::Input::LinuxInputSystem PlatformInputSystem;
-#endif
+#include "PlatformConsoleRenderer.hpp"
+#include "PlatformInputSystem.hpp"
 
 #include "Util/StringUtils.hpp"
 #include "Util/Time.hpp"
@@ -85,8 +76,8 @@ public:
 
 int main(int count, char** values)
 {
-	Consor::WindowSystem::Setup(new PlatformRenderer(),
-		new PlatformInputSystem());
+	Consor::WindowSystem::Setup(new Consor::Console::PlatformConsoleRenderer(),
+		new Consor::Input::PlatformInputSystem());
 
 	Consor::WindowSystem::SetSkin<MonoSkin>();
 	Consor::WindowSystem::Renderer().SetTitle("Consor test application");
