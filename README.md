@@ -48,7 +48,7 @@ Please note, an excepion will NOT be thrown upon rendering outside of the render
 If you absoloutly must, and your control does not influence other controls (such as a tool tip), you may manually adjust the render bounds stack, but this is not advised and strongly discouraged as compatability may break, or it could interfere with other controls.
 
 
-=== Input System ===
+#### Input System
 
 The input system provides the standard input Consor will need, and must implement these pure methods:
 
@@ -115,7 +115,7 @@ top
 	<UNHANDLED - Exhausted>
 ```
 
-=== The Window System ===
+#### The Window System
 
 The current Window System that is inbuilt into Consor positions any control into a desirable, or requested position.
 
