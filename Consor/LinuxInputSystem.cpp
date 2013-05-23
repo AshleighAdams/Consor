@@ -36,7 +36,7 @@ bool LinuxInputSystem::KeyWaiting()
 	return false;
 }
 
-Key LinuxInputSystem::GetKeyPress() // these below arn't properly implimented
+int get_pressed()
 {
 	termios oldt, newt;
 	int ch;
@@ -51,15 +51,82 @@ Key LinuxInputSystem::GetKeyPress() // these below arn't properly implimented
 	}
 	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 	
+	return ch;
+}
+
+Key LinuxInputSystem::GetKeyPress() // these below arn't properly implimented
+{
+	_ShiftDown = _ControlDown = false;
+	
+	int ch = get_pressed();
+	
+	switch(ch)
+	{
+	case 127:
+		return Key::Backspace;
+	case 10:
+		return Key::Enter;
+	case '[':
+		ch = get_pressed();
+		
+		switch(ch)
+		{
+		case 'A':
+			return Key::Up;
+		case 'B':
+			return Key::Down;
+		case 'C':
+			return Key::Right;
+		case 'D':
+			return Key::Left;
+			
+		case '1':
+		{
+			get_pressed(); // read the ;
+			ch = get_pressed();
+			
+			switch(ch)
+			{
+			case '2': // shift was pushed
+				_ShiftDown = true;
+				break;
+			case '5': // ctrl was pushed
+				_ControlDown = true;
+				break;
+			default: // unknown
+				break;
+			}
+			
+			ch = get_pressed();
+			switch(ch)
+			{
+			case 'A':
+				return Key::Up;
+			case 'B':
+				return Key::Down;
+			case 'C':
+				return Key::Right;
+			case 'D':
+				return Key::Left;
+			default:
+				return (Key)ch;
+			}
+		}
+		default:
+			return (Key)ch;
+		}
+	default:
+		return (Key)ch;
+	}
 	return (Key)ch;
 }
 
 bool LinuxInputSystem::ControlDown()
 {
-	return false;
+	return _ControlDown;
 }
 
 bool LinuxInputSystem::ShiftDown()
 {
-	return false;
+	return _ShiftDown;
 }

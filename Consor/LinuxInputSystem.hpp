@@ -9,6 +9,8 @@ namespace Consor
 	{
 		class LinuxInputSystem : public IInputSystem
 		{
+			bool _ShiftDown;
+			bool _ControlDown;
 		public:
 			bool KeyWaiting();
 			Key GetKeyPress();
