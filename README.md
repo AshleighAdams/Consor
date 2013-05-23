@@ -44,7 +44,7 @@ As we can see, the control's size is now acceptable, but the control is not the 
 Another, important rule you need to know, is that a control may not render outside of it's designated area.  The drawing of elements is strictly positioned relativly, and any attempt to draw outside of these bounds will be clipped and nullified.  The controls position will be decided over a cascade of containers (and possibly other controls), of which will arive for you to draw at 0, 0 with the width and height of your control.
 For example, a `ScrollContainer` whose client is a `FlowContainer` will result in your controls position being none-static, but you controll SHOULD never see this level of abstraction.
 
-Please note, an excepion will NOT be thrown upon rendering outside of the render bounds; this is intended behavour, primamarially for use with the `ScrollContainer`.
+Please note, an excepion will NOT be thrown upon rendering outside of the render bounds; this is intended behavour, primarily for use with the `ScrollContainer`.
 If you absoloutly must, and your control does not influence other controls (such as a tool tip), you may manually adjust the render bounds stack, but this is not advised and strongly discouraged as compatability may break, or it could interfere with other controls.
 
 ##### Positioning
