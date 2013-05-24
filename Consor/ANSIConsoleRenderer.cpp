@@ -9,6 +9,8 @@ using namespace Consor::Console;
 #include <assert.h>
 #include <stdexcept>
 #include <sstream>
+#include <iostream>
+#include <fstream>
 using namespace std;
 
 // Linux specific?
@@ -74,7 +76,7 @@ char ANSICharInformation::GetChar()
 
 bool ANSICharInformation::SupportsUnicode()
 {
-	return true;
+	return this->_pRenderer->_SupportsUTF8;
 }
 
 void ANSICharInformation::SetUnicodeChar(char32_t val)
@@ -121,6 +123,7 @@ ANSI_CHAR_INFO& ANSIConsoleRenderer::_GetCharInfo(const Vector& vec)
 ANSIConsoleRenderer::ANSIConsoleRenderer()
 {
 	_CurrentColour = 0;
+	_NoPopAssert = false;
 
 	struct winsize w;
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
@@ -139,15 +142,66 @@ ANSIConsoleRenderer::ANSIConsoleRenderer()
 		_pBuffer[i].FG = Colour(1,1,1);
 		_pBuffer[i].BG = Colour();
 	}
+
+	{ // detect if the terminal supports UTF-8
+		ifstream ifs("/sys/module/vt/parameters/default_utf8");
+		int enabled;
+
+		if(ifs.is_open())
+		{
+			ifs >> enabled;
+			ifs.close();
+		}
+		else
+			enabled = 0;
+
+		this->_SupportsUTF8 = enabled != 0;
+		Util::Log("terminal supports UTF-8: %", this->_SupportsUTF8 ? "true" : "false");
+	}
+	
+	{
+		ifstream ir("/sys/module/vt/parameters/default_red");
+		ifstream ig("/sys/module/vt/parameters/default_grn");
+		ifstream ib("/sys/module/vt/parameters/default_blu");
+
+		size_t pos = 0;
+		while(ir.eof() == false || ig.eof() == false || ib.eof() == false)
+		{
+			int red, green, blue; red = green = blue;
+			if(ir.is_open() && !ir.eof())
+			{
+				ir >> red;
+				ir.get(); // remove the delimeter
+			}
+
+			if(ig.is_open() && !ig.eof())
+			{
+				ig >> green;
+				ig.get();
+			}
+
+			if(ib.is_open() && !ib.eof())
+			{
+				ib >> blue;
+				ib.get();
+			}
+
+			_OriginalColourTable[pos] = Colour((double)red / 255.0, (double)green / 255.0, (double)blue / 255.0);
+			pos++;
+		}
+
+		Util::Log("detected % default colours", pos);
+		
+		ir.close();
+		ig.close();
+		ib.close();
+	}
 }
 
 ANSIConsoleRenderer::~ANSIConsoleRenderer()
 {
 	delete [] _pBuffer;
-	SetColours(ANSI_MAX_COLOURS, _OriginalColourTable);
-	
-	for(size_t i = 0; i < ANSI_MAX_COLOURS; i++)
-		_ColourTable[i] = _OriginalColourTable[i] = Colour(0, 0, 0); // not implimented yet
+	this->ResetColours();
 }
 
 // Just some helper functions for it to use
@@ -172,7 +226,7 @@ string ANSIConsoleRenderer::RendererName()
 
 string ANSIConsoleRenderer::VersionString()
 {
-	return "built " __DATE__ " " __TIME__ ";";
+	return "built " __DATE__ " " __TIME__ ";"
 
 	" abstract renderer;"
 	
@@ -275,10 +329,42 @@ size_t ANSIConsoleRenderer::_ColourToColourIndex(const Colour& targ)
 
 void ANSIConsoleRenderer::_CheckConsoleSize()
 {
+	winsize ws;
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);
+	
+	size_t w = (size_t)ws.ws_col;
+	size_t h = (size_t)ws.ws_row;
+	bool changed = (w != this->_Width) || (h != this->_Height);
+	
+	if(changed)
+	{
+		Util::Log("detected console resize: % %", w, h);
+		
+		this->_Width = w;
+		this->_Height = h;
+		
+		_NoPopAssert = true;
+		PopRenderBounds();
+		PushRenderBounds(Vector(), Size(this->_Width, this->_Height));
+		_NoPopAssert = false;
+		
+		delete [] _pBuffer;
+		_pBuffer = new ANSI_CHAR_INFO[this->_Width * this->_Height];
+		
+		for(size_t i = 0; i < this->_Width * this->_Height; i++)
+		{
+			_pBuffer[i].Letter = ' ';
+			_pBuffer[i].FG = Colour(1,1,1);
+			_pBuffer[i].BG = Colour();
+		}
+		
+	}
 }
 
 void ANSIConsoleRenderer::FlushToScreen()
 {
+	this->_CheckConsoleSize();
+	
 	if(this->_FlushColours) // write any new colours!
 		this->FlushRequestedColours();
 
@@ -301,7 +387,11 @@ void ANSIConsoleRenderer::FlushToScreen()
 			
 			if(current_bg != info.BG)
 			{
-				ANSI::GenerateEscapeSequence(cout, '[', ANSI::EscapeSequence::SelectGraphicRendition, ANSI::GraphicRendition::BackgroundColour256, "5", _ColourToColourIndex(info.BG));
+				if(info.BG == Colour()) // many Linux terminals have black as transparent, so set background to default
+					ANSI::GenerateEscapeSequence(cout, '[', ANSI::EscapeSequence::SelectGraphicRendition,
+						ANSI::GraphicRendition::BackgroundColourDefault);
+				else
+					ANSI::GenerateEscapeSequence(cout, '[', ANSI::EscapeSequence::SelectGraphicRendition, ANSI::GraphicRendition::BackgroundColour256, "5", _ColourToColourIndex(info.BG));
 				current_bg = info.BG;
 			}
 			
@@ -386,7 +476,13 @@ void ANSIConsoleRenderer::SetColours(size_t Count, Colour* pColours)
 
 void ANSIConsoleRenderer::ResetColours()
 {
-	SetColours(ANSI_MAX_COLOURS, _OriginalColourTable);
+	_CurrentColour = 0;
+	_NewColours.clear();
+	
+	Util::Log("reset custom colours");
+	
+	
+	this->SetColours(ANSI_MAX_COLOURS, _OriginalColourTable);
 }
 
 void ANSIConsoleRenderer::SetTitle(const string& Title)

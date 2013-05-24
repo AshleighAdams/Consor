@@ -105,6 +105,7 @@ namespace Consor
 		{
 			friend class ANSICharInformation;
 			
+			bool _SupportsUTF8;
 			size_t _Width, _Height;
 			void _CheckConsoleSize(); // this will resize and handle buffer changes, if something changed
 			
