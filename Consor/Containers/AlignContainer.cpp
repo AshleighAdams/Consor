@@ -3,27 +3,45 @@
 using namespace Consor;
 using namespace std;
 
-AlignContainer::AlignContainer(Control& Client, const Size& Size, AlignContainer::Axis Axis, AlignContainer::Align Align)
+AlignContainer::AlignContainer(Control& Client, AlignContainer::Axis Axis, AlignContainer::Align Align)
 {
 	_pClient = &Client;
 	_Axis = Axis;
 	_Align = Align;
-	_Size = Size;
+	_Size = Size();
 }
 
-Size AlignContainer::GetSize()
+ Size AlignContainer::GetSize()
+ {
+	return _pClient->GetSize();
+ }
+
+Size AlignContainer::GetSize(Console::IConsoleRenderer& Renderer)
 {
 	Size ret;
 	Size clientsize = _pClient->GetSize();
 
+	Size parentsize = _Size;
+
+	{ // stack stuff, get the parent render size, then push it back onto the stack
+		Size old_size = Renderer.RenderSize();
+		Vector old_pos = Renderer.RenderOffset(); // this should be fine for anything, except a manual layout
+
+		Renderer.PopRenderBounds();
+		
+		parentsize = Renderer.RenderSize();
+
+		Renderer.PushRenderBounds(old_pos, parentsize); // notice we also use a new size?
+	}
+
 	if(_Axis == AlignContainer::Axis::Horizotal)
 	{
 		ret.Height = clientsize.Height;
-		ret.Width = _Size.Width;
+		ret.Width = parentsize.Width;
 	}
 	else
 	{
-		ret.Height = _Size.Height;
+		ret.Height = parentsize.Height;
 		ret.Width = clientsize.Width;
 	}
 	
@@ -35,9 +53,9 @@ Size AlignContainer::GetSize()
 	return ret;
 }
 
-Vector AlignContainer::_ClientPos()
+Vector AlignContainer::_ClientPos(Console::IConsoleRenderer& Renderer)
 {
-	Size size = this->GetSize();
+	Size size = this->GetSize(Renderer);
 	Size clientsize = _pClient->GetSize();
 
 	Vector ret;
@@ -85,7 +103,7 @@ void AlignContainer::ForceResize(const Size& Size)
 
 void AlignContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
-	Renderer.PushRenderBounds(_ClientPos(), _pClient->GetSize());
+	Renderer.PushRenderBounds(_ClientPos(Renderer), _pClient->GetSize());
 	_pClient->Draw(Renderer, HasFocus, Skin);
 	Renderer.PopRenderBounds();
 }

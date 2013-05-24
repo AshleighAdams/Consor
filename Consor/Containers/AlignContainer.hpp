@@ -24,14 +24,17 @@ namespace Consor
 		};
 	protected:
 		Control* _pClient;
-		Vector _ClientPos();
+		Control* _pParent;
+		bool _Sizing; // used when determining size
+		Vector _ClientPos(Console::IConsoleRenderer& Renderer);
 		Size _Size;
 		Axis _Axis;
 		Align _Align;
 	public:
-		AlignContainer(Control& Client, const Size& Size, Axis Axis, Align align);
+		AlignContainer(Control& Client, Axis Axis, Align align);
 		AlignContainer(){} // this will crash, but exists only so classes can have it
 		virtual Size GetSize();
+		virtual Size GetSize(Console::IConsoleRenderer& Renderer);
 		virtual void OnResize(const Size& Size);
 		virtual void ForceResize(const Size& Size);
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);

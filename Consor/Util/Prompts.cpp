@@ -40,7 +40,7 @@ std::string Util::MessageBox(const std::string& Message, const std::string& Titl
 		main_buttons.AddControl(*pbtn);
 	}
 
-	AlignContainer align_buttons(main_buttons, Size(), AlignContainer::Axis::Horizotal, AlignContainer::Align::Center);
+	AlignContainer align_buttons(main_buttons, AlignContainer::Axis::Horizotal, AlignContainer::Align::Center);
 	Label msg;
 	msg.SetText(Message);
 	msg.ForceResize(Size(40, 1));
@@ -102,7 +102,7 @@ std::string Util::ChoiceList(const std::string& Message, const std::string& Titl
 	flow_buttons.AddControl(ok);
 	flow_buttons.AddControl(cancel);
 
-	AlignContainer align_buttons(flow_buttons, Size(), AlignContainer::Axis::Horizotal, AlignContainer::Align::Center);
+	AlignContainer align_buttons(flow_buttons, AlignContainer::Axis::Horizotal, AlignContainer::Align::Center);
 
 
 	FlowContainer main_flow(FlowContainer::FlowAxis::Vertical, 0);
@@ -133,7 +133,7 @@ std::string Util::InputBox(const std::string& Message, const std::string& Title)
 	ok.SetText("OK");
 	main_buttons.AddControl(ok);
 
-	AlignContainer align_buttons(main_buttons, Size(), AlignContainer::Axis::Horizotal, AlignContainer::Align::Center);
+	AlignContainer align_buttons(main_buttons, AlignContainer::Axis::Horizotal, AlignContainer::Align::Center);
 	Label msg;
 	msg.SetText(Message);
 	msg.ForceResize(Size(40, 1));
