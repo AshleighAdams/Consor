@@ -82,11 +82,16 @@ void IConsoleRenderer::PushRenderBounds(const Vector& from_a, const Size& size_a
 
 	Vector from = Vector((int)from_a.X, (int)from_a.Y);
 	Size size = Size((int)size_a.Width, (int)size_a.Height);
-	
-	//rb.Pos = from + _CurrentRenderBound.Pos; // this is added as the new renderbounds will apear to be the full console size
+
+	{
+		rb.pos = from_a; // this should be correc,t but not fully tested...
+		rb.size = size_a;
+
+		_BoundsExposed.push_back(rb);
+	}
+
 	rb.pos = from + _CurrentOffset; // this should be correc,t but not fully tested...
 	rb.size = size;
-
 	Vector offset = rb.pos;
 	
 	if(_Bounds.size() != 0)
@@ -117,6 +122,7 @@ void IConsoleRenderer::PopRenderBounds()
 {
 	_Bounds.pop_back();
 	_Offsets.pop_back();
+	_BoundsExposed.pop_back();
 
 	assert(_Bounds.size() > 0);
 
@@ -126,8 +132,15 @@ void IConsoleRenderer::PopRenderBounds()
 
 Size IConsoleRenderer::RenderSize()
 {
-	return Size(_CurrentRenderBound.size.Width, _CurrentRenderBound.size.Height);
+	return _BoundsExposed.back().size;
 }
+
+Vector IConsoleRenderer::RenderOffset()
+{
+	return _BoundsExposed.back().pos;
+}
+
+//RenderOffset
 
 Colour IConsoleRenderer::RequestColour(const Colour& target, bool make)
 {

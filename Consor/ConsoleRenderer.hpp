@@ -43,7 +43,7 @@ namespace Consor
 		class IConsoleRenderer
 		{
 		protected:
-			std::list<renderbound_t> _Bounds;
+			std::list<renderbound_t> _Bounds, _BoundsExposed;
 			std::list<Vector> _Offsets;
 			Vector _CurrentOffset;
 			renderbound_t _CurrentRenderBound;
@@ -86,6 +86,7 @@ namespace Consor
 			virtual void PushRenderBounds(const Vector& from, const Consor::Size& size);
 			virtual void PopRenderBounds();
 			virtual Size RenderSize();
+			virtual Vector RenderOffset();
 			virtual bool InRenderBounds(const Vector& pos, Vector* dir);
 			virtual bool InRenderBounds(const Vector& pos, const Consor::Size& size);
 		};

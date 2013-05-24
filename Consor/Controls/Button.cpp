@@ -6,9 +6,9 @@ using namespace Consor;
 Button::Button()
 {
 	_Label.SetText("Default Button");
-	_HAlign = AlignContainer(_Label, _Label.GetSize(), 
+	_HAlign = AlignContainer(_Label,
 		AlignContainer::Axis::Horizotal, AlignContainer::Align::Center);
-	_VAlign = AlignContainer(_HAlign, _Label.GetSize(), 
+	_VAlign = AlignContainer(_HAlign,
 		AlignContainer::Axis::Vertical, AlignContainer::Align::Center);
 }
 
@@ -26,7 +26,7 @@ void Button::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, co
 	if(HasFocus)
 		col = Skin.LabelForegroundFocused();
 
-	Renderer.PushRenderBounds(Vector(1, 0), _VAlign.GetSize());
+	Renderer.PushRenderBounds(Vector(), _VAlign.GetSize());
 	_VAlign.Draw(Renderer, HasFocus, Skin);
 	Renderer.PopRenderBounds();
 

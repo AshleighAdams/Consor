@@ -144,10 +144,10 @@ int main(int count, char** values)
 		flow_buttons.AddControl(ok);
 		flow_buttons.AddControl(cancel);
 
-		AlignContainer align_flow_buttons(flow_buttons, Size(), AlignContainer::Axis::Horizotal, AlignContainer::Align::Center);
+		AlignContainer align_flow_buttons(flow_buttons, AlignContainer::Axis::Horizotal, AlignContainer::Align::Center);
 
 		Label msg;
-		AlignContainer align_msg(msg, Size(), AlignContainer::Axis::Horizotal, AlignContainer::Align::Center);
+		AlignContainer align_msg(msg, AlignContainer::Axis::Horizotal, AlignContainer::Align::Center);
 
 		FlowContainer flow_main(FlowContainer::FlowAxis::Vertical, 0);
 		flow_main.AddControl(flow_table);
@@ -275,7 +275,7 @@ int main(int count, char** values)
 			close = true;
 		};
 
-		Consor::AlignContainer button_flow_align(button_flow, Consor::Size(),
+		Consor::AlignContainer button_flow_align(button_flow,
 			Consor::AlignContainer::Axis::Horizotal, Consor::AlignContainer::Align::Center);
 
 		Consor::FlowContainer main_flow(Consor::FlowContainer::FlowAxis::Vertical, 1);
