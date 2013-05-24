@@ -180,6 +180,7 @@ void IConsoleRenderer::FlushRequestedColours()
 
 	for(const Colour& col : _NewColours) // assign the new colours
 	{
+		Util::Log("setting colour % of %", i + 1,  _CurrentColour);
 		pColours[i] = col;
 		i++;
 	}
