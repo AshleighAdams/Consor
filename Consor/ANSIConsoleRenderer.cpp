@@ -123,6 +123,7 @@ ANSI_CHAR_INFO& ANSIConsoleRenderer::_GetCharInfo(const Vector& vec)
 ANSIConsoleRenderer::ANSIConsoleRenderer()
 {
 	_CurrentColour = 0;
+	_NoPopAssert = false;
 
 	struct winsize w;
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
@@ -225,7 +226,7 @@ string ANSIConsoleRenderer::RendererName()
 
 string ANSIConsoleRenderer::VersionString()
 {
-	return "built " __DATE__ " " __TIME__ ";";
+	return "built " __DATE__ " " __TIME__ ";"
 
 	" abstract renderer;"
 	
@@ -328,10 +329,42 @@ size_t ANSIConsoleRenderer::_ColourToColourIndex(const Colour& targ)
 
 void ANSIConsoleRenderer::_CheckConsoleSize()
 {
+	winsize ws;
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);
+	
+	size_t w = (size_t)ws.ws_col;
+	size_t h = (size_t)ws.ws_row;
+	bool changed = (w != this->_Width) || (h != this->_Height);
+	
+	if(changed)
+	{
+		Util::Log("detected console resize: % %", w, h);
+		
+		this->_Width = w;
+		this->_Height = h;
+		
+		_NoPopAssert = true;
+		PopRenderBounds();
+		PushRenderBounds(Vector(), Size(this->_Width, this->_Height));
+		_NoPopAssert = false;
+		
+		delete [] _pBuffer;
+		_pBuffer = new ANSI_CHAR_INFO[this->_Width * this->_Height];
+		
+		for(size_t i = 0; i < this->_Width * this->_Height; i++)
+		{
+			_pBuffer[i].Letter = ' ';
+			_pBuffer[i].FG = Colour(1,1,1);
+			_pBuffer[i].BG = Colour();
+		}
+		
+	}
 }
 
 void ANSIConsoleRenderer::FlushToScreen()
 {
+	this->_CheckConsoleSize();
+	
 	if(this->_FlushColours) // write any new colours!
 		this->FlushRequestedColours();
 

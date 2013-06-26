@@ -50,6 +50,7 @@ namespace Consor
 
 			size_t _CurrentColour;
 			bool _FlushColours;
+			bool _NoPopAssert;
 			std::list<Colour> _NewColours;
 			virtual std::tuple<Colour, bool> _ClosestColourMatch(const Colour& target, bool only_created = false) = 0;
 		public:

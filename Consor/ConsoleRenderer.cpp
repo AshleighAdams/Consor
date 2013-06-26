@@ -1,7 +1,10 @@
 #include "ConsoleRenderer.hpp"
 #include <assert.h>
 #include <locale>
-#include <codecvt>
+
+#ifndef _GNUC_
+//#include <codecvt>
+#endif
 
 using namespace std;
 
@@ -124,7 +127,8 @@ void IConsoleRenderer::PopRenderBounds()
 	_Offsets.pop_back();
 	_BoundsExposed.pop_back();
 
-	assert(_Bounds.size() > 0);
+	if(_NoPopAssert == false)
+		assert(_Bounds.size() > 0);
 
 	_CurrentRenderBound = _Bounds.back(); // last element
 	_CurrentOffset = _Offsets.back();
