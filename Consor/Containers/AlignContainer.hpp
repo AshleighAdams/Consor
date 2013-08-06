@@ -19,8 +19,9 @@ namespace Consor
 		};
 		enum Axis
 		{
-			Horizotal,
-			Vertical
+			Horizotal = 0, // TODO: Remove this line
+			Horizontal = 0, // whoops, let's leave the above one for backwards compatability, for now anyway
+			Vertical = 1
 		};
 	protected:
 		Control* _pClient;
