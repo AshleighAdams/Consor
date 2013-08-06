@@ -1,6 +1,8 @@
 language: cpp
 
 script:
+  - chmod +x ./GenerateProjects.sh
+  - chmod +x ./ThirdParty/premake4.elf
   - ./GenerateProjects.sh
-  - cd Projects
+  - cd ./Projects
   - make config-releaseshared
