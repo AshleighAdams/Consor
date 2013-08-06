@@ -1,9 +1,10 @@
 language: cpp
+install: tree
 
 script:
   - chmod +x ./GenerateProjects.sh
   - chmod +x ./ThirdParty/Premake4.elf
-  - ls
+  - tree
   - ./GenerateProjects.sh
   - cd ./Projects
   - make config=releaseshared
