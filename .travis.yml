@@ -1,0 +1,6 @@
+language: cpp
+
+script:
+  - ./GenerateProjects.sh
+  - cd Projects
+  - make config-releaseshared
