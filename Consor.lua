@@ -6,7 +6,7 @@ solution "Consor"
 	language "C++"
 	location "Projects"
 	targetdir "Binaries"
-	configurations { "Debug", "Release", "DebugShared", "ReleaseShared" }
+	configurations { "ReleaseShared", "DebugShared", "DebugStatic", "ReleaseStatic", "Debug" }
 
 	configuration "Debug or DebugShared"
 		flags { "Symbols" }
@@ -16,7 +16,7 @@ solution "Consor"
 	project "Consor"
 		files
 		{
-			"Consor/**.hpp", "Source/**.cpp"
+			"Source/**.hpp", "Source/**.cpp"
 		}
 		vpaths
 		{
@@ -30,22 +30,25 @@ solution "Consor"
 
 		configuration "linux"
 			buildoptions { "-std=c++11" }
+			links { "pthread" }
 			postbuildcommands { "mkdir -p ../Include/Consor", "cp -r --target-directory=../Include/Consor/ ../Source/*.hpp" }
 
-		configuration "Debug"
+		configuration "DebugStatic"
 			targetsuffix "_sd"
-		configuration "Release"
+		configuration "ReleaseStatic"
 			targetsuffix "_s"
 		configuration "DebugShared"
 			targetsuffix "_d"
 
-		configuration "Debug or Release"
+		configuration "DebugStatic or ReleaseStatic"
 			kind "StaticLib"
 		configuration "DebugShared or ReleaseShared"
 			kind "SharedLib"
 			defines { "CONSOR_SHARED" }
+		configuration "Debug"
+			kind "ConsoleApp"
 
-		configuration { "linux", "DebugShared or ReleaseShared"}
+		configuration { "linux", "DebugShared or ReleaseShared or Debug"}
 			links { "boost_locale" }
 		configuration { "windows", "DebugShared" }
 			links { "boost_locale_d" }

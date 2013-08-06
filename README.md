@@ -16,7 +16,7 @@ On Linux:
 
 ```
 cd ./Projects
-make config=releaseshared
+make
 ```
 On Windows, open the solution up located in `./Projects/`
 
