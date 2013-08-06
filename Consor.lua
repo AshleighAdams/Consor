@@ -1,15 +1,18 @@
+if _ACTION == "clean" then
+	os.rmdir("Include")
+end
+
 solution "Consor"
 	language "C++"
 	location "Projects"
 	targetdir "Binaries"
-	includedirs { "Include" }
 	configurations { "Debug", "Release", "DebugShared", "ReleaseShared" }
 
 	configuration "Debug or DebugShared"
 		flags { "Symbols" }
 	configuration "Release or ReleaseShared"
 		flags { "Optimize" }
-
+	
 	project "Consor"
 		files
 		{
@@ -27,6 +30,7 @@ solution "Consor"
 
 		configuration "linux"
 			buildoptions { "-std=c++11" }
+			postbuildcommands { "mkdir -p ../Include/Consor", "cp -r --target-directory=../Include/Consor/ ../Consor/*.hpp" }
 
 		configuration "Debug"
 			targetsuffix "_sd"
