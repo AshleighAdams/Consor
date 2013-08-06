@@ -5,6 +5,23 @@ A console GUI Library, released under the GPLv3 licence.  (c) Copyright 2013 Mit
 
 The examples below may assume the namespaces `std` and `Consor` are being used.
 
+### Building
+
+Execute `GenerateProjects.sh` or `GenerateProjects.bat` depending upon your operating system.
+
+Building:
+
+On Linux:
+
+```
+cd ./Projects
+make config=releaseshared
+```
+On Windows, open the solution up located in `./Projects/`
+
+
+### Example Usage
+
 #### Positioning and Sizes
 
 Unlike conventional UI libraries, Consor follows a more 'automated' way of positioning controls.
