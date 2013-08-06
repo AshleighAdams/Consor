@@ -19,6 +19,7 @@ make config=releaseshared
 ```
 On Windows, open the solution up located in `./Projects/`
 
+The output goes to `./Binaries/` for the binaries, and `./Include/Consor/` for the headers.  To use the libary, you need to place the headers and binaries in the appropriate places (e.g. `/usr/include/Consor/` maps to `./Include/Consor/`, and `/usr/lib/libConsor.so` maps to `./Binaries/libConsor.so` on Linux).
 
 ### Example Usage
 
