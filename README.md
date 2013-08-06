@@ -6,6 +6,24 @@ A console GUI Library, released under the GPLv3 licence.  (c) Copyright 2013 Kat
 
 The examples below may assume the namespaces `std` and `Consor` are being used.
 
+### Building
+
+Execute `GenerateProjects.sh` or `GenerateProjects.bat` depending upon your operating system.
+
+Building:
+
+On Linux:
+
+```
+cd ./Projects
+make config=releaseshared
+```
+On Windows, open the solution up located in `./Projects/`
+
+The output goes to `./Binaries/` for the binaries, and `./Include/Consor/` for the headers.  To use the libary, you need to place the headers and binaries in the appropriate places (e.g. `/usr/include/Consor/` maps to `./Include/Consor/`, and `/usr/lib/libConsor.so` maps to `./Binaries/libConsor.so` on Linux).
+
+### Example Usage
+
 #### Positioning and Sizes
 
 Unlike conventional UI libraries, Consor follows a more 'automated' way of positioning controls.
