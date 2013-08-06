@@ -2,7 +2,7 @@ language: cpp
 
 script:
   - chmod +x ./GenerateProjects.sh
-  - chmod +x ./ThirdParty/premake4.elf
+  - chmod +x ./ThirdParty/Premake4.elf
   - ./GenerateProjects.sh
   - cd ./Projects
-  - make config-releaseshared
+  - make config=releaseshared
