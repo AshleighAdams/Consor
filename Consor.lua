@@ -16,12 +16,12 @@ solution "Consor"
 	project "Consor"
 		files
 		{
-			"Consor/**.hpp", "Consor/**.cpp"
+			"Consor/**.hpp", "Source/**.cpp"
 		}
 		vpaths
 		{
-			["Source Files"] = "Consor/**.cpp",
-			["Header Files"] = "Consor/**.hpp"
+			["Source Files"] = "Source/**.cpp",
+			["Header Files"] = "Source/**.hpp"
 		}
 
 		configuration "windows"
@@ -30,7 +30,7 @@ solution "Consor"
 
 		configuration "linux"
 			buildoptions { "-std=c++11" }
-			postbuildcommands { "mkdir -p ../Include/Consor", "cp -r --target-directory=../Include/Consor/ ../Consor/*.hpp" }
+			postbuildcommands { "mkdir -p ../Include/Consor", "cp -r --target-directory=../Include/Consor/ ../Source/*.hpp" }
 
 		configuration "Debug"
 			targetsuffix "_sd"
@@ -53,6 +53,6 @@ solution "Consor"
 			links { "boost_locale" }
 
 		configuration "linux"
-			excludes { "Consor/WindowsInputSystem.cpp", "Consor/WindowsConsoleRenderer.cpp" }
+			excludes { "Source/WindowsInputSystem.cpp", "Source/WindowsConsoleRenderer.cpp" }
 		configuration "windows"
-			excludes { "Consor/LinuxInputSystem.cpp", "Consor/ANSIConsoleRenderer.cpp" }
+			excludes { "Source/LinuxInputSystem.cpp", "Source/ANSIConsoleRenderer.cpp" }
