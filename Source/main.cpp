@@ -37,7 +37,7 @@ using namespace std;
 class MonoSkin : public Consor::DefaultSkin
 {
 public:
-	MonoSkin(Consor::Console::IConsoleRenderer& Renderer) : DefaultSkin(Renderer)
+	MonoSkin(Consor::Console::IConsoleRenderer& Renderer) : DefaultSkin(Renderer, true)
 	{
 		WindowLeft = WindowRight = ' ';
 
@@ -52,24 +52,6 @@ public:
 	}
 };
 
-class CSaneSkin : public Consor::DefaultSkin
-{
-public:
-	CSaneSkin(Consor::Console::IConsoleRenderer& Renderer) : DefaultSkin(Renderer)
-	{
-		WindowLeft = ' ';
-		WindowRight = ' ';
-
-		Foreground = RequestColour(Renderer, Consor::Colour(0, 0, 0));
-		ForegroundShine = RequestColour(Renderer, Consor::Colour(1, 1, 1));
-		Background = RequestColour(Renderer, Consor::Colour(0.7, 0.7, 0.7));
-		AlternateBackground = RequestColour(Renderer, Consor::Colour(0.3, 0.3, 0.3));
-		FocusColour = RequestColour(Renderer, Consor::Colour(0, 0, 1));
-		ProgressPercent = Consor::Colour(0, 0, 0, 0);
-		ProgressForeground = RequestColour(Renderer, Consor::Colour(0, 1, 0));
-		CanvasColour = RequestColour(Renderer, Consor::Colour(0.392, 0.548, 0.929));
-	};
-};
 
 //#include <codecvt>
 #include <locale>
@@ -79,7 +61,6 @@ int main(int count, char** values)
 	Consor::WindowSystem::Setup(new Consor::Console::PlatformConsoleRenderer(),
 		new Consor::Input::PlatformInputSystem());
 
-	Consor::WindowSystem::SetSkin<MonoSkin>();
 	Consor::WindowSystem::Renderer().SetTitle("Consor test application");
 	
 	atexit([]()
@@ -93,22 +74,13 @@ int main(int count, char** values)
 		cerr << "CALLBACK";
 	});
 
-	list<string> skins;
-	skins.push_back("Default");
-	skins.push_back("Mono");
-	skins.push_back("Sane");
-	skins.push_back("Hacker");
-	string selected = Consor::Util::ChoiceList("Please select a skin.", "Select Skin", skins);
+	string selected = Consor::Util::ChoiceList("Please select a skin.", "Select Skin", {"Default", "Mono", "Orange"});
 
 	if(selected == "Mono")
 	{
 		Consor::WindowSystem::SetSkin<MonoSkin>();
 	}
-	if(selected == "Sane")
-	{
-		Consor::WindowSystem::SetSkin<CSaneSkin>();
-	}
-	else if(selected == "Hacker")
+	else if(selected == "Orange")
 	{
 		Consor::WindowSystem::SetSkin<Consor::HackerSkin>();
 	}
@@ -194,73 +166,12 @@ int main(int count, char** values)
 		WindowSystem::UnregisterWindow(window);
 	}
 
-	// the pretend "logging in" window
-	{
-		using namespace Consor;
-
-		Label consoletext;
-		FlowContainer flow(FlowContainer::FlowAxis::Vertical, 0);
-		flow.AddControl(consoletext);
-
-		ScrollContainer scroll(flow, Size(40, 8));
-
-		string total = "";
-		bool notscrolled = true;
-		auto addtext = [&](const std::string& msg)
-		{
-			WindowSystem::Lock(); // we're messing with something that the main draw thread will be too
-			total += msg + "\n";
-			consoletext.SetText(total);
-			consoletext.ForceResize(scroll.GetSize() - Size(1, 1));
-			
-			if(notscrolled && scroll.ScrollDown())
-				notscrolled = false;
-			WindowSystem::Unlock();
-		};
-
-		WindowContainer window(scroll, "Logging in");
-
-		WindowSystem::RegisterWindow(window, Vector(-1, -1));
-
-		addtext("commencing the ScrollContainer auto scrolling test..."); Util::Sleep(0.5);
-		addtext("connecting to login server..."); Util::Sleep(0.5);
-		addtext("logging in..."); Util::Sleep(2);
-
-		string reasons[] = {"information", "datapack", "members", "updates", "earth", "universe", "lorem ipsum", "oxford dictionary"};
-
-		for(unsigned int i = 0; i < (sizeof reasons / sizeof reasons[0]); i++)
-		{
-			addtext(Util::FormatString("downloading \"%\"...", reasons[i])); Util::Sleep(0.75);
-		}
-
-		addtext("launching..."); Util::Sleep(1);
-		addtext("loading UI..."); Util::Sleep(1);
-
-		ProgressBar progbar;
-		progbar.ForceResize(Size(flow.GetSize().Width - 2, 1));
-
-		WindowSystem::Lock();
-		flow.AddControl(progbar);
-		WindowSystem::Unlock();
-
-		for(int i = 0; i < 10; i++)
-		{
-			progbar.SetPercent((double)i / 10.0);
-			WindowSystem::Draw();
-			Util::Sleep(0.1);
-		}
-		Util::Sleep(1);
-
-		WindowSystem::UnregisterWindow(window);
-	}
-
 	{
 		Consor::Label msg;
 		//msg.SetText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tempor metus sed ligula tempor tincidunt. Nullam quis condimentum augue. Nulla varius, nunc venenatis molestie egestas, neque lorem bibendum dui, vitae placerat magna nunc at nulla. In ultricies lectus quis purus bibendum eget ullamcorper metus tempus. Phasellus pulvinar, est sit amet auctor tempus, turpis nisl cursus mauris, vitae hendrerit felis tellus eu turpis. Vestibulum id leo sed magna vehicula aliquet. Fusce viverra auctor augue ut rutrum. Quisque quis nisl non turpis sollicitudin rutrum sit amet eget libero. Donec pretium egestas ante, eu aliquam mi porttitor quis.");
 	
 		msg.SetText(Consor::Util::FormatString("The current renderer is %, version string \"%\".", Consor::WindowSystem::RendererName(), Consor::WindowSystem::RendererVersionString()));
 
-		msg.ForceResize(Consor::Size(36, 1));
 		Consor::ScrollContainer msg_scroll(msg, Consor::Size(-1, 10));
 	
 		Consor::FlowContainer button_flow(Consor::FlowContainer::FlowAxis::Horizontal, 1);
@@ -382,10 +293,12 @@ int main(int count, char** values)
 
 		button_flow_align.ForceResize(main_flow.GetSize());
 
-		Consor::ScrollContainer main_scroll(main_flow, Consor::Size(30, 15));
+		Consor::ScrollContainer main_scroll(main_flow, Consor::Size(60, 15));
+		msg.ForceResize(Consor::Size(60 - 2, 1));
+		
 		Consor::WindowContainer window(main_scroll, "Consor Test");
 
-		Consor::WindowSystem::RegisterWindow(window, Consor::Vector(1, 1));
+		Consor::WindowSystem::RegisterWindow(window, Consor::Vector(-1, -1));
 	
 		while(!close)
 		{
