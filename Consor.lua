@@ -31,7 +31,19 @@ solution "Consor"
 		configuration "linux"
 			buildoptions { "-std=c++11" }
 			links { "pthread" }
-			postbuildcommands { "mkdir -p ../Include/Consor", "cp -r --target-directory=../Include/Consor/ ../Source/*.hpp" }
+			postbuildcommands {
+				"mkdir -p ../Include/Consor",
+				"cp -r --target-directory=../Include/Consor/ ../Source/*.hpp",
+				
+				"mkdir -p ../Include/Consor/Containers",
+				"cp -r --target-directory=../Include/Consor/Containers/ ../Source/Containers/*.hpp",
+				
+				"mkdir -p ../Include/Consor/Controls",
+				"cp -r --target-directory=../Include/Consor/Controls/ ../Source/Controls/*.hpp",
+				
+				"mkdir -p ../Include/Consor/Util",
+				"cp -r --target-directory=../Include/Consor/Util/ ../Source/Util/*.hpp",
+			}
 
 		configuration "DebugStatic"
 			targetsuffix "_sd"
