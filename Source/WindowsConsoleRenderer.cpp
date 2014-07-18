@@ -230,7 +230,7 @@ string WindowsConsoleRenderer::VersionString()
 	"; abstract draw calls: DrawBox, DrawRect, DrawString"
 #endif
 
-	"; flushmode = "
+	"; flushmode: "
 #ifdef DELTA_DRAW_ONLY
 	"delta"
 	#ifdef DELTA_DRAW_1_BIGGER
