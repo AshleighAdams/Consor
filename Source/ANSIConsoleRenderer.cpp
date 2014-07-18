@@ -236,7 +236,7 @@ string ANSIConsoleRenderer::VersionString()
 	"; direct draw calls: none"
 	"; abstract draw calls: DrawBox, DrawRect, DrawString"
 	
-	"; flushmode = "
+	"; flushmode: "
 #ifdef DELTA_DRAW_ONLY
 	"delta"
 	#ifdef DELTA_DRAW_1_BIGGER
