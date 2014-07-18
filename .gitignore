@@ -2,3 +2,14 @@ Binaries/
 Projects/
 Include/
 *~
+
+# .deb package
+Packages/debian/changelog
+Packages/debian/libconsor/
+Packages/debian/debhelper.log
+Packages/debian/libconsor.debhelper.log
+Packages/debian/libconsor.substvars
+Packages/debian/files
+Packages/build/
+Packages/Files/Include/
+Packages/Files/libConsor.so
