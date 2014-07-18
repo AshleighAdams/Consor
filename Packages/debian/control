@@ -1,0 +1,22 @@
+Source: libconsor
+Section: lib
+Priority: optional
+Maintainer: Kate Adams <self@kateadams.eu>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.4
+Homepage: https://github.com/KateAdams/Consor
+Vcs-Git: https://github.com/KateAdams/Consor.git
+
+Package: libconsor
+Version: auto
+Architecture: any
+Depends: 
+Description: Modern C++ console GUI.
+ Brings a modern C++11 API for a console.
+
+#Package: libconsor-dev
+#Version: auto
+#Architecture: any
+#Depends: libconsor
+#Description: Development packages for Consor.
+# Development packages for Consor.

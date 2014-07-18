@@ -1,0 +1,3 @@
+PREFIX = $(DESTDIR)/usr
+
+INSTALL           = install -D
