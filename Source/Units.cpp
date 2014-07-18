@@ -271,12 +271,18 @@ Colour Colour::Blend(const Colour& A, const Colour& B)
 	return out.Normalize();
 }
 
+// ugh, not sure why, but the abs() func returns an int...
+inline double absolute(double x)
+{
+	return x >= 0.0 ? x : -x;
+}
+
 double Colour::Distance(const Colour& A, const Colour& B)
 {
-	double dist_r = abs(A.R - B.R);
-	double dist_g = abs(A.G - B.G);
-	double dist_b = abs(A.B - B.B);
-	double dist_a = abs(A.A - B.A);
+	double dist_r = absolute(A.R - B.R);
+	double dist_g = absolute(A.G - B.G);
+	double dist_b = absolute(A.B - B.B);
+	double dist_a = absolute(A.A - B.A);
 
 	return dist_r + dist_g + dist_b + dist_a;
 }

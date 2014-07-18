@@ -288,7 +288,8 @@ tuple<Colour, bool> ANSIConsoleRenderer::_ClosestColourMatch(const Colour& targe
 			best = &col;
 		}
 	}
-
+	
+	// There is one already created, but the console is not yet aware of the colour
 	if(_NewColours.size() != 0 && best_distance < 0.0001)
 		return std::tuple<Colour, bool>(*best, true);
 
@@ -305,7 +306,7 @@ tuple<Colour, bool> ANSIConsoleRenderer::_ClosestColourMatch(const Colour& targe
 			best = cur;
 		}
 	}
-
+	
 	return std::tuple<Colour, bool>(*best, best_distance < 0.0001);
 }
 
