@@ -3,13 +3,24 @@ Projects/
 Include/
 *~
 
-# .deb package
-Packages/debian/changelog
-Packages/debian/libconsor/
-Packages/debian/debhelper.log
-Packages/debian/libconsor.debhelper.log
-Packages/debian/libconsor.substvars
-Packages/debian/files
-Packages/build/
-Packages/Files/Include/
-Packages/Files/libConsor.so
+# libconsor package
+Packages/Libary/debian/changelog
+Packages/Libary/debian/libconsor/
+Packages/Libary/debian/debhelper.log
+Packages/Libary/debian/libconsor.debhelper.log
+Packages/Libary/debian/libconsor.substvars
+Packages/Libary/debian/files
+Packages/Libary/build/
+Packages/Libary/Files/
+
+# libconsor-dev package
+Packages/Development/debian/changelog
+Packages/Development/debian/libconsor-dev/
+Packages/Development/debian/debhelper.log
+Packages/Development/debian/libconsor-dev.debhelper.log
+Packages/Development/debian/libconsor-dev.substvars
+Packages/Development/debian/files
+Packages/Development/build/
+Packages/Development/Files/
+
+

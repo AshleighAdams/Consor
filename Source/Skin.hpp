@@ -207,6 +207,24 @@ namespace Consor
 			ProgressForeground = RequestColour(Renderer, Colour(1, 0.5, 0));
 		};
 	};
+	
+	class MonoSkin : public Consor::DefaultSkin
+	{
+	public:
+		MonoSkin(Consor::Console::IConsoleRenderer& Renderer) : DefaultSkin(Renderer, true)
+		{
+			WindowLeft = WindowRight = ' ';
+
+			Foreground = RequestColour(Renderer, Consor::Colour(1, 1, 1));
+			ForegroundShine = Foreground;
+			Background = RequestColour(Renderer, Consor::Colour(0, 0, 0));
+			AlternateBackground = Background;
+			FocusColour = RequestColour(Renderer, Consor::Colour(0.5, 0.5, 0.5));
+			ProgressPercent = Consor::Colour(0, 0, 0, 0);
+			ProgressForeground = Foreground;
+			CanvasColour = Background;
+		}
+	};
 }
 
 #endif

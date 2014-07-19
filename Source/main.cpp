@@ -33,26 +33,6 @@
 
 using namespace std;
 
-// this skin is usefull for debugging in Linux, as the colours don't become hard to read when the debugger is invoked
-class MonoSkin : public Consor::DefaultSkin
-{
-public:
-	MonoSkin(Consor::Console::IConsoleRenderer& Renderer) : DefaultSkin(Renderer, true)
-	{
-		WindowLeft = WindowRight = ' ';
-
-		Foreground = RequestColour(Renderer, Consor::Colour(1, 1, 1));
-		ForegroundShine = Foreground;
-		Background = RequestColour(Renderer, Consor::Colour(0, 0, 0));
-		AlternateBackground = Background;
-		FocusColour = RequestColour(Renderer, Consor::Colour(0.5, 0.5, 0.5));
-		ProgressPercent = Consor::Colour(0, 0, 0, 0);
-		ProgressForeground = Foreground;
-		CanvasColour = Background;
-	}
-};
-
-
 //#include <codecvt>
 #include <locale>
 
@@ -78,7 +58,7 @@ int main(int count, char** values)
 
 	if(selected == "Mono")
 	{
-		Consor::WindowSystem::SetSkin<MonoSkin>();
+		Consor::WindowSystem::SetSkin<Consor::MonoSkin>();
 	}
 	else if(selected == "Orange")
 	{
