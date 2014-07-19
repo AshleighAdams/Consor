@@ -11,14 +11,10 @@ clean:
 
 files:
 	mkdir -p Files
-	cp ../Binaries/libConsor.so ./Files/libConsor.so
-	cp -r ../Include ./Files/Include
+	cp ../../Binaries/libConsor.so ./Files/libConsor.so
 
 install:
 	$(INSTALL) ./Files/libConsor.so $(PREFIX)/lib/libconsor.so
-	$(MKDIR) $(PREFIX)/include/Consor
-	$(CP) -r ./Files/Include/Consor/* $(PREFIX)/include/Consor/
-	$(INSTALL) ./Files/consor.pc $(PREFIX)/share/pkgconfig/consor.pc
 
 deb: files
 	echo Prefix is $(PREFIX)

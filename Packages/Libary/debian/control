@@ -12,11 +12,4 @@ Version: auto
 Architecture: any
 Depends: 
 Description: Modern C++ console GUI.
- Brings a modern C++11 API for a console.
-
-#Package: libconsor-dev
-#Version: auto
-#Architecture: any
-#Depends: libconsor
-#Description: Development packages for Consor.
-# Development packages for Consor.
+ Brings a modern C++11 API for a console GUI.
