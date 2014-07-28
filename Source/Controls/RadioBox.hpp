@@ -19,8 +19,9 @@ namespace Consor
 		RadioBox();
 		~RadioBox();
 		
-		// Will select
+		/// Add a possible selection.
 		void AddChoice(const std::string& Choice);
+		/// Get the value that is selected.
 		std::string GetChoice();
 
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);
