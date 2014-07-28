@@ -83,6 +83,7 @@ namespace Consor
 			char32_t GetUnicodeChar();
 		};
 
+		/// A console renderer implimentation that uses Window's API.
 		class WindowsConsoleRenderer : public IConsoleRenderer
 		{
 			friend class CWindowsCharInformation;

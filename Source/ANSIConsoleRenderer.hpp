@@ -101,6 +101,7 @@ namespace Consor
 			char32_t GetUnicodeChar();
 		};
 		
+		/// A console renderer implimentation that uses ANSI escape sequences.  Linux/OSX Compatible.
 		class ANSIConsoleRenderer : public IConsoleRenderer
 		{
 			friend class ANSICharInformation;
