@@ -27,13 +27,20 @@ namespace Consor
 		/// \warning The input value can go out of bounds, and will be extrapolated.
 		/// \warning The range minimium does not have to be less than the range maximium.
 		template<typename T>
-		T Scale(T Value, T FromMin, T FromMax, T ToMin, T ToMax)
+		T Map(T Value, T FromMin, T FromMax, T ToMin, T ToMax)
 		{
 			T from_diff = FromMax - FromMin;
 			T to_diff = ToMax - ToMin;
 
 			T y = (Value - FromMin) / from_diff;
 			return ToMin + to_diff * y;
+		}
+		
+		/// \deprecated Moved to `Consor::Util::Map()`
+		template<typename T>
+		T Scale(T Value, T FromMin, T FromMax, T ToMin, T ToMax)
+		{
+			return Map<T>(Value, FromMin, FromMax, ToMin, ToMax);
 		}
 	}
 }
