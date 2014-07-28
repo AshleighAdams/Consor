@@ -17,7 +17,11 @@ void CheckBox::SetText(std::string Text)
 
 void CheckBox::SetChecked(bool Value)
 {
+	bool fire_event = this->Checked() != Value;
 	_Checked = Value;
+	
+	if(fire_event)
+		this->ValueChanged(this->Checked());
 }
 
 bool CheckBox::Checked()
