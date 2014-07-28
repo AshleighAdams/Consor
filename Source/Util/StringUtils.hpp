@@ -57,7 +57,14 @@ namespace Consor
 			return ss.str();
 		}
 
+		/// Format the input seconds into a reasonable string.  Will attempt to cut at word breaks, else hyphenate.
 		extern std::string FormatTimeSpan(double Time);
+		/// Wrap a string around a specified width.
+		/// \param input The input string.
+		/// \param width The target width.
+		/// \param pOutWidth If not nullptr, it's set to the real width of the string.
+		/// \param pOutHeight If not nullptr, it's set to the real height of the string.
+		/// \return The new width-constrained string.
 		extern std::string WrapText(const std::string& input, size_t width, size_t* pOutWidth, size_t* pOutHeight);
 	}
 }

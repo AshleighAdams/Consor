@@ -63,9 +63,12 @@ namespace Consor
 		Colour(double R, double G, double B);
 		Colour(double R, double G, double B, double A);
 
+		/// Clamp the components to a sane range.
 		Colour& Normalize();
 		
+		/// Blend `B` on top of `A` (using alpha).
 		static Colour Blend(const Colour& A, const Colour& B);
+		/// The distance between the two colours.
 		static double Distance(const Colour& A, const Colour& B);
 
 		static const Colour& None();

@@ -15,6 +15,7 @@ namespace Consor
 		typedef std::function<void(const std::string&)> LogCallback;
 
 		extern void Log(const std::string& Message);
+		/// The argument `callback` will be called when a new log message is generated.
 		void HookLog(LogCallback callback);
 
 		template<class... Args>

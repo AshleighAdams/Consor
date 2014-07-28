@@ -25,6 +25,7 @@ namespace Consor
 	template<class... Args>
 	class Hook; // fwd decleration
 
+	/// The hook handle.  Upon being disposed, `Unregister()` is called.
 	template<class... Args>
 	struct HookHandle
 	{
