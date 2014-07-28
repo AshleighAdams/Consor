@@ -7,13 +7,14 @@
 
 namespace Consor
 {
+	/// The same as a TextBox, but is censored.
 	class PasswordBox : public TextBox
 	{
 	protected:
 		char _PasswordChar;
 	public:
 		PasswordBox();
-		/// `TextBox` uses `GetText()` to render the text.  This re-impliments that function to censor the password.
+		/// `TextBox` uses `GetText()` to render the text.  This re-implements that function to censor the password.
 		virtual std::string GetText();
 		/// Get the entered string, uncensored.
 		virtual std::string GetPassword();
