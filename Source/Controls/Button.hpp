@@ -17,9 +17,12 @@ namespace Consor
 		AlignContainer _HAlign;
 		Label _Label;
 	public:
+		/// Fired upon the button being clicked.
 		Hook<> Click;
 
 		Button();
+		/// Set the button's lable's text.
+		/// \param Text The string to set the lable's text to.
 		void SetText(std::string Text);
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);
 		virtual void ForceResize(const Size& Size);
