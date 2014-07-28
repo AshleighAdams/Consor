@@ -40,6 +40,7 @@ namespace Consor
 			Size size;
 		};
 
+		/// The console renderer interface.
 		class IConsoleRenderer
 		{
 		protected:
