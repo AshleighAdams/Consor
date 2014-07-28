@@ -23,7 +23,7 @@ namespace Consor
 		/// \param FromMax The maximum input value.
 		/// \param ToMin The input minimum will map to this.
 		/// \param ToMax The input maximum will map to this.
-		/// \return `Value` mapped to the from-range to the to-range.
+		/// \return `Value` mapped from the from-range to the to-range.
 		/// \warning The input value can go out of bounds, and will be extrapolated.
 		/// \warning The range minimium does not have to be less than the range maximium.
 		template<typename T>
