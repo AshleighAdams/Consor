@@ -54,13 +54,20 @@ namespace Consor
 		//extern bool KeyWaiting();
 		//extern Key GetKeyPress();
 
+		/// Input system interface.
 		class IInputSystem // Jookia is the one who wanted this to be instanced
 		{
 		public:
 			virtual ~IInputSystem() {};
+			/// \return `true` if there is a key waiting on the buffer.
 			virtual bool KeyWaiting() = 0;
+			/// Gets the next key that has been pressed.
+			/// \warning Will wait if the buffer is empty.  If this is not the desired behavior then check a key is on the buffer with `KeyWaiting()`.
+			/// \return The key that has been pressed.
 			virtual Key GetKeyPress() = 0;
+			/// \return `true` if control is down.
 			virtual bool ControlDown() = 0;
+			/// \return `true` if shift is down.
 			virtual bool ShiftDown() = 0;
 		};
 	}
