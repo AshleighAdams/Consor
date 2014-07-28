@@ -6,6 +6,7 @@
 
 namespace Consor
 {
+	/// Aligns a control on the specified axis(s).
 	class AlignContainer : public Control
 	{
 	public:
@@ -35,6 +36,7 @@ namespace Consor
 		AlignContainer(Control& Client, Axis Axis, Align align);
 		AlignContainer(){} // this will crash, but exists only so classes can have it
 		virtual Size GetSize();
+		/// Used to calculate the size of the control (streches itself, so we can be placed in the center).
 		virtual Size GetSize(Console::IConsoleRenderer& Renderer);
 		virtual void OnResize(const Size& Size);
 		virtual void ForceResize(const Size& Size);

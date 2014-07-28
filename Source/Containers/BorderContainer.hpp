@@ -6,6 +6,7 @@
 
 namespace Consor
 {
+	/// Adds padding to a control.
 	class BorderContainer : public Control
 	{
 	protected:

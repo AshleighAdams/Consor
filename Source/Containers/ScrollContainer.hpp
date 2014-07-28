@@ -9,6 +9,7 @@
 
 namespace Consor
 {
+	/// A container that allows controls to overflow.
 	class ScrollContainer : public Control
 	{
 	protected:
