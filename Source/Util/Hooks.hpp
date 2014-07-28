@@ -61,6 +61,7 @@ namespace Consor
 		}
 	};
 
+	/// Event based system.
 	template<class... Args>
 	class Hook
 	{
@@ -108,6 +109,7 @@ namespace Consor
 			//_CallMutex.unlock();
 		}		
 		
+		/// Calls all subscribed functions in their own thread.
 		inline void operator()(Args... args)
 		{
 			auto func = [&](Args... subargs)
