@@ -6,6 +6,7 @@
 
 namespace Consor
 {
+	/// A window-like container.
 	class WindowContainer : public Control
 	{
 	protected:

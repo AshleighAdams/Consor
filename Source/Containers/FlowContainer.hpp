@@ -7,8 +7,7 @@
 
 namespace Consor
 {
-	
-
+	/// 
 	class FlowContainer : public Control
 	{
 	public:
@@ -25,7 +24,9 @@ namespace Consor
 		size_t _Focusable();
 		Control* _GetFocused();
 	public:
-		FlowContainer(FlowAxis axis, double Sepperation);
+		/// \param axis The direction the controls flow.
+		/// \param Separation The amount of separation between each control.
+		FlowContainer(FlowAxis axis, double Separation);
 		virtual Size GetSize();
 		virtual void OnResize(const Size& Size);
 		virtual void ForceResize(const Size& Size);
