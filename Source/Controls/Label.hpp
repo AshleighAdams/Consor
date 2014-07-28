@@ -13,8 +13,10 @@ namespace Consor
 		std::string _SetText;
 	public:
 		Label();
+		/// Set the text to draw.
 		void SetText(const std::string& Text);
 		virtual void Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin);
+		/// Will wrap the text to this size.
 		virtual void ForceResize(const Size& Size);
 	};
 }
