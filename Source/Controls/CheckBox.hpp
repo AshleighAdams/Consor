@@ -19,7 +19,7 @@ namespace Consor
 		Hook<bool> ValueChanged;
 	
 		CheckBox();
-		/// Set the lable's text.
+		/// Set the label's text.
 		void SetText(std::string Text);
 		/// \return Whether the checkbox is checked.
 		bool Checked();
