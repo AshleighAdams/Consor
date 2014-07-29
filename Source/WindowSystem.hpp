@@ -59,6 +59,8 @@ namespace Consor
 
 		Colour RequestColour(const Colour& col, bool make = false);
 
+		/// Set the skin for the window system to use.
+		/// \tparam Skin The skin to set.
 		template <class Skin>
 		static std::shared_ptr<ISkin> SetSkin()
 		{
