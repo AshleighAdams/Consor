@@ -28,7 +28,7 @@ namespace Consor
 			}
 		}
 		template<class T, class... Args>
-		inline void FormatString(std::stringstream& ss, const char* pFormat, T Value, Args... args)
+		inline void FormatString(std::stringstream& ss, const char* pFormat, T Value, Args... args) github style md
 		{
 			while(*pFormat)
 			{
@@ -52,10 +52,9 @@ namespace Consor
 		
 		/// Format a string, use % to represent argument, and %% to represent "%".
 		/// Requires `std::ostream& operator<<(std::ostream&, const T&);` to be defined, where T is the type of the argument.
-		/// Example:
-		/// \code{.cpp}
-		/// Util::FormatString("100 / 2 * 5 = %", 100 / 2 * 5);
-		/// \endcode
+		/// \par Example
+		/// \include format-string.cpp
+		/// \include format-string.txt
 		template<class... Args>
 		inline std::string FormatString(const char* pFormat, Args... args)
 		{
@@ -72,6 +71,9 @@ namespace Consor
 		/// \param pOutWidth If not nullptr, it's set to the real width of the string.
 		/// \param pOutHeight If not nullptr, it's set to the real height of the string.
 		/// \return The new width-constrained string.
+		/// \par Example
+		/// \include wrap-text.cpp
+		/// \include wrap-text.txt
 		extern std::string WrapText(const std::string& input, size_t width, size_t* pOutWidth, size_t* pOutHeight);
 	}
 }
