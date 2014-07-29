@@ -24,9 +24,9 @@ namespace Consor
 		size_t _Focusable();
 		Control* _GetFocused();
 	public:
-		/// \param axis The direction the controls flow.
+		/// \param Axis The direction the controls flow.
 		/// \param Separation The amount of separation between each control.
-		FlowContainer(FlowAxis axis, double Separation);
+		FlowContainer(FlowAxis Axis, double Separation);
 		virtual Size GetSize();
 		virtual void OnResize(const Size& Size);
 		virtual void ForceResize(const Size& Size);

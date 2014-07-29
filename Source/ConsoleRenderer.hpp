@@ -79,7 +79,7 @@ namespace Consor
 			virtual void GetColours(size_t Count, Colour* pColours) = 0;
 			/// Set the console colours from the array `pColours`.
 			/// \param Count The size of our array to prevent buffer overflows, should be equal to `this->MaxColours()`.
-			/// \warn If you wish to create a colour, you should use `RequestColour`!
+			/// \warning If you wish to create a colour, you should use `RequestColour`!
 			virtual void SetColours(size_t Count, Colour* pColours) = 0;
 			/// Reset the colours to the console's defaults.
 			virtual void ResetColours() = 0;
@@ -88,7 +88,7 @@ namespace Consor
 			/// Get the closest colour possible.  Will create it if `make == true`.
 			virtual Colour RequestColour(const Colour& target, bool make = false);
 			/// When colours have been modified, this should be called.
-			/// \warn It is the console renderer's job to call this.
+			/// \warning It is the console renderer's job to call this.
 			virtual void FlushRequestedColours();
 
 			/// Set the console's title.
