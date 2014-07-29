@@ -76,9 +76,11 @@ namespace Consor
 			virtual size_t MaxColours() = 0;
 			/// Fill the array `pColours` with the current console colours.
 			/// \param Count The size of our array to prevent buffer overflows, should be equal to `this->MaxColours()`.
+			/// \param[out] pColours The array to output the colours.
 			virtual void GetColours(size_t Count, Colour* pColours) = 0;
 			/// Set the console colours from the array `pColours`.
 			/// \param Count The size of our array to prevent buffer overflows, should be equal to `this->MaxColours()`.
+			/// \param[in] pColours The array to input the colours.
 			/// \warning If you wish to create a colour, you should use `RequestColour`!
 			virtual void SetColours(size_t Count, Colour* pColours) = 0;
 			/// Reset the colours to the console's defaults.
