@@ -11,6 +11,7 @@ namespace Consor
 {
 	namespace Util
 	{
+		/// \cond PRIVATE
 		inline void FormatString(std::stringstream& ss, const char* pFormat)
 		{
 			while(*pFormat)
@@ -26,7 +27,6 @@ namespace Consor
 				ss << *pFormat++;
 			}
 		}
-
 		template<class T, class... Args>
 		inline void FormatString(std::stringstream& ss, const char* pFormat, T Value, Args... args)
 		{
@@ -48,7 +48,14 @@ namespace Consor
 
 			throw std::invalid_argument("Too many arguments provided!");
 		}
-
+		/// \endcond
+		
+		/// Format a string, use % to represent argument, and %% to represent "%".
+		/// Requires `std::ostream& operator<<(std::ostream&, const T&);` to be defined, where T is the type of the argument.
+		/// Example:
+		/// \code{.cpp}
+		/// Util::FormatString("100 / 2 * 5 = %", 100 / 2 * 5);
+		/// \endcode
 		template<class... Args>
 		inline std::string FormatString(const char* pFormat, Args... args)
 		{
