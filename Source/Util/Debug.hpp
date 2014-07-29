@@ -12,12 +12,17 @@ namespace Consor
 	{
 		// FUCK YOU MICROSOFT
 		//using LogCallback = std::function<void(const std::string&)>;
+		
 		typedef std::function<void(const std::string&)> LogCallback;
-
-		extern void Log(const std::string& Message);
 		/// The argument `callback` will be called when a new log message is generated.
 		void HookLog(LogCallback callback);
 
+		/// \cond PRIVATE
+		extern void Log(const std::string& Message);
+		/// \endcond
+		
+		/// Sends a message to stderr, and calls any functions subscribed to the log.
+		/// \note Uses `Util::FormatString()` to format the message and arguments.
 		template<class... Args>
 		inline void Log(const char* pFormat, Args... args)
 		{

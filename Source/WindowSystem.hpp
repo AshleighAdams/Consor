@@ -38,7 +38,7 @@ namespace Consor
 		extern void HandleInput(Input::Key key, Input::IInputSystem& is);
 		/// Register and place a new control at the top of the stack.
 		/// \param control The control to be registered.
-		/// \param The position to place it.  `-1` means center, a value between `0` and `1` is a percentage, and values `>= 1` are absolute.
+		/// \param pos The position to place it.  `-1` means center, a value between `0` and `1` is a percentage, and values `>= 1` are absolute.
 		extern void RegisterWindow(Control& control, Vector pos);
 		/// Remove a control from the stack.
 		extern void UnregisterWindow(Control& control);
