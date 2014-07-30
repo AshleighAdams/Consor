@@ -13,6 +13,7 @@ for file in Examples/*.cpp; do
 	#include <Consor/Skin.hpp>
 	#include <Consor/Util/Prompts.hpp>
 	#include <Consor/Util/StringUtils.hpp>
+	#include <Consor/Util/Math.hpp>
 	
 	using namespace std;
 	using namespace Consor;
@@ -25,14 +26,14 @@ for file in Examples/*.cpp; do
 }' >> /tmp/example.cpp
 	
 	echo "compiling $file..."
-	result=`c++ /tmp/example.cpp -o /tmp/example $cflags 2>&1`
 	result_file="${file%.cpp}.txt"
-	
+	c++ /tmp/example.cpp -o /tmp/example $cflags &> /tmp/example.log
+		
 	if [ $? == 0 ]; then # did we build it okay?
 		/tmp/example &> $result_file
 	else
 		echo "Build failed:"
-		echo $result
-		echo $result > $result_file
+		cat /tmp/example.log
+		cat /tmp/example.log > $result_file
 	fi
 done

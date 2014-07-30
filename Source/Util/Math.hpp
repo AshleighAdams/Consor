@@ -26,6 +26,9 @@ namespace Consor
 		/// \return `Value` mapped from the from-range to the to-range.
 		/// \warning The input value can go out of bounds, and will be extrapolated.
 		/// \warning The range minimium does not have to be less than the range maximium.
+		/// \par Example
+		/// \include map.cpp
+		/// \include map.txt
 		template<typename T>
 		T Map(T Value, T FromMin, T FromMax, T ToMin, T ToMax)
 		{
