@@ -51,7 +51,9 @@ namespace Consor
 		/// \endcond
 		
 		/// Format a string, use % to represent argument, and %% to represent "%".
-		/// Requires `std::ostream& operator<<(std::ostream&, const T&);` to be defined, where T is the type of the argument.
+		/// \param pFormat The input format string.
+		/// \param args The arguments used to format the string.
+		/// \note Requires `std::ostream& operator<<(std::ostream&, const T&);` to be defined, where T is the type of the argument.
 		/// \par Example
 		/// \include format-string.cpp
 		/// \include format-string.txt
@@ -64,6 +66,11 @@ namespace Consor
 		}
 
 		/// Format the input seconds into a reasonable string.  Will attempt to cut at word breaks, else hyphenate.
+		/// \param Time Number of seconds to format.
+		/// \return The formatted string.
+		/// \par Example
+		/// \include format-timespan.cpp
+		/// \include format-timespan.txt
 		extern std::string FormatTimeSpan(double Time);
 		/// Wrap a string around a specified width.
 		/// \param input The input string.
