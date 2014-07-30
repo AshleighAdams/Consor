@@ -16,21 +16,18 @@ std::string Consor::Util::FormatTimeSpan(double Time)
 		"day",
 		"week",
 		"year",
-		"lustrum"
 		"decade",
 		"century", // centuries, ohwell
 	};
 
 	double ajustment[] = {
-		60, // seconds
-		60, // minutes, minuets in
-		60, // hour, hours in
-		24, // day, days in
-		7,  // week, weeks in,
-		52, // year, years in...
-		5,
-		20,
-		10,
+		60, // seconds in a min
+		60, // mins in an hour
+		24, // hours in a day
+		7,  // days in a week
+		52, // weeks in a year
+		10, // years in a decade
+		10, // decades in a century
 		1
 	};
 
@@ -39,15 +36,13 @@ std::string Consor::Util::FormatTimeSpan(double Time)
 	
 	for(unsigned int i = 0; i < sizeof(ajustment) / sizeof(ajustment[0]) - 1; i++)
 	{
-		long long unit = (long long)fmod(units, ajustment[i+1]);
-		units = units / ajustment[i+1];
+		long long unit = (long long)fmod(units, ajustment[i]);
+		units = units / ajustment[i];
 
 		string unit_name = names[i];
 
 		if(unit != 1)
-		{
 			unit_name.append("s");
-		}
 
 		string str_unit;
 		stringstream str;

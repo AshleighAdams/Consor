@@ -55,7 +55,7 @@ namespace Consor
 		/// \param args The arguments used to format the string.
 		/// \return The formatted string.
 		/// \exception std::invalid_argument Incorrect number of arguments.
-		/// \note Requires `std::ostream& operator<<(std::ostream&, const T&);` to be defined, where T is the type of the argument.
+		/// \note Requires `std::ostream& operator<<(std::ostream&, const T&)` to be defined, where `T` is the type of the argument.
 		/// \par Example
 		/// \include format-string.cpp
 		/// \include format-string.txt
