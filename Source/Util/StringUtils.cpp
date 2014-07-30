@@ -63,20 +63,15 @@ std::string Consor::Util::FormatTimeSpan(double Time)
 
 inline bool IsSeperatorChar(char x)
 {
-	if(x >= 'a' && x <= 'z')
-		return false;
-
-	if(x >= 'A' && x <= 'Z')
-		return false;
-	
-
 	switch(x)
 	{
-	case '_':
-	case '=':
-		return false;
-	default:
+	case ' ':
+	case '-':
+	case '/':
+	case '\\':
 		return true;
+	default:
+		return false;
 	}
 }
 
@@ -100,6 +95,7 @@ std::string Consor::Util::WrapText(const std::string& input, size_t width, size_
 
 		const char& x = input[pos];
 
+		// the space may have wrapped around, if so, then just ignore it.
 		if(line_len == 0 && x == ' ')
 		{
 			pos++;
