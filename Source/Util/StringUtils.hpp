@@ -53,6 +53,8 @@ namespace Consor
 		/// Format a string, use % to represent argument, and %% to represent "%".
 		/// \param pFormat The input format string.
 		/// \param args The arguments used to format the string.
+		/// \return The formatted string.
+		/// \exception std::invalid_argument Incorrect number of arguments.
 		/// \note Requires `std::ostream& operator<<(std::ostream&, const T&);` to be defined, where T is the type of the argument.
 		/// \par Example
 		/// \include format-string.cpp
