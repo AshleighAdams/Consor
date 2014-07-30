@@ -1,9 +1,0 @@
-2.07587e-317 = 0 seconds 
-64 = 1 minute 4 seconds 
-729 = 12 minutes 9 seconds 
-4096 = 1 hour 8 minutes 16 seconds 
-15625 = 4 hours 20 minutes 25 seconds 
-46656 = 12 hours 57 minutes 36 seconds 
-117649 = 1 day 8 hours 40 minutes 49 seconds 
-262144 = 3 days 0 hours 49 minutes 4 seconds 
-531441 = 6 days 3 hours 37 minutes 21 seconds
