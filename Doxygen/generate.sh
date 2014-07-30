@@ -1,4 +1,4 @@
 #!/bin/bash
 
-./generate.sh
+./generate-examples.sh
 doxygen Doxyfile
