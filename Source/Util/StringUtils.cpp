@@ -9,7 +9,7 @@ std::string Consor::Util::FormatTimeSpan(double Time)
 	if(Time != Time || Time == std::numeric_limits<double>::infinity())
 		return "\u221E";
 
-	string names[] = {
+	static string names[] = {
 		"second",
 		"minute",
 		"hour",
@@ -20,7 +20,7 @@ std::string Consor::Util::FormatTimeSpan(double Time)
 		"century", // centuries, ohwell
 	};
 
-	double ajustment[] = {
+	static double ajustment[] = {
 		60, // seconds in a min
 		60, // mins in an hour
 		24, // hours in a day
