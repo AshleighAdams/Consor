@@ -3,7 +3,7 @@ exec_prefix=${prefix}
 includedir=${prefix}/include
 libdir=${exec_prefix}/lib
 
-Name: consor
+Name: Consor
 Description: C++11 console GUI libary.
 Version: 1.0.0
 Cflags:
