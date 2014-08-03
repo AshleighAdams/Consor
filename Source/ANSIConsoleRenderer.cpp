@@ -159,6 +159,9 @@ ANSIConsoleRenderer::ANSIConsoleRenderer()
 		Util::Log("terminal supports UTF-8: %", this->_SupportsUTF8 ? "true" : "false");
 	}
 	
+	{	// \033]4;$COLOUR;?\007
+	}
+	
 	{
 		ifstream ir("/sys/module/vt/parameters/default_red");
 		ifstream ig("/sys/module/vt/parameters/default_grn");
@@ -481,9 +484,10 @@ void ANSIConsoleRenderer::ResetColours()
 	_NewColours.clear();
 	
 	Util::Log("reset custom colours");
-	
-	
 	this->SetColours(ANSI_MAX_COLOURS, _OriginalColourTable);
+	
+	// This will "clear" the console!
+	cout << "\033c";
 }
 
 void ANSIConsoleRenderer::SetTitle(const string& Title)
