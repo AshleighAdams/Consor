@@ -10,6 +10,7 @@ clean:
 	#rm -rf ./Files/Include
 
 files:
+	rm -rf Files
 	mkdir -p Files
 	cp -r ../../Include ./Files/Include
 	cp ../../Source/consor.pc ./Files/consor.pc
