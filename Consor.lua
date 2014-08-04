@@ -32,6 +32,8 @@ solution "Consor"
 			buildoptions { "-std=c++11" }
 			links { "pthread" }
 			postbuildcommands {
+				"rm -rf ../Include",
+				
 				"mkdir -p ../Include/Consor",
 				"cp -r --target-directory=../Include/Consor/ ../Source/*.hpp",
 				

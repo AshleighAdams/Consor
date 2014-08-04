@@ -32,9 +32,9 @@ namespace Consor
 		typedef std::function<void(Args...)>	function_t;
 		typedef Hook<Args...>					hook_t;
 
-		hook_t*		_pHook;
-		function_t	_Func;
-
+		hook_t*	    _pHook;
+		function_t  _Func;
+		bool        _DontUnreg {false};
 	public:
 		HookHandle(hook_t* pHook, const function_t& Func)
 		{
@@ -46,10 +46,15 @@ namespace Consor
 		{
 			Unregister();
 		}
+		
+		void DontUnregister() // for example, it could be a static/global function that will live on after the handle has gone out of scope
+		{
+			_DontUnreg = true;
+		}
 
 		inline void Unregister()
 		{
-			if(!_pHook)
+			if(!_pHook || _DontUnreg)
 				return;
 			
 			(*_pHook) -= this;

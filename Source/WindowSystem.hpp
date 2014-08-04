@@ -73,7 +73,16 @@ namespace Consor
 			return skin;
 		}
 
-		
+		/// Set the skin for the window system to use.
+		/// \param Skin The skin to set.
+		static std::shared_ptr<ISkin> SetSkin(std::shared_ptr<ISkin> Skin)
+		{
+			using namespace _priv_WindowSystem;
+			Lock();
+			_SetSkin(Skin);
+			Unlock();
+			return Skin;
+		}
 	};
 };
 

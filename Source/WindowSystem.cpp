@@ -51,7 +51,7 @@ bool CheckHotkeys(Input::IInputSystem& System, Input::Key Key)
 {
 	bool ret = false;
 
-	for(auto hk : _HotKeys)
+	for(auto& hk : _HotKeys)
 	{
 		if(hk.key == Key && hk.ctrl == System.ControlDown() && hk.shift == System.ShiftDown())
 		{
