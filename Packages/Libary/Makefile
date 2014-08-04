@@ -10,6 +10,7 @@ clean:
 	#rm -rf ./Files/Include
 
 files:
+	rm -rf Files
 	mkdir -p Files
 	cp ../../Binaries/libConsor.so ./Files/libConsor.so
 
