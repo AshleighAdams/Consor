@@ -3,13 +3,11 @@
 
 using namespace Consor;
 
-Button::Button()
+Button::Button() :
+	_HAlign( AlignContainer(_Label,  AlignContainer::Axis::Horizotal, AlignContainer::Align::Center) ),
+	_VAlign( AlignContainer(_HAlign, AlignContainer::Axis::Vertical,  AlignContainer::Align::Center) )
 {
 	_Label.SetText("Default Button");
-	_HAlign = AlignContainer(_Label,
-		AlignContainer::Axis::Horizotal, AlignContainer::Align::Center);
-	_VAlign = AlignContainer(_HAlign,
-		AlignContainer::Axis::Vertical, AlignContainer::Align::Center);
 }
 
 void Button::SetText(std::string Text)

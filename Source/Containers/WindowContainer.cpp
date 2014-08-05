@@ -3,21 +3,16 @@
 using namespace Consor;
 using namespace std;
 
-WindowContainer::WindowContainer(Control& Client, const string& Title)
+WindowContainer::WindowContainer(Control& Client, const string& Title) :
+	_Client(Client),
+	_Title(Title)
 {
-	_pClient = &Client;
-	_Title = Title;
 }
 
-WindowContainer::WindowContainer()
-{
-	_pClient = nullptr;
-	_Title = "None";
-}
 
 Size WindowContainer::GetSize()
 {
-	return _pClient->GetSize() + Size(2, 2); // an aditional 2 for the border
+	return _Client.GetSize() + Size(2, 2); // an aditional 2 for the border
 }
 
 void WindowContainer::OnResize(const Size& size)
@@ -26,7 +21,7 @@ void WindowContainer::OnResize(const Size& size)
 
 void WindowContainer::ForceResize(const Size& size)
 {
-	_pClient->ForceResize(size - Size(2, 2)); // subtract the border
+	_Client.ForceResize(size - Size(2, 2)); // subtract the border
 }
 
 void WindowContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
@@ -64,16 +59,16 @@ void WindowContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool Has
 
 	// draw the child
 
-	Renderer.PushRenderBounds(Vector(1, 1), _pClient->GetSize());
+	Renderer.PushRenderBounds(Vector(1, 1), _Client.GetSize());
 	{
-		_pClient->Draw(Renderer, HasFocus, Skin);
+		_Client.Draw(Renderer, HasFocus, Skin);
 	}
 	Renderer.PopRenderBounds();
 }
 
 bool WindowContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
 {
-	return _pClient->HandleInput(Key, System);
+	return _Client.HandleInput(Key, System);
 }
 
 bool WindowContainer::CanFocus()
