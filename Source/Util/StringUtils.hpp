@@ -28,7 +28,7 @@ namespace Consor
 			}
 		}
 		template<class T, class... Args>
-		inline void FormatString(std::stringstream& ss, const char* pFormat, T Value, Args... args)
+		inline void FormatString(std::stringstream& ss, const char* pFormat, T&& Value, Args&&... args)
 		{
 			while(*pFormat)
 			{
@@ -60,7 +60,7 @@ namespace Consor
 		/// \include format-string.cpp
 		/// \include format-string.txt
 		template<class... Args>
-		inline std::string FormatString(const char* pFormat, Args... args)
+		inline std::string FormatString(const char* pFormat, Args&&... args)
 		{
 			std::stringstream ss;
 			FormatString(ss, pFormat, args...);

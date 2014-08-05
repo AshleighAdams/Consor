@@ -24,7 +24,7 @@ namespace Consor
 		/// Sends a message to stderr, and calls any functions subscribed to the log.
 		/// \note Uses `Util::FormatString()` to format the message and arguments.
 		template<class... Args>
-		inline void Log(const char* pFormat, Args... args)
+		inline void Log(const char* pFormat, Args&&... args)
 		{
 			std::stringstream ss;
 			FormatString(ss, pFormat, args...);
