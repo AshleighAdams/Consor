@@ -10,9 +10,8 @@ namespace Consor
 	class WindowContainer : public Control
 	{
 	protected:
-		Control* _pClient;
+		Control& _Client;
 		std::string _Title;
-		WindowContainer();
 	public:
 		WindowContainer(Control& Client, const std::string& Title);
 		virtual Size GetSize();
