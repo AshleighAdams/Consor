@@ -4,6 +4,7 @@
 #include "../Containers/WindowContainer.hpp"
 #include "../Containers/FlowContainer.hpp"
 #include "../Containers/AlignContainer.hpp"
+#include "../Containers/ScrollContainer.hpp"
 
 #include "../Controls/Button.hpp"
 #include "../Controls/TextBox.hpp"
@@ -74,7 +75,7 @@ std::string Util::ChoiceList(const std::string& Message, const std::string& Titl
 
 	for(const string& choice : Choices)
 		radio.AddChoice(choice);
-
+	
 
 	FlowContainer flow_buttons(FlowContainer::FlowAxis::Horizontal, 1.0);
 	Label msg;
@@ -111,16 +112,35 @@ std::string Util::ChoiceList(const std::string& Message, const std::string& Titl
 	main_flow.AddControl(align_buttons);
 
 	align_buttons.ForceResize(main_flow.GetSize());
-	WindowContainer window(main_flow, Title);
-	WindowSystem::RegisterWindow(window, Vector(-1, -1));
-
+	
 	while(running)
 	{
-		Util::Sleep(0.1);
+		Control* main = &main_flow;
+		ScrollContainer main_scroll(main_flow, Size());
+		
+		Size flow_size = main_flow.GetSize();
+		Size our_size = WindowSystem::Renderer().GetSize();
+		
+		if(flow_size.Height + 2 >= our_size.Height || flow_size.Width + 2 >= our_size.Width) /* 2 = window border */
+		{
+			main = &main_scroll; // scrolling is required!
+			Size maxsize = our_size - Size(2, 2);
+			Size minsize = flow_size + Size(2, 2);
+			
+			Size compact = Size( min(maxsize.Width, minsize.Width), min(maxsize.Height, minsize.Height) );
+			main_scroll.ForceResize(compact);
+			cerr << "Using scroll: size at " << compact << "\n";
+		}
+		
+		WindowContainer window(*main, Title);
+		WindowSystem::RegisterWindow(window, Vector(-1, -1));
+		
+		while(running && WindowSystem::Renderer().GetSize() == our_size)
+			Util::Sleep(0.1);
+		
+		WindowSystem::UnregisterWindow(window);
 	}
-
-	WindowSystem::UnregisterWindow(window);
-
+	
 	return cancled ? "" : radio.GetChoice();
 }
 

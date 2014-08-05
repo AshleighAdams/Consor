@@ -88,6 +88,15 @@ Size& Size::operator/=(double A)
 	this->Height /= A;
 	return *this;
 }
+bool Size::operator==(const Size& A) const
+{
+	return this->Width == A.Width && this->Height == A.Height;
+}
+
+bool Size::operator!=(const Size& A) const
+{
+	return !(*this == A);
+}
 
 // Vector
 
