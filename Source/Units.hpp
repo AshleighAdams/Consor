@@ -28,6 +28,8 @@ namespace Consor
 		Size& operator/=(const Size& A);
 		Size& operator*=(double A);
 		Size& operator/=(double A);
+		bool operator==(const Size& A) const;
+		bool operator!=(const Size& A) const;
 	};
 
 	class Vector

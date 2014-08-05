@@ -211,6 +211,7 @@ void WindowSystem::Close()
 	if(_Close)
 		return;
 
+	_HotKeys.clear();
 	_Close = true;
 	_DrawThread.join();
 	_InputThread.join();
