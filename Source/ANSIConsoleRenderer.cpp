@@ -2,6 +2,7 @@
 #include "ANSIConsoleRenderer.hpp"
 #include "Util/Debug.hpp"
 
+
 using namespace Consor;
 using namespace Consor::Console;
 
@@ -488,6 +489,7 @@ void ANSIConsoleRenderer::ResetColours()
 	
 	// This will "clear" the console!
 	cout << "\033c";
+	cout.flush();
 }
 
 void ANSIConsoleRenderer::SetTitle(const string& Title)
