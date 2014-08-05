@@ -2,6 +2,7 @@
 #define CONSOR_LINUXINPUTSYSTEM_H
 
 #include "InputSystem.hpp"
+#include <termios.h>
 
 namespace Consor
 {
@@ -11,7 +12,10 @@ namespace Consor
 		{
 			bool _ShiftDown;
 			bool _ControlDown;
+			termios _Old;
 		public:
+			LinuxInputSystem();
+			virtual ~LinuxInputSystem();
 			bool KeyWaiting();
 			Key GetKeyPress();
 			bool ControlDown();

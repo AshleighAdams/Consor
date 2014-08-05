@@ -35,15 +35,15 @@ void WindowSystem::RegisterHotKey(Control* pControl, Input::Key Key, bool Contro
 {
 	_Mutex.lock();
 
-	_hotkey_info hotkey;
+	_HotKeys.emplace_back();
+	
+	_hotkey_info& hotkey = _HotKeys.back();
 	hotkey.callback = callback;
 	hotkey.ctrl = Control;
 	hotkey.shift = Shift;
 	hotkey.key = Key;
 	hotkey.ptr = pControl;
-
-	_HotKeys.push_back(hotkey);
-
+	
 	_Mutex.unlock();
 }
 
@@ -103,8 +103,13 @@ bool WindowSystem::Setup(Console::IConsoleRenderer* Renderer, Input::IInputSyste
 	{
 		while(!_Close)
 		{
-			Input::Key k = _pInput->GetKeyPress();
-			HandleInput(k, *_pInput);
+			Util::Sleep(1.0/30.0); // run it roughly 30 times per second, about the max repeats/per second if you hold your key down
+			
+			while(_pInput->KeyWaiting())
+			{
+				Input::Key k = _pInput->GetKeyPress();
+				HandleInput(k, *_pInput);
+			}
 		}
 	});
 

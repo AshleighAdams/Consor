@@ -8,23 +8,33 @@
 using namespace Consor;
 using namespace Consor::Input;
 
+LinuxInputSystem::LinuxInputSystem()
+{
+	termios newt;
+	int ch;
+	
+	tcgetattr(STDIN_FILENO, &_Old);
+	newt = _Old;
+	newt.c_lflag &= ~(ICANON | ECHO);
+	
+	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+}
+
+LinuxInputSystem::~LinuxInputSystem()
+{
+	tcsetattr(STDIN_FILENO, TCSANOW, &_Old);
+}
+
 bool LinuxInputSystem::KeyWaiting()
 {
 	termios oldt, newt;
 	int ch, oldf;
-	
-	tcgetattr(STDIN_FILENO, &oldt);
-	newt = oldt;
-	newt.c_lflag &= ~(ICANON | ECHO);
-	
-	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-	
+		
 	oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
 	fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
 	
-	ch = getchar();
+		ch = getchar();
 	
-	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 	fcntl(STDIN_FILENO, F_SETFL, oldf);
 	
 	if(ch != EOF)
@@ -36,29 +46,11 @@ bool LinuxInputSystem::KeyWaiting()
 	return false;
 }
 
-int get_pressed()
-{
-	termios oldt, newt;
-	int ch;
-	
-	tcgetattr(STDIN_FILENO, &oldt);
-	newt = oldt;
-	newt.c_lflag &= ~(ICANON | ECHO);
-	
-	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-	{
-		ch = getchar();
-	}
-	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-	
-	return ch;
-}
-
 Key LinuxInputSystem::GetKeyPress() // these below arn't properly implimented
 {
 	_ShiftDown = _ControlDown = false;
 	
-	int ch = get_pressed();
+	int ch = getchar();
 	
 	switch(ch)
 	{
@@ -67,7 +59,7 @@ Key LinuxInputSystem::GetKeyPress() // these below arn't properly implimented
 	case 10:
 		return Key::Enter;
 	case '[':
-		ch = get_pressed();
+		ch = getchar();
 		
 		switch(ch)
 		{
@@ -82,8 +74,8 @@ Key LinuxInputSystem::GetKeyPress() // these below arn't properly implimented
 			
 		case '1':
 		{
-			get_pressed(); // read the ;
-			ch = get_pressed();
+			getchar(); // read the ;
+			ch = getchar();
 			
 			switch(ch)
 			{
@@ -97,7 +89,7 @@ Key LinuxInputSystem::GetKeyPress() // these below arn't properly implimented
 				break;
 			}
 			
-			ch = get_pressed();
+			ch = getchar();
 			switch(ch)
 			{
 			case 'A':
