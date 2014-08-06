@@ -8,13 +8,13 @@ Graph::Graph(double Height) :
 	_FlowVert(Consor::FlowContainer::FlowAxis::Vertical, 0),
 	_FlowGraphs(Consor::FlowContainer::FlowAxis::Horizontal, 0),
 	_Height(Height),
-	_XLableAlign(_XLabel, AlignContainer::Axis::Horizotal, AlignContainer::Align::Center),
-	_YLableAlign(_YLabel, AlignContainer::Axis::Vertical, AlignContainer::Align::Center)
+	_XLabelAlign(_XLabel, AlignContainer::Axis::Horizotal, AlignContainer::Align::Center),
+	_YLabelAlign(_YLabel, AlignContainer::Axis::Vertical, AlignContainer::Align::Center)
 {
-	_FlowHorz.AddControl(_YLableAlign);
+	_FlowHorz.AddControl(_YLabelAlign);
 	_FlowHorz.AddControl(_FlowVert);
 	_FlowVert.AddControl(_FlowGraphs);
-	_FlowVert.AddControl(_XLableAlign);
+	_FlowVert.AddControl(_XLabelAlign);
 
 	_Click = [&](double a, size_t b)
 	{
@@ -55,17 +55,17 @@ VerticalProgressBar& Graph::AddBar(double Value)
 
 	_ToDelete.push_back(pb);
 	_FlowGraphs.AddControl(*pb);
-	_XLableAlign.ForceResize(_FlowGraphs.GetSize());
+	_XLabelAlign.ForceResize(_FlowGraphs.GetSize());
 
 	return *pb;
 }
 
-void Graph::SetXLable(const std::string& Text)
+void Graph::SetXLabel(const std::string& Text)
 {
 	_XLabel.SetText(Text);
 }
 
-void Graph::SetYLable(const std::string& Text)
+void Graph::SetYLabel(const std::string& Text)
 {
 	_YLabel.SetText(Text);
 }
