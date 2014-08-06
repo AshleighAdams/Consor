@@ -24,7 +24,7 @@ namespace Consor
 		double _Height;
 		Label _XLabel;
 		Label _YLabel;
-		AlignContainer _XLableAlign, _YLableAlign;
+		AlignContainer _XLabelAlign, _YLabelAlign;
 		std::function<void(double, size_t)> _Click;
 	public:
 		/// Fired when the user clicked a bar.  Parameters are X and Y.
@@ -37,8 +37,8 @@ namespace Consor
 		virtual bool CanFocus();
 		virtual VerticalProgressBar& AddBar(double Value);
 		
-		virtual void SetXLable(const std::string& Text);
-		virtual void SetYLable(const std::string& Text);
+		virtual void SetXLabel(const std::string& Text);
+		virtual void SetYLabel(const std::string& Text);
 		virtual void AddXAxisNotch(const std::string&, double Height);
 
 
