@@ -1,17 +1,41 @@
 #include "ScrollContainer.hpp"
+#include "../Util/Debug.hpp"
 
 using namespace Consor;
 using namespace std;
 
-ScrollContainer::ScrollContainer(Control& Client, const Size& Size)
+ScrollContainer::ScrollContainer(Control& Client, const Size& Size, bool ShrinkToContents) :
+	_Client(Client),
+	_HScrollbar(),
+	_VScrollbar(),
+	_ShrinkToContents(ShrinkToContents),
+	_MaxSize(Size)
 {
-	_pClient = &Client;
 	ForceResize(Size);
 }
 
 Size ScrollContainer::GetSize()
 {
-	Size clientsize = _pClient->GetSize();
+	
+	Size clientsize = _Client.GetSize();
+	
+	// Do we need to resize ourselves?
+	if(_ShrinkToContents && clientsize != _Size)
+	{
+		Size optimal = clientsize;
+		
+		if(optimal.Width > _MaxSize.Width)
+			optimal.Width = _MaxSize.Width;
+		if(optimal.Height > _MaxSize.Height)
+			optimal.Height = _MaxSize.Height;
+		
+		if(optimal != _Size)
+		{		
+			Util::Log("resizing ScrollContainer to %", optimal);
+			this->ForceResize(optimal);
+		}
+	}
+	
 	Size ret = _Size;
 
 	if(_Size.Width < 0)
@@ -48,13 +72,13 @@ void ScrollContainer::ForceResize(const Size& size)
 void ScrollContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool HasFocus, const Consor::ISkin& Skin)
 {
 	Size selfsize = GetSize();
-	Size childsize = _pClient->GetSize();
+	Size childsize = _Client.GetSize();
 
 	Vector offset;
 
 	Size vscrollsize = _VScrollbar.GetSize();
 	Size hscrollsize = _HScrollbar.GetSize();
-	Size clientsize = _pClient->GetSize();
+	Size clientsize = _Client.GetSize();
 
 	if(_Size.Width > 0 && childsize.Width > _Size.Width) // if the width isn't automatic
 	{
@@ -85,13 +109,13 @@ void ScrollContainer::Draw(Consor::Console::IConsoleRenderer& Renderer, bool Has
 	else vscrollsize.Width = 0;
 
 	Renderer.PushRenderBounds(offset, selfsize - Size(vscrollsize.Width, hscrollsize.Height));
-		_pClient->Draw(Renderer, HasFocus && _pClient->CanFocus(), Skin);
+		_Client.Draw(Renderer, HasFocus && _Client.CanFocus(), Skin);
 	Renderer.PopRenderBounds();
 }
 
 bool ScrollContainer::ScrollDown(size_t count)
 {
-	Size clientsize = _pClient->GetSize();
+	Size clientsize = _Client.GetSize();
 	Size selfsize = this->GetSize();
 
 	if(clientsize.Height < selfsize.Height)
@@ -114,7 +138,7 @@ bool ScrollContainer::ScrollDown(size_t count)
 
 bool ScrollContainer::ScrollUp(size_t count)
 {
-	Size clientsize = _pClient->GetSize();
+	Size clientsize = _Client.GetSize();
 	Size selfsize = this->GetSize();
 
 	if(clientsize.Height < selfsize.Height)
@@ -137,7 +161,7 @@ bool ScrollContainer::ScrollUp(size_t count)
 
 bool ScrollContainer::ScrollLeft(size_t count)
 {
-	Size clientsize = _pClient->GetSize();
+	Size clientsize = _Client.GetSize();
 	Size selfsize = this->GetSize();
 
 	if(clientsize.Width < selfsize.Width)
@@ -160,7 +184,7 @@ bool ScrollContainer::ScrollLeft(size_t count)
 
 bool ScrollContainer::ScrollRight(size_t count)
 {
-	Size clientsize = _pClient->GetSize();
+	Size clientsize = _Client.GetSize();
 	Size selfsize = this->GetSize();
 
 	if(clientsize.Width < selfsize.Width)
@@ -208,7 +232,7 @@ bool ScrollContainer::HandleInput(Input::Key Key, Input::IInputSystem& System)
 			return true;
 	}
 
-	if(_pClient->HandleInput(Key, System))
+	if(_Client.HandleInput(Key, System))
 		return true;
 
 	if(_Size.Height > 0)
