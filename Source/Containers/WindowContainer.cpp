@@ -1,14 +1,57 @@
 #include "WindowContainer.hpp"
 
+#include "../Util/Time.hpp"
+#include "../Util/Debug.hpp"
+#include "../WindowSystem.hpp"
+
 using namespace Consor;
 using namespace std;
 
 WindowContainer::WindowContainer(Control& Client, const string& Title) :
 	_Client(Client),
-	_Title(Title)
+	_Title(Title),
+	_Running(false)
 {
 }
 
+WindowContainer::~WindowContainer()
+{
+	struct DisposedButNotUnregistered {} _;
+	if(_Running)
+	{
+		Util::Log("~WindowContainer() called, but is still registered!");
+		this->Close();
+	}
+}
+
+void WindowContainer::Show(const Vector& Position)
+{
+	if(_Running)
+		return;
+	_Running = true;
+	
+	WindowSystem::RegisterWindow(*this, Position);
+	
+	_RunningMutex.lock();
+	_RunningMutex.lock(); // Lock the thread, eventually the input thread in the
+	                      // WindowSystem will call `this->Close()` where the
+	                      // mutex will be unlocked, and allowed to continue.
+	
+	_RunningMutex.unlock(); // for consistancy sake, remove the first lock.
+	
+	//while(_Running)
+	//	Util::Sleep(1.0 / 10.0); // check 10 times per second	
+}
+
+void WindowContainer::Close()
+{
+	if(!_Running)
+		return;
+	
+	WindowSystem::UnregisterWindow(*this);
+	_Running = false;
+	_RunningMutex.unlock();
+}
 
 Size WindowContainer::GetSize()
 {
