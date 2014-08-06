@@ -13,12 +13,14 @@ namespace Consor
 	class ScrollContainer : public Control
 	{
 	protected:
-		Control* _pClient;
+		Control& _Client;
 		HorizontalScrollbar _HScrollbar;
 		VerticalScrollbar _VScrollbar;
+		bool _ShrinkToContents;
+		Size _MaxSize;
 	public:
-		ScrollContainer(Control& Client, const Size& Size);
-		ScrollContainer(){} // this should never actually be used
+		/// \param ShrinkToContents Make the scroll container the size of it's client, unless it reaches the max size!
+		ScrollContainer(Control& Client, const Size& Size, bool ShrinkToContents = false);
 		virtual Size GetSize();
 		virtual void OnResize(const Size& Size);
 		virtual void ForceResize(const Size& Size);
