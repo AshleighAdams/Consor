@@ -21,6 +21,7 @@ HorizontalScrollbar::HorizontalScrollbar()
 void HorizontalScrollbar::SetPercent(double Percent)
 {
 	_Value = Percent;
+	this->ValueChanged(this->_Value);
 }
 
 double HorizontalScrollbar::GetPercent()
