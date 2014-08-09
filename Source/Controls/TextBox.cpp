@@ -128,6 +128,8 @@ bool TextBox::HandleInput(Input::Key Key, Input::IInputSystem& System)
 			return true;
 		_Text.erase(_CursorPosition, 1);
 		_LastTyped = Util::GetTime();
+		
+		this->ValueChanged(_Text);
 		return true;
 	}
 	else if(Key == Input::Key::Backspace)
@@ -137,6 +139,8 @@ bool TextBox::HandleInput(Input::Key Key, Input::IInputSystem& System)
 		_Text.erase(_CursorPosition - 1, 1);
 		_CursorPosition--;
 		_LastTyped = Util::GetTime();
+		
+		this->ValueChanged(_Text);
 		return true;
 	}
 	else if(Key == Input::Key::Insert)
@@ -154,6 +158,8 @@ bool TextBox::HandleInput(Input::Key Key, Input::IInputSystem& System)
 		_Text.insert(_CursorPosition, 1, letter);
 		_CursorPosition++;
 		_LastTyped = Util::GetTime();
+		
+		this->ValueChanged(_Text);
 		return true;
 	}
 
