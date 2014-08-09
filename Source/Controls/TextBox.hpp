@@ -2,6 +2,7 @@
 #define CONTROLS_TEXTBOX_H
 
 #include "../Control.hpp"
+#include "../Util/Hooks.hpp"
 #include <string>
 
 namespace Consor
@@ -16,6 +17,8 @@ namespace Consor
 
 		virtual bool _IsTypedChar(Input::Key Key, char& letter);
 	public:
+		Hook<std::string> ValueChanged;
+		
 		TextBox();
 		void SetText(const std::string& Text);
 		virtual std::string GetText();
