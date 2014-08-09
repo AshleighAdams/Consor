@@ -2,6 +2,7 @@
 #define CONTROLS_HSCROLL_H
 
 #include "../Control.hpp"
+#include "../Util/Hooks.hpp"
 #include <string>
 
 namespace Consor
@@ -13,6 +14,8 @@ namespace Consor
 		double _ChangeSize;
 		double _ScrollRegionSize;
 	public:
+		Hook<double> ValueChanged;
+		
 		HorizontalScrollbar(const Size& Size);
 		HorizontalScrollbar();
 		void SetPercent(double Percent);
