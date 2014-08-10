@@ -61,7 +61,10 @@ bool RadioBox::HandleInput(Input::Key Key, Input::IInputSystem& System)
 	}
 
 	// ok, now send it
-	return _FlowContainer.HandleInput(Key, System);
+	bool ret = _FlowContainer.HandleInput(Key, System);
+	if(ret && (Key == Input::Key::Enter || Key == Input::Key::Space)) // the input was handled, the choice was changed
+		this->OnValueChanged(this->GetChoice());
+	return ret;
 }
 
 bool RadioBox::CanFocus()
