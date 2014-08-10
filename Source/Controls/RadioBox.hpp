@@ -4,6 +4,7 @@
 #include "../Control.hpp"
 #include "CheckBox.hpp"
 #include "../Containers/FlowContainer.hpp"
+#include "../Util/Hooks.hpp"
 
 #include <string>
 #include <tuple>
@@ -16,6 +17,8 @@ namespace Consor
 		std::list<std::tuple<CheckBox*, std::string>> _Checkboxes;
 		FlowContainer _FlowContainer;
 	public:
+		Hook<std::string> OnValueChanged;
+		
 		RadioBox();
 		~RadioBox();
 		
