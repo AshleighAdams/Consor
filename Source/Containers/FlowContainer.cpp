@@ -172,3 +172,12 @@ void FlowContainer::AddControl(Control& Control, double SizeTo)
 	}
 	_Controls.push_back(&Control);
 }
+
+void FlowContainer::RemoveControl(Control& Control)
+{
+	Consor::Control* targ = &Control;
+	_Controls.remove_if([&](Consor::Control* ptr)
+	{
+		return ptr == targ;
+	});
+}
