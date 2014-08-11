@@ -36,6 +36,7 @@ namespace Consor
 
 		// Size is length along the FlowContainer's axis (width, if vertical), 0 to not resize control
 		virtual void AddControl(Control& Control, double Size = 0);
+		virtual void RemoveControl(Control& Control);
 	};
 };
 
