@@ -470,8 +470,7 @@ void ANSIConsoleRenderer::FlushToScreen()
 		}
 	
 	// Update the delta buffer
-	for(int i = 0; i < _Width * _Height; i++)
-		_pBufferDelta[i] = _pBuffer[i];
+	memcpy(_pBufferDelta, _pBuffer, _Width * _Height * sizeof(ANSI_CHAR_INFO));
 		
 	if(!something_changed)
 	{
