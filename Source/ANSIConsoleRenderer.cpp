@@ -1,6 +1,7 @@
 // Consor
 #include "ANSIConsoleRenderer.hpp"
 #include "Util/Debug.hpp"
+#include "Util/Time.hpp"
 
 
 using namespace Consor;
@@ -137,11 +138,21 @@ ANSIConsoleRenderer::ANSIConsoleRenderer()
 	PushRenderBounds(Vector(), Size(_Width, _Height));
 	_pBuffer = new ANSI_CHAR_INFO[_Width * _Height];
 	
+	#ifdef DELTA_DRAW_ONLY
+	_pBufferDelta = new ANSI_CHAR_INFO[_Width * _Height];
+	#endif
+	
 	for(size_t i = 0; i < _Width * _Height; i++)
 	{
 		_pBuffer[i].Letter = ' ';
 		_pBuffer[i].FG = Colour(1,1,1);
 		_pBuffer[i].BG = Colour();
+		
+		#ifdef DELTA_DRAW_ONLY
+		_pBufferDelta[i].Letter = '#'; // make it different, so it will draw everything the first time
+		_pBufferDelta[i].FG = Colour(1,1,1);
+		_pBufferDelta[i].BG = Colour();
+		#endif
 	}
 
 	{ // detect if the terminal supports UTF-8
@@ -345,6 +356,12 @@ void ANSIConsoleRenderer::_CheckConsoleSize()
 	{
 		Util::Log("detected console resize: % %", w, h);
 		
+		if(w > 1000 || h > 1000)
+		{
+			Util::Log("detected console resize: invalid size? pretending old size");
+			return;
+		}
+		
 		this->_Width = w;
 		this->_Height = h;
 		
@@ -356,14 +373,30 @@ void ANSIConsoleRenderer::_CheckConsoleSize()
 		delete [] _pBuffer;
 		_pBuffer = new ANSI_CHAR_INFO[this->_Width * this->_Height];
 		
+		#ifdef DELTA_DRAW_ONLY
+		delete [] _pBufferDelta;
+		_pBufferDelta = new ANSI_CHAR_INFO[this->_Width * this->_Height];
+		#endif
+		
 		for(size_t i = 0; i < this->_Width * this->_Height; i++)
 		{
 			_pBuffer[i].Letter = ' ';
 			_pBuffer[i].FG = Colour(1,1,1);
 			_pBuffer[i].BG = Colour();
+			
+			#ifdef DELTA_DRAW_ONLY
+			_pBufferDelta[i].Letter = '#';
+			_pBufferDelta[i].FG = Colour(1,1,1);
+			_pBufferDelta[i].BG = Colour();
+			#endif
 		}
 		
 	}
+}
+
+inline bool ansi_charinfo_equals(const ANSI_CHAR_INFO& A, const ANSI_CHAR_INFO& B)
+{
+	return A.Letter == B.Letter && A.BG == B.BG && A.FG == B.FG;
 }
 
 void ANSIConsoleRenderer::FlushToScreen()
@@ -376,11 +409,85 @@ void ANSIConsoleRenderer::FlushToScreen()
 	stringstream ss;
 	Colour current_fg = Colour(-1, -1, -1), current_bg = Colour(-1, -1, -1);
 	
-	for(size_t y = 0; y < _Height; y++)
-	{
-		ANSI::GenerateEscapeSequence(cout, '[', ANSI::EscapeSequence::CursorPosition, to_string(y + 1), "1"); // y; x
-		
+	size_t startx = 0, starty = 0, endx = _Width - 1, endy = _Height - 1;
+	
+	#ifdef DELTA_DRAW_ONLY
+	bool something_changed = false;
+	
+	// find the first instance from X that's changed
+	for (size_t x = 0; x < _Width; x++)
+		for(size_t y = 0; y < _Height; y++)
+		{
+			ANSI_CHAR_INFO& newinfo = _pBuffer[x + _Width * y];
+			ANSI_CHAR_INFO& oldinfo = _pBufferDelta[x + _Width * y];
+			if(!ansi_charinfo_equals(newinfo, oldinfo))
+			{
+				startx = x;
+				something_changed = true;
+				y = _Height; x = _Width; break;// break 2;
+			}
+		}
+	// last instance of X
+	for (int x = _Width - 1; x >= 0; x--)
+		for(size_t y = 0; y < _Height; y++)
+		{
+			ANSI_CHAR_INFO& newinfo = _pBuffer[x + _Width * y];
+			ANSI_CHAR_INFO& oldinfo = _pBufferDelta[x + _Width * y];
+			if(!ansi_charinfo_equals(newinfo, oldinfo))
+			{
+				endx = x;
+				something_changed = true;
+				y = _Height; x = -1; break;// break 2;
+			}
+		}
+	
+	// first instance of Y changed
+	for (size_t y = 0; y < _Height; y++)
 		for(size_t x = 0; x < _Width; x++)
+		{
+			ANSI_CHAR_INFO& newinfo = _pBuffer[x + _Width * y];
+			ANSI_CHAR_INFO& oldinfo = _pBufferDelta[x + _Width * y];
+			if(!ansi_charinfo_equals(newinfo, oldinfo))
+			{
+				starty = y;
+				something_changed = true;
+				y = _Height; x = _Width; break;// break 2;
+			}
+		}
+	
+	// last instance of Y
+	for (int y = _Height - 1; y >= 0; y--)
+		for(size_t x = 0; x < _Width; x++)
+		{
+			ANSI_CHAR_INFO& newinfo = _pBuffer[x + _Width * y];
+			ANSI_CHAR_INFO& oldinfo = _pBufferDelta[x + _Width * y];
+			if(!ansi_charinfo_equals(newinfo, oldinfo))
+			{
+				endy = y;
+				something_changed = true;
+				y = -1; x = _Width; break;// break 2;
+			}
+		}
+	
+	// Update the delta buffer
+	for(int i = 0; i < _Width * _Height; i++)
+		_pBufferDelta[i] = _pBuffer[i];
+		
+	if(!something_changed)
+	{
+		startx = endx = _Width - 1;
+		starty = endy = _Height - 1;
+	}
+	else
+		this->SetTitle(Util::FormatString("%: %, % to %, % (%)", Util::GetTime(), startx, starty, endx, endy, something_changed));
+	
+	#endif
+	
+	for(size_t y = starty; y <= endy; y++)
+	{
+		ANSI::GenerateEscapeSequence(cout, '[', ANSI::EscapeSequence::CursorPosition, to_string(y + 1), to_string(startx + 1)); // y; x
+		
+		for(size_t x = startx; x <= endx; x++)
 		{
 			ANSI_CHAR_INFO& info = _pBuffer[x + _Width * y];
 			

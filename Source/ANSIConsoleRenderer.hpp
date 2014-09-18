@@ -6,6 +6,7 @@
 #include <ostream>
 
 #define ANSI_MAX_COLOURS 256 // providing they're on xterm, this should work
+#define DELTA_DRAW_ONLY
 
 namespace Consor
 {
@@ -112,6 +113,7 @@ namespace Consor
 			
 			bool _CompleteFlush; // instruct the renderer to completley flush the screen
 			ANSI_CHAR_INFO* _pBuffer;
+			ANSI_CHAR_INFO* _pBufferDelta;
 			Colour _ColourTable[ANSI_MAX_COLOURS];
 			Colour _OriginalColourTable[ANSI_MAX_COLOURS];
 			ANSI_CHAR_INFO& _GetCharInfo(const Vector& vec);
