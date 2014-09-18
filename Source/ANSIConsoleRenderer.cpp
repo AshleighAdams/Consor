@@ -477,8 +477,7 @@ void ANSIConsoleRenderer::FlushToScreen()
 		startx = endx = _Width - 1;
 		starty = endy = _Height - 1;
 	}
-	else
-		this->SetTitle(Util::FormatString("%: %, % to %, % (%)", Util::GetTime(), startx, starty, endx, endy, something_changed));
+	//else this->SetTitle(Util::FormatString("%: %, % to %, % (%)", Util::GetTime(), startx, starty, endx, endy, something_changed));
 	
 	#endif
 	
